@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
 <head>
     <meta charset="UTF-8">
     <title>[[${title}]]</title>
@@ -12,8 +12,8 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="/xadmin/css/font.css">
     <link rel="stylesheet" href="/xadmin/css/xadmin.css">
-    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
-    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/libs/jquery/jquery.min.js"></script>
+    <script src="/temp/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="/xadmin/script/xadmin.js"></script>
 
 </head>
@@ -57,7 +57,7 @@
           data: {
             username: data.field.username,
             password: data.field.password,
-            '_csrf': $('#_csrf').val()
+            '_csrf': $('#_csrf').val(),
           },
           success: function(result) {
             if (result.result === true) {
@@ -74,7 +74,7 @@
               window.location.reload();
             }
             $($('form>input')[3]).removeAttr('disabled');
-          }
+          },
         });
         return false;
       });

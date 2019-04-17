@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>[[${site.title}]]</title>
@@ -21,23 +20,10 @@
         </li>
     </th:block>
 </th:block>
-<div layout:fragment="content" class="page-content">
-    <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
-        <ul class="layui-tab-title">
-            <li class="home"><i class="layui-icon layui-icon-home"></i>首页</li>
-        </ul>
-        <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
-                <iframe src='/manage/welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
-            </div>
-        </div>
-    </div>
-    <div class="page-content-bg"></div>
-    <div class="footer">
-        <div class="copyright" th:inline="text">[[${site.copyright}]]</div>
-    </div>
+<div layout:fragment="content" class="container">
+    1234234
 </div>
-<div layout:fragment="script">
+<th:block layout:fragment="script">
     <script th:inline="javascript">
       // <![CDATA[
       var menus = /*[[${menus}]]*/;
@@ -45,8 +31,7 @@
       window.onload = function() {
         $('#nav li:eq(0)').click();
       };
-
     </script>
-</div>
+</th:block>
 </body>
 </html>

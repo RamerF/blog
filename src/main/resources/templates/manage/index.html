@@ -9,13 +9,9 @@
 <body>
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
-        <li>
-            <a th:attr="_href=${c.url},href=not ${#lists.isEmpty(c.children)}?'javascript:void(0)':${c.url}">
-                <i class="iconfont">&#xe6a7;</i>
-                <cite th:text="${c.name}"></cite>
-                <i th:if="not ${#lists.isEmpty(c.children)}" class="iconfont nav_right">&#xe697;</i>
-            </a>
-            <ul class="sub-menu" th:if="not ${#lists.isEmpty(c.children)}"
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':'mdc-list-item-fix'}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
+            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
     </th:block>
@@ -23,15 +19,12 @@
 <div layout:fragment="content" class="container">
     1234234
 </div>
+</body>
 <th:block layout:fragment="script">
     <script th:inline="javascript">
       // <![CDATA[
       var menus = /*[[${menus}]]*/;
       // ]]>
-      window.onload = function() {
-        $('#nav li:eq(0)').click();
-      };
     </script>
 </th:block>
-</body>
 </html>

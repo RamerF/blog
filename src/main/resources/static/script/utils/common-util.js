@@ -1,21 +1,15 @@
-//自定义日期格式
-function format(time, format) {
-  var t = new Date(time);
-  var tf = function(i) {return (i < 10 ? '0' : '') + i;};
-  return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a) {
-    switch (a) {
-      case 'yyyy':
-        return tf(t.getFullYear());
-      case 'MM':
-        return tf(t.getMonth() + 1);
-      case 'mm':
-        return tf(t.getMinutes());
-      case 'dd':
-        return tf(t.getDate());
-      case 'HH':
-        return tf(t.getHours());
-      case 'ss':
-        return tf(t.getSeconds());
-    }
-  });
-}
+(function() {
+  $.collapse = function(opts) {
+    // var paras = $.extend({
+    //   tabContainer: 'tab-container',
+    //   tab: 'tab',
+    //   tabTitle: 'tab-title',
+    //   tabContent: 'tab-content',
+    //   activeTab: 'active'
+    // }, opts || {});
+    console.log(opts);
+    $(opts).find('h3.mdc-list-group__subheader').click(function() {
+      $(this).next().slideToggle(150);
+    });
+  };
+})(jQuery);

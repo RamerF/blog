@@ -1,0 +1,17 @@
+.mdc-list-item-fix {
+    position: relative;
+    align-items: center;
+    justify-content: flex-start;
+    line-height: 48px;
+    padding: 0 16px;
+    overflow: hidden;
+}
+
+.mdc-list-group__subheader {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

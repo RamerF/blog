@@ -5,118 +5,44 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{base_layout}" lang="zh">
 <head>
-    <title></title>
-    <th:block layout:fragment="head">
-        <meta name="viewport"
-              content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8"/>
-        <!--    <link rel="shortcut icon" href="https://www.thymeleaf.org/doc/images/favicon.ico" type="image/x-icon"/>-->
-        <script src="/script/utils/common-util.js"></script>
-        <script src="/libs/material-components-web/material-components-web.min.js"></script>
-        <link href="/libs/material-components-web/material-components-web.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/libs/material-components-web/material-icons.css">
-        <!-- DataTables -->
-        <!--<link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.css"/>-->
-        <!--<link rel="stylesheet" href="/lib/style/style.css"/>-->
-        <!--<script type="text/javascript" src="/xadmin/script/xadmin.js"></script>-->
-        <!--<script type="text/javascript" src="/lib/material-design-light/material.min.js"></script>-->
-        <!--<link rel="stylesheet" href="/lib/material-design-light/material.min.css">-->
-    </th:block>
+    <title>layout</title>
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8"/>
+    <link rel="shortcut icon" href="https://www.thymeleaf.org/doc/images/favicon.ico" type="image/x-icon"/>
+    <script src="/script/utils/common-util.js"></script>
+    <script src="/libs/material-components-web/material-components-web.min.js"></script>
+    <link href="/libs/material-components-web/material-components-web.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/libs/material-components-web/material-icons.css">
+    <link rel="stylesheet" href="/style/manage/layout.css">
 </head>
 <body layout:fragment="container">
 <div class="container">
-    <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1">
-  <span class="mdc-tab__content">
-    <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
-    <span class="mdc-tab__text-label">Favorites</span>
-  </span>
-        <span class="mdc-tab-indicator">
-    <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-  </span>
-        <span class="mdc-tab__ripple"></span>
-    </button>
-    <div class="header">
-        <div class="logo"><a href="./index">[[${site.name}]]</a></div>
-        <ul class="layui-nav right" lay-filter="">
-            <li class="layui-nav-item">
-                <a sec:authorize="hasAnyAuthority('global:*','manager:read')" th:text="${session.manager.name}"></a>
-                <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                    <!--<dd><a onclick="x_admin_show('个人信息','http://www.baidu.com')">个人信息</a></dd>-->
-                    <!--<dd><a onclick="x_admin_show('切换帐号','http://www.baidu.com')">切换帐号</a></dd>-->
-                    <dd><a href="/manage/logout">退出</a></dd>
-                </dl>
-            </li>
-            <li class="layui-nav-item to-index"><a href="/">首页</a></li>
-        </ul>
+    <div>
+        导航栏
     </div>
     <div class="left-side mdc-menu">
-        <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" id="nav" th:inline="text">
-            <li class="mdc-list-item" role="menuitem" th:each="m:${menus}">
-                <a th:attr="_href=${m.url},href=not ${#lists.isEmpty(m.children)}?'javascript:void(0)':${m.url}">
-                    <!--                    <i th:class=" ${'layui-icon ' + m.icon}"></i>-->
-                    <span class="mdc-list-item__text" th:text="${m.name}"></span>
-                    <i th:if="not ${#lists.isEmpty(m.children)}" class="iconfont nav_right">&#xe697;</i>
-                </a>
-                <ul class="sub-menu mdc-list" th:if="not ${#lists.isEmpty(m.children)}"
-                    th:include="this::retrieveChild(${m.children})"></ul>
-            </li>
-        </ul>
+        <th:block th:each="m:${menus}" th:inline="text">
+            <h3 class="mdc-list-group__subheader">[[${m.name}]]</h3>
+            <ul class="mdc-list" th:if="not ${#lists.isEmpty(m.children)}"
+                th:include="this::retrieveChild(${m.children})">
+            </ul>
+        </th:block>
     </div>
     <th:block th:fragment="retrieveChild(children)">
         <th:block th:each="c:${children}">
-            <li>
-                <a th:attr="_href=${c.url},href=not ${#lists.isEmpty(c.children)}?'javascript:void(0)':${c.url}">
-                    <i class="iconfont">&#xe6a7;</i>
-                    <cite th:text="${c.name}"></cite>
-                    <i th:if="not ${#lists.isEmpty(c.children)}" class="iconfont nav_right">&#xe697;</i>
-                </a>
-                <ul class="sub-menu" th:if="not ${#lists.isEmpty(c.children)}"
+            <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
+                <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
+                <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                     th:include="this::retrieveChild(${c.children})"></ul>
             </li>
         </th:block>
     </th:block>
-    <button class="foo-button mdc-button">Button</button>
-    <div class="main-content" layout:fragment="content"></div>
 </div>
 </body>
 <th:block layout:fragment="common-script">
     <script type="text/javascript">
       $(function() {
-        const tab = new mdc.tabBar.MDCTab(document.querySelector('.mdc-tab'));
-        mdc.ripple.MDCRipple.attachTo(document.querySelector('.foo-button'));
-        const menu = new mdc.menu.MDCMenu(document.querySelector('.mdc-menu'));
-        menu.open = true;
-        $('.left-side #nav li').click(function(event) {
-          if ($(this).children('.sub-menu').length) {
-            if ($(this).hasClass('open')) {
-              $(this).removeClass('open');
-              $(this).find('.nav_right').html('&#xe697;');
-              $(this).children('.sub-menu').stop().slideUp();
-              $(this).siblings().children('.sub-menu').slideUp();
-            } else {
-              $(this).addClass('open');
-              $(this).children('a').find('.nav_right').html('&#xe6a6;');
-              $(this).children('.sub-menu').stop().slideDown();
-              $(this).siblings().children('.sub-menu').stop().slideUp();
-              $(this).siblings().find('.nav_right').html('&#xe697;');
-              $(this).siblings().removeClass('open');
-            }
-          } else {
-            var url = $(this).children('a').attr('_href');
-            var title = $(this).find('cite').html();
-            var index = $('.left-nav #nav li').index($(this));
-
-            // for (var i = 0; i < $('.x-iframe').length; i++) {
-            //   if ($('.x-iframe').eq(i).attr('tab-id') == index + 1) {
-            //     tab.tabChange(index + 1);
-            //     event.stopPropagation();
-            //     return;
-            //   }
-            // }
-            // tab.tabAdd(title, url, index + 1);
-            // tab.tabChange(index + 1);
-          }
-          event.stopPropagation();
-        });
+        $.collapse('.left-side.mdc-menu');
         // TODO-WARN: 自动选择菜单
         // var url = location.href.substr(location.origin.length);
         // url = url.endsWith('#') ? url.substr(0, url.length - 1) : url;
@@ -125,6 +51,5 @@
         // activeMenu.addClass('active-menu');
       });
     </script>
-    <th:block layout:fragment="script">+++++++++++</th:block>
 </th:block>
 </html>

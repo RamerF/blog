@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @PreAuthorize("hasAnyAuthority('global:read','config:read')")
 @RequestMapping(AccessPath.MANAGE + "/config")
-@Api(description = "管理端系统参数接口")
+@Api(tags = "管理端系统参数接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ConfigController {
   @Resource private ConfigService service;

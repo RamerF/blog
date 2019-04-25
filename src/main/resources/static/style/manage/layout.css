@@ -1,3 +1,49 @@
+body {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+}
+
+.mdc-drawer-fixed {
+    border-color: rgba(0, 0, 0, .12);
+    background-color: #fff;
+    border-radius: 0 0 0 0;
+    z-index: 6;
+    width: 256px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    height: 100%;
+    transition-property: -webkit-transform;
+    transition-property: transform, -webkit-transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    border-right-width: 1px;
+    border-right-style: solid;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.mdc-drawer-app-content {
+    flex: auto;
+    overflow: auto;
+    position: relative;
+}
+
+.main-container {
+    padding: 0 16px;
+}
+
+.app-bar {
+    position: absolute;
+}
+
+.mdc-top-app-bar {
+    z-index: 7;
+}
+
+
 .mdc-list-item-fix {
     position: relative;
     align-items: center;
@@ -14,4 +60,5 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    line-height: 48px;
 }

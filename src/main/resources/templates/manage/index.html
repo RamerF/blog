@@ -10,14 +10,39 @@
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
         <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':'mdc-list-item-fix'}">
-            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
+            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
     </th:block>
 </th:block>
-<div layout:fragment="content" class="container">
-    1234234
+<div layout:fragment="main-container" class="main-container">
+    <div class="mdc-list-group">
+        <h3 class="mdc-list-group__subheader">List 1</h3>
+        <ul class="mdc-list">
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">line item</span>
+            </li>
+            <li class="mdc-list-item">
+                <span class="mdc-list-item__text">line item</span>
+            </li>
+            <li class="mdc-list-item">
+                <span class="mdc-list-item__text">line item</span>
+            </li>
+        </ul>
+        <h3 class="mdc-list-group__subheader">List 2</h3>
+        <ul class="mdc-list">
+            <li class="mdc-list-item">
+                <span class="mdc-list-item__text">line item</span>
+            </li>
+            <li class="mdc-list-item">
+                <span class="mdc-list-item__text">line item</span>
+            </li>
+            <li class="mdc-list-item">
+                <span class="mdc-list-item__text">line item</span>
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 <th:block layout:fragment="script">

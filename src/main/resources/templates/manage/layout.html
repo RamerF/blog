@@ -15,34 +15,51 @@
     <link rel="stylesheet" href="/libs/material-components-web/material-icons.css">
     <link rel="stylesheet" href="/style/manage/layout.css">
 </head>
-<body layout:fragment="container">
-<div class="container">
-    <div>
-        导航栏
+<body class="container" layout:fragment="container">
+<header class="mdc-top-app-bar mdc-top-app-bar--dense header">
+    <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+            <a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
+            <span class="mdc-top-app-bar__title">Title</span>
+        </section>
     </div>
-    <div class="left-side mdc-menu">
-        <th:block th:each="m:${menus}" th:inline="text">
-            <h3 class="mdc-list-group__subheader">[[${m.name}]]</h3>
+</header>
+<aside class="mdc-drawer-fixed mdc-top-app-bar--fixed-adjust">
+    <div class="menu-container mdc-list">
+        <th:block th:each="m,stat:${menus}" th:inline="text">
+            <li th:if="${stat.index ne 0}" class="mdc-list-divider mdc-list-divider--padded"></li>
+            <h3 class="mdc-list-group__subheader" th:attr="data-href=${m.url}">[[${m.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(m.children)}"
                 th:include="this::retrieveChild(${m.children})">
             </ul>
         </th:block>
     </div>
-    <th:block th:fragment="retrieveChild(children)">
-        <th:block th:each="c:${children}">
-            <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
-                <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
-                <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
-                    th:include="this::retrieveChild(${c.children})"></ul>
-            </li>
-        </th:block>
-    </th:block>
+</aside>
+<div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust">
+    <main class="main-content" id="main-content" layout:fragment="main-container"></main>
 </div>
+<th:block th:fragment="retrieveChild(children)">
+    <th:block th:each="c:${children}">
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
+            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
+                th:include="this::retrieveChild(${c.children})"></ul>
+        </li>
+    </th:block>
+</th:block>
 </body>
 <th:block layout:fragment="common-script">
     <script type="text/javascript">
       $(function() {
-        $.collapse('.left-side.mdc-menu');
+        // 菜单折叠
+        $.collapse('aside.mdc-drawer-fixed');
+        // 添加ripple效果
+        new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
+            (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
+        // 链接跳转
+        $('h3[data-href]').click(function() {
+          window.location.href = this.dataset.href;
+        });
         // TODO-WARN: 自动选择菜单
         // var url = location.href.substr(location.origin.length);
         // url = url.endsWith('#') ? url.substr(0, url.length - 1) : url;
@@ -51,5 +68,8 @@
         // activeMenu.addClass('active-menu');
       });
     </script>
+    <th:block layout:fragment="script">
+
+    </th:block>
 </th:block>
 </html>

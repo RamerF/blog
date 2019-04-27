@@ -1,4 +1,4 @@
-package org.ramer.admin.controller.manage;
+package org.ramer.admin.system.controller;
 
 import io.swagger.annotations.*;
 import java.util.Map;
@@ -20,12 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller
 @PreAuthorize("hasAnyAuthority('global:read','config:read')")
-@RequestMapping(AccessPath.MANAGE + "/config")
-@Api(tags = "管理端系统参数接口")
+@RequestMapping(AccessPath.MANAGE + "/system/config")
+@Api(tags = "管理端: 系统参数接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ConfigController {
   @Resource private ConfigService service;
@@ -39,7 +40,7 @@ public class ConfigController {
 
   @GetMapping("/index")
   @ApiOperation("系统参数页面")
-  String index(Map<String, Object> map, HttpSession session) {
+  String index(@ApiIgnore Map<String, Object> map, @ApiIgnore HttpSession session) {
     commonService.writeMenuAndSiteInfo(session, map);
     return "manage/config/index";
   }
@@ -57,7 +58,8 @@ public class ConfigController {
 
   @GetMapping
   @ApiOperation("添加系统参数页面")
-  String create() {
+  String create(@ApiIgnore Map<String, Object> map, @ApiIgnore HttpSession session) {
+    commonService.writeMenuAndSiteInfo(session, map);
     return "manage/config/create";
   }
 

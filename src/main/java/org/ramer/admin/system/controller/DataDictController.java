@@ -1,4 +1,4 @@
-package org.ramer.admin.controller.manage;
+package org.ramer.admin.system.controller;
 
 import io.swagger.annotations.*;
 import java.util.Map;

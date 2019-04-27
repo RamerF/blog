@@ -1,4 +1,4 @@
-package org.ramer.admin.controller.manage;
+package org.ramer.admin.system.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

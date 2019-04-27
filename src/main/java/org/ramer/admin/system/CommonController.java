@@ -1,4 +1,4 @@
-package org.ramer.admin.controller;
+package org.ramer.admin.system;
 
 import org.ramer.admin.entity.domain.manage.ManageLog;
 import org.ramer.admin.entity.response.CommonResponse;

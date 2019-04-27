@@ -4,123 +4,99 @@
       xmlns:layout="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}">
-
 <head>
+    <title>添加系统配置</title>
 </head>
-
 <body>
-<div layout:fragment="content">
-    <div class="x-body layui-anim layui-anim-up">
-        <form class="layui-form">
-            <input th:if="${_csrf!=null}" type="hidden"
-                   th:name="${_csrf.parameterName}"
-                   id="_csrf"
-                   th:value="${_csrf.token}"/>
-            <div class="layui-form-item">
-                <label for="L_code" class="layui-form-label">
-                    <span class="x-red">*</span>Code
-                </label>
-                <div class="layui-input-inline">
-                    <input type="text" id="L_code" name="code" required="true" lay-verify="code"
-                           autocomplete="off" class="layui-input">
+<th:block th:fragment="retrieveChild(children)">
+    <th:block th:each="c:${children}">
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
+            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
+                th:include="this::retrieveChild(${c.children})"></ul>
+        </li>
+    </th:block>
+</th:block>
+<div layout:fragment="main-container" class="main-container">
+    <form class="">
+        <input th:if="${_csrf!=null}" type="hidden"
+               th:name="${_csrf.parameterName}"
+               id="_csrf"
+               th:value="${_csrf.token}"/>
+        <div class="text-field-container">
+            <div class="mdc-text-field mdc-text-field--outlined"
+                 data-mdc-auto-init="MDCTextField">
+                <input type="text" id="my-input" class="mdc-text-field__input" maxlength="20">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label for="my-input" class="mdc-floating-label">请输入CODE</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label for="L_name" class="layui-form-label">
-                    <span class="x-red">*</span>名称
-                </label>
-                <div class="layui-input-inline">
-                    <input type="text" id="L_name" name="name" required="true" lay-verify="name"
-                           autocomplete="off" class="layui-input">
-                </div>
+            <div class="mdc-text-field-helper-line">
+                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+                    *必填</p>
+                <div class="mdc-text-field-character-counter">0 / 20</div>
             </div>
-            <div class="layui-form-item">
-                <label for="L_value" class="layui-form-label">
-                    <span class="x-red">*</span>值
-                </label>
-                <div class="layui-input-inline">
-                    <input type="text" id="L_value" name="value" required="true" lay-verify="value"
-                           autocomplete="off" class="layui-input">
-                </div>
+        </div>
+
+        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+            <input type="text" id="my-text-field" class="mdc-text-field__input">
+            <label class="mdc-floating-label" for="my-text-field">My Label</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
+
+        <div class="">
+            <label for="L_code" class="-label">
+                <span class="x-red">*</span>Code
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_code" name="code" required="true" lay-verify="code"
+                       autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-form-item">
-                <label for="L_remark" class="layui-form-label">
-                    备注
-                </label>
-                <div class="layui-input-inline">
-                    <input type="text" id="L_remark" name="remark" required="false" lay-verify="remark"
-                           autocomplete="off" class="layui-input">
-                </div>
+        </div>
+        <div class="">
+            <label for="L_name" class="-label">
+                <span class="x-red">*</span>名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_name" name="name" required="true" lay-verify="name"
+                       autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">
-                </label>
-                <button class="layui-btn" lay-filter="add" lay-submit="">
-                    增加
-                </button>
+        </div>
+        <div class="">
+            <label for="L_value" class="-label">
+                <span class="x-red">*</span>值
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_value" name="value" required="true" lay-verify="value"
+                       autocomplete="off" class="layui-input">
             </div>
-        </form>
-    </div>
+        </div>
+        <div class="">
+            <label for="L_remark" class="-label">
+                备注
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_remark" name="remark" required="false" lay-verify="remark"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="">
+            <label class="-label">
+            </label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">
+                增加
+            </button>
+        </div>
+    </form>
 </div>
 <div layout:fragment="script">
-    <script>
-
-      layui.use(['form', 'layer'], function() {
-        $ = layui.jquery;
-        var form = layui.form
-            , layer = layui.layer;
-
-        //自定义验证规则
-        form.verify({
-          code: function(value) {
-            if (value.length < 1) {
-              return '请输入Code';
-            }
-          },
-          name: function(value) {
-            if (value.length < 1) {
-              return '请输入名称';
-            }
-          },
-          value: function(value) {
-            if (value.length < 1) {
-              return '请输入值';
-            }
-          },
-          //, name: [/(.+){6,12}$/, '密码必须6到12位']
-        });
-
-        //监听提交
-        form.on('submit(add)', function(data) {
-          $('.layui-btn').attr('disabled','disabled');
-          $('.layui-btn').css('background','#ccc');
-          data.field['_method'] = 'post';
-          $.ajax({
-            url: '/manage/config',
-            type: 'post',
-            data: data.field,
-            success: function(data) {
-              $('.layui-btn').removeAttr('disabled');
-              $('.layui-btn').css('background','#009688');
-              if (data.result == true) {
-                //刷新表
-                window.parent.refresh();
-                layer.alert(data.msg, {icon: 1}, function() {
-
-                  $(this).blur();
-                  // 获得frame索引
-                  var index = parent.layer.getFrameIndex(window.name);
-                  //关闭当前frame
-                  parent.layer.close(index);
-                });
-              } else {
-                layer.alert(data.msg, {icon: 2});
-              }
-            },
-          });
-          return false;
-        });
-
+    <script type="text/javascript">
+      $(function() {
+        new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
       });
     </script>
 </div>

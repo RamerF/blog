@@ -1,8 +1,9 @@
 package ${basePath}.entity.response${subDir};
 
-import ${basePath}.entity.domain.AbstractEntity;
+import ${basePath}.system.entity.domain.AbstractEntity;
 import ${basePath}.entity.domain${subDir}.${name};
 import ${basePath}.entity.pojo${subDir}.${name}PoJo;
+import java.math.BigDecimal;
 import java.util.Optional;
 import lombok.*;
 import org.springframework.beans.BeanUtils;

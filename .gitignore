@@ -15,6 +15,7 @@ logs
 src/main/java/org/ramer/admin/controller/TestController.java
 src/main/resources/config
 admin-springdata.iml
+admin-generator.iml
 target
 .idea
 node_modules

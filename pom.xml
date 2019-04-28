@@ -2,10 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.ramer</groupId>
+    <groupId>org.ramer.admin</groupId>
     <artifactId>admin-springdata</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>admin-generator</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>admin-springdata</name>
     <url>http://maven.apache.org</url>

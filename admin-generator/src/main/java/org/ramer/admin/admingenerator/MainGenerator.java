@@ -1,4 +1,4 @@
-package org.ramer.admin.adminspringdata;
+package org.ramer.admin.admingenerator;
 
 import java.io.*;
 import java.lang.reflect.Field;

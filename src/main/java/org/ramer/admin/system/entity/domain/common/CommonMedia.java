@@ -1,0 +1,38 @@
+package org.ramer.admin.system.entity.domain.common;
+
+import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import javax.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.Table;
+
+@Entity(name = CommonMedia.TABLE_NAME)
+@Table(appliesTo = CommonMedia.TABLE_NAME, comment = "通用多媒体文件存储")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class CommonMedia extends AbstractEntity {
+  public static final String TABLE_NAME = "common_media";
+
+  /** {@link Constant.CommonMediaCode} */
+  @Column(columnDefinition = "varchar(255) not null comment '该字段确定来源'")
+  private String code;
+
+  @Column(columnDefinition = "varchar(255) not null comment '地址'")
+  private String url;
+
+  @Column(columnDefinition = "varchar(255) comment '备注'")
+  private String remark;
+
+  @Column(name = "category_id", insertable = false, updatable = false)
+  private Long categoryId;
+
+  @ManyToOne private CommonMediaCategory category;
+
+  public static CommonMedia of(long id) {
+    final CommonMedia media = new CommonMedia();
+    media.setId(id);
+    return media;
+  }
+}

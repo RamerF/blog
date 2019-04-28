@@ -1,7 +1,7 @@
-package ${basePath}.service${subDir};
+package ${basePath}${moduleName}.service${subDir};
 
-import ${basePath}.entity.domain${subDir}.${name};
-import ${basePath}.entity.pojo${subDir}.${name}PoJo;
+import ${basePath}${moduleName}.entity.domain${subDir}.${name};
+import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
 import ${basePath}.system.service.BaseService;
 
 /** @author ramer */

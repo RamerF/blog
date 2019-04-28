@@ -1,8 +1,8 @@
-package ${basePath}.validator${subDir};
+package ${basePath}${moduleName}.validator${subDir};
 
-import ${basePath}.entity.domain${subDir}.${name};
-import ${basePath}.entity.pojo${subDir}.${name}PoJo;
-import ${basePath}.entity.request${subDir}.${name}Request;
+import ${basePath}${moduleName}.entity.domain${subDir}.${name};
+import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
+import ${basePath}${moduleName}.entity.request${subDir}.${name}Request;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;

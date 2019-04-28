@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.ramer.admin.system.entity.Constant;
 
 /** 持久类的公有父类，定义了公有的属性，简化了持久类的书写 */
 @Data

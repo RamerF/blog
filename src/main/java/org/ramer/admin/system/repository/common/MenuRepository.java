@@ -1,0 +1,21 @@
+package org.ramer.admin.system.repository.common;
+
+import org.ramer.admin.system.entity.domain.common.Menu;
+import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
+import org.ramer.admin.system.repository.BaseRepository;
+import java.util.List;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface MenuRepository extends BaseRepository<Menu, Long> {
+
+  @Query(
+      "select menu from org.ramer.admin.system.entity.domain.common.Manager m inner join m.roleses r inner join r.menus menu where m.id= :managerId and menu.state= :state order by menu.sort asc")
+  List<Menu> findByManager(@Param("managerId") long managerId, @Param("state") int state);
+
+  @Query(
+      "select new org.ramer.admin.system.entity.pojo.common.MenuPoJo(menu.id,menu.state,menu.name,menu.url,menu.leaf,menu.icon,menu.parent.id,menu.sort,menu.createTime,menu.updateTime) from org.ramer.admin.system.entity.domain.common.Manager m inner join m.roleses r inner join r.menus menu where m.id= :managerId and menu.state= :state order by menu.sort asc")
+  List<MenuPoJo> findNameByManager(@Param("managerId") Long managerId, @Param("state") int state);
+}

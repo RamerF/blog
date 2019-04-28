@@ -1,10 +1,11 @@
-package org.ramer.admin.system.controller;
+package org.ramer.admin.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.entity.Constant;
 import org.ramer.admin.entity.Constant.AccessPath;

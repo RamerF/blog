@@ -1,5 +1,12 @@
-package org.ramer.admin.system.controller;
+package org.ramer.admin.system.controller.common.manage;
 
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.domain.common.Roles;
+import org.ramer.admin.system.entity.pojo.common.RolesPoJo;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.service.common.*;
+import org.ramer.admin.system.validator.common.RolesValidator;
+import org.ramer.admin.util.TextUtil;
 import io.swagger.annotations.*;
 import java.util.List;
 import java.util.Map;
@@ -7,27 +14,19 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.entity.AbstractEntity;
-import org.ramer.admin.entity.Constant.AccessPath;
-import org.ramer.admin.entity.domain.manage.Roles;
-import org.ramer.admin.entity.pojo.manage.RolesPoJo;
-import org.ramer.admin.entity.response.CommonResponse;
-import org.ramer.admin.service.common.CommonService;
-import org.ramer.admin.service.manage.system.*;
-import org.ramer.admin.util.TextUtil;
-import org.ramer.admin.validator.RolesValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller
 @PreAuthorize("hasAnyAuthority('global:read','roles:read')")
-@RequestMapping(AccessPath.MANAGE + "/roles")
-@Api(description = "管理端系统角色接口")
+@RequestMapping("/manage/roles")
+@Api(tags = "管理端: 系统角色接口")
 @SuppressWarnings("UnusedDeclaration")
 public class RolesController {
   @Resource private RolesService service;
@@ -44,7 +43,7 @@ public class RolesController {
 
   @GetMapping("/index")
   @ApiOperation("系统角色管理页面")
-  public String index(Map<String, Object> map) {
+  public String index(@ApiIgnore Map<String, Object> map) {
     return "manage/roles/index";
   }
 
@@ -61,7 +60,7 @@ public class RolesController {
 
   @GetMapping
   @ApiOperation("添加系统角色页面")
-  String create(Map<String, Object> map) {
+  String create(@ApiIgnore Map<String, Object> map) {
     map.put("menus", menuService.list(null));
     map.put("privileges", privilegeService.list(null));
     return "manage/roles/create";
@@ -101,7 +100,8 @@ public class RolesController {
 
   @GetMapping("/{id}")
   @ApiOperation("更新系统角色页面")
-  String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
+  String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map)
+      throws Exception {
     final long id = TextUtil.validLong(idStr, 0);
     if (id <= 0) {
       throw new NumberFormatException("id 格式不正确");
@@ -130,7 +130,9 @@ public class RolesController {
       @Valid Roles roles,
       BindingResult bindingResult) {
     final long id = TextUtil.validLong(idStr, 0);
-    if (id <= 0) return CommonResponse.wrongFormat("id");
+    if (id <= 0) {
+      return CommonResponse.wrongFormat("id");
+    }
     if (menuIdsStr == null) {
       return CommonResponse.canNotBlank("菜单");
     }

@@ -45,11 +45,14 @@ public class MainGenerator {
     Properties properties = new Properties();
     final File configFile =
         new File(path.substring(0, path.lastIndexOf("/")).concat("/config.ini"));
+    // 基础包路径
+    String basePath = null;
     if (configFile.exists()) {
       properties.load(
           new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));
-      classPath = properties.getProperty("classPath");
+      basePath = properties.getProperty("basePath");
       domainPath = properties.getProperty("domainPath");
+      classPath = properties.getProperty("classPath");
       aliaName = properties.getProperty("aliaName");
       description = properties.getProperty("description");
       isCopy = properties.getProperty("isCopy");
@@ -65,9 +68,11 @@ public class MainGenerator {
         savingPathResponse = properties.getProperty("savingPathResponse");
       }
     } else {
+      System.out.println(" 请输入项目包路径: 例如: org.ramer.demo");
+      Scanner scanner = new Scanner(System.in);
+      basePath = scanner.next();
       System.out.println(
           " 请输入domain对象的包路径: 例如: org.ramer.demo.entity.domain.manage.system.Manager");
-      Scanner scanner = new Scanner(System.in);
       domainPath = scanner.next();
       System.out.println(" 请输入domain对象的class目录: 例如: D:/workspace/admin-springdata/target/classes");
       classPath = scanner.next();
@@ -110,22 +115,28 @@ public class MainGenerator {
 
     // domain类名
     final String domainName = domainPath.substring(domainPath.lastIndexOf(".") + 1);
-    // 基础包路径
-    final String packagePath = domainPath.substring(0, domainPath.indexOf(".entity"));
+    String moduleName = domainPath.substring(0, domainPath.indexOf(".entity"));
+    // 长度相同说明没有子模块
+    moduleName =
+        moduleName.length() == basePath.length() ? "" : moduleName.substring(basePath.length());
+
     final int subDirFrom = domainPath.indexOf("domain.") + 6;
     final int subDirTo = domainPath.indexOf(domainName) - 1;
     final String subDir = subDirFrom == subDirTo ? "" : domainPath.substring(subDirFrom, subDirTo);
 
     generateRepository(
-        packagePath, domainName, subDir, aliaName, description, savingPathRepository);
-    generateService(packagePath, domainName, subDir, aliaName, description, savingPathService);
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPathRepository);
+    generateService(
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPathService);
     generateServiceImpl(
-        packagePath, domainName, subDir, aliaName, description, savingPathServiceImpl);
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPathServiceImpl);
     generateController(
-        packagePath, domainName, subDir, aliaName, description, savingPathController);
-    generateValidator(packagePath, domainName, subDir, aliaName, description, savingPathValidator);
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPathController);
+    generateValidator(
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPathValidator);
     generatePoJo(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -134,7 +145,8 @@ public class MainGenerator {
         classPath,
         savingPathPoJo);
     generateRequest(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -143,7 +155,8 @@ public class MainGenerator {
         classPath,
         savingPathRequest);
     generateResponse(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -156,7 +169,8 @@ public class MainGenerator {
   }
 
   private static void generateResponse(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -166,7 +180,8 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithField(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -178,7 +193,8 @@ public class MainGenerator {
   }
 
   private static void generateRequest(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -188,7 +204,8 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithField(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -200,7 +217,8 @@ public class MainGenerator {
   }
 
   private static void generatePoJo(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -210,7 +228,8 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithField(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -222,7 +241,8 @@ public class MainGenerator {
   }
 
   private static void generateValidator(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -230,11 +250,12 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithNoField(
-        packagePath, domainName, subDir, aliaName, description, savingPath, "Validator");
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPath, "Validator");
   }
 
   private static void generateController(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -242,11 +263,12 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithNoField(
-        packagePath, domainName, subDir, aliaName, description, savingPath, "Controller");
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPath, "Controller");
   }
 
   private static void generateServiceImpl(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -254,11 +276,12 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithNoField(
-        packagePath, domainName, subDir, aliaName, description, savingPath, "ServiceImpl");
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPath, "ServiceImpl");
   }
 
   private static void generateService(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -266,11 +289,12 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithNoField(
-        packagePath, domainName, subDir, aliaName, description, savingPath, "Service");
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPath, "Service");
   }
 
   private static void generateRepository(
-      String packagePath,
+      String basePath,
+      String moduleName,
       String domainName,
       String subDir,
       String aliaName,
@@ -278,7 +302,7 @@ public class MainGenerator {
       String savingPath)
       throws Exception {
     generateWithNoField(
-        packagePath, domainName, subDir, aliaName, description, savingPath, "Repository");
+        basePath, moduleName, domainName, subDir, aliaName, description, savingPath, "Repository");
   }
 
   private static File copyTemplateFile(final String domainName, final String suffix)
@@ -314,7 +338,8 @@ public class MainGenerator {
   }
 
   private static void generateWithNoField(
-      final String packagePath,
+      final String basePath,
+      final String moduleName,
       final String domainName,
       final String subDir,
       final String aliaName,
@@ -326,7 +351,8 @@ public class MainGenerator {
     if (file == null) return;
     StringBuilder stringBuilder = loadFile(file);
     writeFile(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -339,7 +365,8 @@ public class MainGenerator {
   }
 
   private static void generateWithField(
-      final String packagePath,
+      final String basePath,
+      final String moduleName,
       final String domainName,
       final String subDir,
       final String aliaName,
@@ -355,7 +382,8 @@ public class MainGenerator {
     final StringBuilder fieldBuilder = new StringBuilder();
     buildField(domainPath, classPath, fieldBuilder);
     writeFile(
-        packagePath,
+        basePath,
+        moduleName,
         domainName,
         subDir,
         aliaName,
@@ -423,7 +451,8 @@ public class MainGenerator {
   }
 
   private static void writeFile(
-      final String packagePath,
+      final String basePath,
+      final String moduleName,
       final String domainName,
       final String subDir,
       final String aliaName,
@@ -437,7 +466,8 @@ public class MainGenerator {
     final String content =
         stringBuilder
             .toString()
-            .replace("${basePath}", packagePath)
+            .replace("${basePath}", basePath)
+            .replace("${moduleName}", moduleName)
             .replace("${name}", domainName)
             .replace("${alia}", aliaName)
             .replace("${description}", description)

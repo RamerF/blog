@@ -1,6 +1,6 @@
-package ${basePath}.entity.request${subDir};
+package ${basePath}${moduleName}.entity.request${subDir};
 
-import ${basePath}.entity.domain${subDir}.${name};
+import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}.system.entity.request.AbstractEntityRequest;
 import ${basePath}.system.entity.domain.AbstractEntity;
 import java.math.BigDecimal;

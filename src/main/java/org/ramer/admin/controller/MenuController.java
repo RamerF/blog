@@ -1,4 +1,4 @@
-package org.ramer.admin.system.controller;
+package org.ramer.admin.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.*;

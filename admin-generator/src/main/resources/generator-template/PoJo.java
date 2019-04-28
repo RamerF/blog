@@ -1,9 +1,10 @@
-package ${basePath}.entity.pojo${subDir};
+package ${basePath}${moduleName}.entity.pojo${subDir};
 
 import ${basePath}.system.entity.domain.AbstractEntity;
-import ${basePath}.entity.domain${subDir}.${name};
+import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}.system.entity.pojo.AbstractEntityPoJo;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.*;

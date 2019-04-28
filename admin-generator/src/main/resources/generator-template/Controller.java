@@ -1,15 +1,15 @@
- package ${basePath}.controller${subDir};
+ package ${basePath}${moduleName}.controller${subDir};
 
 import ${basePath}.system.entity.Constant.AccessPath;
-import ${basePath}.entity.domain${subDir}.${name};
-import ${basePath}.entity.pojo${subDir}.${name}PoJo;
-import ${basePath}.entity.request${subDir}.${name}Request;
-import ${basePath}.entity.response${subDir}.${name}Response;
+import ${basePath}${moduleName}.entity.domain${subDir}.${name};
+import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
+import ${basePath}${moduleName}.entity.request${subDir}.${name}Request;
+import ${basePath}${moduleName}.entity.response${subDir}.${name}Response;
 import ${basePath}.system.entity.response.CommonResponse;
 import ${basePath}.system.service.common.CommonService;
-import ${basePath}.service${subDir}.${name}Service;
+import ${basePath}${moduleName}.service${subDir}.${name}Service;
 import ${basePath}.util.TextUtil;
-import ${basePath}.validator${subDir}.${name}Validator;
+import ${basePath}${moduleName}.validator${subDir}.${name}Validator;
 import io.swagger.annotations.*;
 import java.util.Map;
 import javax.annotation.Resource;

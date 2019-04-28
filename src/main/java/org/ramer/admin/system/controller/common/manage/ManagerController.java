@@ -1,7 +1,16 @@
-package org.ramer.admin.system.controller;
+package org.ramer.admin.system.controller.common.manage;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.domain.common.Manager;
+import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.service.common.*;
+import org.ramer.admin.system.validator.common.ManagerValidator;
+import org.ramer.admin.util.*;
+import org.ramer.admin.util.PathUtil.SavingFolder;
 import io.swagger.annotations.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,17 +19,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.entity.AbstractEntity;
-import org.ramer.admin.entity.Constant.AccessPath;
-import org.ramer.admin.entity.domain.manage.Manager;
-import org.ramer.admin.entity.pojo.manage.ManagerPoJo;
-import org.ramer.admin.entity.response.CommonResponse;
-import org.ramer.admin.exception.CommonException;
-import org.ramer.admin.service.common.CommonService;
-import org.ramer.admin.service.manage.system.*;
-import org.ramer.admin.util.*;
-import org.ramer.admin.util.PathUtil.SavingFolder;
-import org.ramer.admin.validator.ManagerValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,12 +29,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller
-@RequestMapping(AccessPath.MANAGE + "/manager")
+@RequestMapping("/manage/manager")
 @PreAuthorize("hasAnyAuthority('global:read','manager:read')")
-@Api(description = "管理端系统操作员接口")
+@Api(tags = "管理端: 系统操作员接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ManagerController {
   @Resource private ManagerService service;
@@ -52,7 +51,7 @@ public class ManagerController {
 
   @GetMapping("/index")
   @ApiOperation("管理员管理页面")
-  String index(Map<String, Object> map) {
+  String index(@ApiIgnore Map<String, Object> map) {
     return "manage/manager/index";
   }
 
@@ -68,7 +67,7 @@ public class ManagerController {
 
   @GetMapping
   @ApiOperation("添加管理员管理页面")
-  String create(Map<String, Object> map) {
+  String create(@ApiIgnore Map<String, Object> map) {
     map.put("roleses", rolesService.list(null));
     return "manage/manager/create";
   }
@@ -81,7 +80,8 @@ public class ManagerController {
       @RequestParam(value = "validDate", required = false) String validDateStr,
       @RequestParam(value = "roleIds[]", required = false) String[] roleIdsStr,
       @Valid Manager manager,
-      BindingResult bindingResult) {
+      BindingResult bindingResult)
+      throws Exception {
     log.info(
         " ManagerController.create : [{},{},{}]",
         JSON.toJSONString(manager),
@@ -91,14 +91,11 @@ public class ManagerController {
         || !manager.getPassword().matches("^[a-zA-Z]\\w{5,17}$")) {
       return CommonResponse.fail("密码 必须以字母开头,长度在6~18之间,只能包含字符,数字和下划线");
     }
+    Date validDate = TextUtil.validDate(validDateStr, "yyyy-MM-dd HH:mm:ss", null);
+    manager.setValidDate(validDate);
     if (bindingResult.hasErrors()) {
       return CommonResponse.fail(commonService.collectBindingResult(bindingResult));
     }
-    Date validDate = TextUtil.validDate(validDateStr, "yyyy-MM-dd HH:mm:ss", null);
-    if (validDate == null || validDate.before(new Date())) {
-      return CommonResponse.fail("有效日期必须大于当前时间");
-    }
-    manager.setValidDate(validDate);
     try {
       manager =
           service.save(
@@ -118,7 +115,8 @@ public class ManagerController {
 
   @GetMapping("/{id}")
   @ApiOperation("更新管理员页面")
-  String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
+  String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map)
+      throws Exception {
     final long id = TextUtil.validLong(idStr, 0);
     if (id <= 0) {
       throw new CommonException("id 格式不正确");
@@ -146,7 +144,9 @@ public class ManagerController {
       throws Exception {
     log.info(" ManagerController.update : [{},{}]", JSON.toJSONString(manager), validDateStr);
     final long id = TextUtil.validLong(idStr, 0);
-    if (id <= 0) return CommonResponse.wrongFormat("id");
+    if (id <= 0) {
+      return CommonResponse.wrongFormat("id");
+    }
     Date validDate = TextUtil.validDate(validDateStr, "yyyy-MM-dd HH:mm:ss", null);
     manager.setValidDate(validDate);
     manager.setId(id);
@@ -180,7 +180,9 @@ public class ManagerController {
   ResponseEntity create(
       @PathVariable("id") String idStr, @RequestParam("roleIds[]") String[] roleIdsStr) {
     final long id = TextUtil.validLong(idStr, 0);
-    if (id <= 0) return CommonResponse.wrongFormat("id");
+    if (id <= 0) {
+      return CommonResponse.wrongFormat("id");
+    }
     Manager manager = service.getById(id);
     manager =
         service.update(
@@ -200,7 +202,9 @@ public class ManagerController {
   ResponseEntity setImg(@PathVariable("id") String idStr, @RequestParam("file") MultipartFile file)
       throws Exception {
     final long id = TextUtil.validLong(idStr, 0);
-    if (id <= 0) return CommonResponse.wrongFormat("id");
+    if (id <= 0) {
+      return CommonResponse.wrongFormat("id");
+    }
     Manager manager = service.getById(id);
     // 获取shop图片目录的相对值路径
     String imageUrl;
@@ -236,7 +240,7 @@ public class ManagerController {
 
   @GetMapping("/getRolesAndMenus")
   @ResponseBody
-  ResponseEntity initUserInfoById(HttpSession session) {
+  ResponseEntity initUserInfoById(@ApiIgnore HttpSession session) {
     final Manager person = (Manager) session.getAttribute("manager");
     return Optional.ofNullable(service.getById(person.getId()))
         .map(
@@ -262,7 +266,7 @@ public class ManagerController {
       @PathVariable("id") @P("idStr") String idStr,
       @RequestParam(value = "oldPass") String oldPass,
       @RequestParam(value = "newPass") String newPass,
-      @P("manager") HttpSession session) {
+      @P("manager") @ApiIgnore HttpSession session) {
     Manager manager = (Manager) session.getAttribute("manager");
     int result = service.updatePassword(manager.getId(), oldPass, newPass);
     ResponseEntity commonResponse;
@@ -290,7 +294,9 @@ public class ManagerController {
   @ResponseBody
   ResponseEntity delete(@PathVariable("id") String idStr) throws Exception {
     long id = TextUtil.validLong(idStr, 0);
-    if (id <= 0) return CommonResponse.wrongFormat("id");
+    if (id <= 0) {
+      return CommonResponse.wrongFormat("id");
+    }
     return commonService.delete(service, idStr);
   }
 }

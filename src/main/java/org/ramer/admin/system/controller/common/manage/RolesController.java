@@ -9,11 +9,11 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Role;
-import org.ramer.admin.system.entity.pojo.common.RolesPoJo;
+import org.ramer.admin.system.entity.pojo.common.RolePoJo;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.TextUtil;
-import org.ramer.admin.system.validator.common.RolesValidator;
+import org.ramer.admin.system.validator.common.RoleValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,11 +30,10 @@ import springfox.documentation.annotations.ApiIgnore;
 @SuppressWarnings("UnusedDeclaration")
 public class RolesController {
   @Resource private RoleService service;
-  @Resource private ConfigService configService;
   @Resource private MenuService menuService;
   @Resource private PrivilegeService privilegeService;
   @Resource private CommonService commonService;
-  @Resource private RolesValidator validator;
+  @Resource private RoleValidator validator;
 
   @InitBinder
   void initBinder(WebDataBinder binder) {
@@ -116,7 +115,7 @@ public class RolesController {
     map.put("menus", menuService.list(null));
     map.put("privileges", privilegeService.list(null));
     return commonService.update(
-        service, RolesPoJo.class, idStr, "manage/roles/update", map, "roles");
+        service, RolePoJo.class, idStr, "manage/roles/update", map, "roles");
   }
 
   @PutMapping("/{id}")

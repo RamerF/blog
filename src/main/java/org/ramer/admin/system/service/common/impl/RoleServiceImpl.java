@@ -1,6 +1,7 @@
 package org.ramer.admin.system.service.common.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -8,14 +9,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.*;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.RoleRepository;
 import org.ramer.admin.system.service.common.RoleService;
 import org.ramer.admin.system.util.TextUtil;
-import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/** @author ramer */
 @Slf4j
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -39,15 +42,6 @@ public class RoleServiceImpl implements RoleService {
     return repository.saveAndFlush(roles);
   }
 
-  @Transactional
-  @Override
-  public synchronized Role update(Role roles, List<Long> menuIds, List<Long> privilegeIds) {
-    return repository
-        .findById(roles.getId())
-        .map(r -> create(roles, menuIds, privilegeIds))
-        .orElse(null);
-  }
-
   @Override
   public List<Role> listByManager(long managerId) {
     return repository.findByManager(managerId, Constant.STATE_ON);
@@ -60,58 +54,16 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public List<Long> listMenuIds(Role roles) {
-    return roles.getMenus().stream()
-        .mapToLong(AbstractEntity::getId)
-        .boxed()
-        .collect(Collectors.toList());
+    return roles.getMenus().stream().map(AbstractEntity::getId).collect(Collectors.toList());
   }
 
   @Transactional
   @Override
-  public Role create(Role roles) {
-    textFilter(roles, roles);
-    return repository.saveAndFlush(roles);
-  }
-
-  @Override
-  public long count() {
-    return repository.count();
-  }
-
-  @Override
-  public Role getById(long id) {
-    return repository.findById(id).orElse(null);
-  }
-
-  @Override
-  public List<Role> list(final String criteria) {
-    return page(criteria, -1, -1).getContent();
-  }
-
-  @Override
-  public Page<Role> page(final String criteria, final int page, final int size) {
-    final PageRequest pageable = pageRequest(page, size);
-    return pageable == null
-        ? new PageImpl<>(Collections.emptyList())
-        : repository.findAll(getSpec(criteria), pageable);
-  }
-
-  @Transactional
-  @Override
-  public synchronized Role update(Role r) {
-    return Optional.ofNullable(getById(r.getId()))
-        .map(
-            roles -> {
-              textFilter(r, roles);
-              return repository.saveAndFlush(roles);
-            })
+  public synchronized Role update(Role roles, List<Long> menuIds, List<Long> privilegeIds) {
+    return repository
+        .findById(roles.getId())
+        .map(r -> create(roles, menuIds, privilegeIds))
         .orElse(null);
-  }
-
-  @Transactional
-  @Override
-  public synchronized void delete(long id) {
-    repository.deleteById(id);
   }
 
   @Override
@@ -128,5 +80,11 @@ public class RoleServiceImpl implements RoleService {
             builder.and(
                 builder.equal(root.get("state"), Constant.STATE_ON),
                 builder.or(builder.like(root.get("name"), "%" + criteria + "%")));
+  }
+
+  @SuppressWarnings({"unchecked"})
+  @Override
+  public <U extends BaseRepository<Role, Long>> U getRepository() throws CommonException {
+    return (U) repository;
   }
 }

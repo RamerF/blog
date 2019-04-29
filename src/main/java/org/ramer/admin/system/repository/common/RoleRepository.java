@@ -1,8 +1,8 @@
 package org.ramer.admin.system.repository.common;
 
+import java.util.List;
 import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.repository.BaseRepository;
-import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

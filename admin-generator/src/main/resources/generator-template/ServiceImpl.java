@@ -7,7 +7,7 @@ import ${basePath}.system.repository.BaseRepository;
 import ${basePath}${moduleName}.repository${subDir}.${name}Repository;
 import ${basePath}.system.service.BaseService;
 import ${basePath}${moduleName}.service${subDir}.${name}Service;
-import ${basePath}.util.TextUtil;
+import ${basePath}.system.util.TextUtil;
 import java.util.*;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;

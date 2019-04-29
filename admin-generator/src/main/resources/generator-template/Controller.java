@@ -8,7 +8,7 @@ import ${basePath}${moduleName}.entity.response${subDir}.${name}Response;
 import ${basePath}.system.entity.response.CommonResponse;
 import ${basePath}.system.service.common.CommonService;
 import ${basePath}${moduleName}.service${subDir}.${name}Service;
-import ${basePath}.util.TextUtil;
+import ${basePath}.system.util.TextUtil;
 import ${basePath}${moduleName}.validator${subDir}.${name}Validator;
 import io.swagger.annotations.*;
 import java.util.Map;

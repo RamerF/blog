@@ -23,7 +23,8 @@ public class ${name}PoJo extends AbstractEntityPoJo {
 ${fieldList}
   @Override
   @SuppressWarnings({"unchecked"})
-  public <E extends AbstractEntity, T extends AbstractEntityPoJo> T of(E entity, Class<T> clazz) {
+  public <E extends AbstractEntity, T extends AbstractEntityPoJo> T of(
+      final E entity, final Class<T> clazz) {
     if (Objects.isNull(entity)) {
       return null;
     }
@@ -34,7 +35,7 @@ ${fieldList}
     return (T) poJo;
   }
 
-  public static ${name}PoJo of(${name} entity) {
+  public static ${name}PoJo of(final ${name} entity) {
     return new ${name}PoJo().of(entity, ${name}PoJo.class);
   }
 }

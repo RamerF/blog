@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationInit implements ApplicationRunner {
   @Resource private MenuService menuService;
-  @Resource private RolesService rolesService;
+  @Resource private RoleService rolesService;
   @Resource private ConfigService configService;
   @Resource private ManagerService managerService;
   @Resource private DataDictService dataDictService;

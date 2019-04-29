@@ -39,7 +39,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class ManagerController {
   @Resource private ManagerService service;
   @Resource private MenuService menuService;
-  @Resource private RolesService rolesService;
+  @Resource private RoleService rolesService;
   @Resource private CommonService commonService;
   @Resource private ManagerValidator validator;
 

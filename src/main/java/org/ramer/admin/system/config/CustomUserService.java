@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CustomUserService implements UserDetailsService {
   @Resource private ManagerService managerService;
-  @Resource private RolesService rolesService;
+  @Resource private RoleService rolesService;
   @Resource private PrivilegeService privilegeService;
 
   @Override

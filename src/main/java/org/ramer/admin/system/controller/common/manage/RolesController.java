@@ -29,7 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "管理端: 系统角色接口")
 @SuppressWarnings("UnusedDeclaration")
 public class RolesController {
-  @Resource private RolesService service;
+  @Resource private RoleService service;
   @Resource private ConfigService configService;
   @Resource private MenuService menuService;
   @Resource private PrivilegeService privilegeService;

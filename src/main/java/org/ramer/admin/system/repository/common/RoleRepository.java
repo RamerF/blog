@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RolesRepository extends BaseRepository<Role, Long> {
+public interface RoleRepository extends BaseRepository<Role, Long> {
   @Query(
       "select r from org.ramer.admin.system.entity.domain.common.Manager m inner join m.roleses r where m.id= :managerId and r.state= :state")
   List<Role> findByManager(@Param("managerId") long managerId, @Param("state") int state);

@@ -5,7 +5,7 @@ import org.ramer.admin.system.entity.pojo.common.RolesPoJo;
 import org.ramer.admin.system.service.BaseService;
 import java.util.List;
 
-public interface RolesService extends BaseService<Role, RolesPoJo> {
+public interface RoleService extends BaseService<Role, RolesPoJo> {
 
   Role create(Role role, List<Long> menuIds, List<Long> privilegeIds);
 

@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.*;
-import org.ramer.admin.system.repository.common.RolesRepository;
-import org.ramer.admin.system.service.common.RolesService;
+import org.ramer.admin.system.repository.common.RoleRepository;
+import org.ramer.admin.system.service.common.RoleService;
 import org.ramer.admin.system.util.TextUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,8 +18,8 @@ import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
-public class RolesServiceImpl implements RolesService {
-  @Resource private RolesRepository repository;
+public class RoleServiceImpl implements RoleService {
+  @Resource private RoleRepository repository;
 
   @Transactional
   @Override

@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.common.Menu;
 import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.MenuRepository;
 import org.ramer.admin.system.service.common.MenuService;
 import org.ramer.admin.system.service.common.PrivilegeService;
@@ -100,10 +102,16 @@ public class MenuServiceImpl implements MenuService {
     return StringUtils.isEmpty(criteria)
         ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
         : (root, query, builder) ->
+        builder.and(
+            builder.equal(root.get("state"), Constant.STATE_ON),
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
-                builder.and(
-                    builder.like(root.get("name"), "%" + criteria + "%"),
-                    builder.like(root.get("remark"), "%" + criteria + "%")));
+                builder.like(root.get("name"), "%" + criteria + "%"),
+                builder.like(root.get("remark"), "%" + criteria + "%")));
+  }
+
+  @SuppressWarnings({"unchecked"})
+  @Override
+  public <U extends BaseRepository<Menu, Long>> U getRepository() throws CommonException {
+    return (U) repository;
   }
 }

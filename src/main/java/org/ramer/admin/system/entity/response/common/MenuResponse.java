@@ -1,26 +1,43 @@
 package org.ramer.admin.system.entity.response.common;
 
-import java.util.List;
+import java.util.Objects;
 import lombok.*;
-import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
+import org.ramer.admin.system.entity.domain.common.Menu;
 import org.springframework.beans.BeanUtils;
 
-/** @author ramer */
+/**
+ * 菜单.
+ *
+ * @author ramer
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public final class MenuResponse {
-  private Long id;
-  private String name;
-  private String url;
-  private Boolean leaf;
-  private String icon;
-  private Long pId;
-  private List<MenuResponse> children;
+public class MenuResponse {
 
-  public static MenuResponse of(MenuPoJo menuPoJo) {
-    MenuResponse response = new MenuResponse();
-    BeanUtils.copyProperties(menuPoJo, response);
-    return response;
+  private Boolean leaf;
+
+  private String name;
+
+  private String alia;
+
+  private String url;
+
+  private Integer sort;
+
+  private String icon;
+
+  private String remark;
+
+  private Long parentId;
+
+  public static MenuResponse of(final Menu menu) {
+    if (Objects.isNull(menu)) {
+      return null;
+    }
+    MenuResponse poJo = new MenuResponse();
+    // TODO-WARN:  将 Domain 对象转换成 Response 对象
+    BeanUtils.copyProperties(menu, poJo);
+    return poJo;
   }
 }

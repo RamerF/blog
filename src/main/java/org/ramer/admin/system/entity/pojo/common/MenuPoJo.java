@@ -1,25 +1,38 @@
 package org.ramer.admin.system.entity.pojo.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.Menu;
-import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 import java.util.Date;
 import java.util.Objects;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.domain.common.Menu;
+import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 
-/** @author ramer */
+/**
+ * 菜单.
+ *
+ * @author ramer
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public final class MenuPoJo extends AbstractEntityPoJo {
-  private String name;
-  private String url;
+public class MenuPoJo extends AbstractEntityPoJo {
+
   private Boolean leaf;
+
+  private String name;
+
+  private String alia;
+
+  private String url;
+
+  private Integer sort;
+
   private String icon;
-  private Long pId;
-  private String pName;
-  private int sort;
+
+  private String remark;
+
+  private Long parentId;
 
   public MenuPoJo(
       final Long id,
@@ -38,7 +51,7 @@ public final class MenuPoJo extends AbstractEntityPoJo {
     setUrl(url);
     setLeaf(leaf);
     setIcon(icon);
-    setPId(pId);
+    setParentId(pId);
     setSort(sort);
     setCreateTime(createTime);
     setUpdateTime(updateTime);
@@ -51,16 +64,15 @@ public final class MenuPoJo extends AbstractEntityPoJo {
     if (Objects.isNull(entity)) {
       return null;
     }
-    MenuPoJo poJo = (MenuPoJo) super.of(entity, clazz);
     Menu obj = (Menu) entity;
+    MenuPoJo poJo = (MenuPoJo) super.of(entity, clazz);
     if (!Objects.isNull(obj.getParent())) {
-      poJo.setPId(obj.getParent().getId());
-      poJo.setPName(obj.getParent().getName());
+      poJo.setParentId(obj.getParent().getId());
     }
     return (T) poJo;
   }
 
-  public static MenuPoJo of(Menu menu) {
-    return new MenuPoJo().of(menu, MenuPoJo.class);
+  public static MenuPoJo of(final Menu entity) {
+    return new MenuPoJo().of(entity, MenuPoJo.class);
   }
 }

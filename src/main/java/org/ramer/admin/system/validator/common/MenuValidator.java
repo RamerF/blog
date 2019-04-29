@@ -2,6 +2,7 @@ package org.ramer.admin.system.validator.common;
 
 import org.ramer.admin.system.entity.domain.common.Menu;
 import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
+import org.ramer.admin.system.entity.request.common.MenuRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -12,7 +13,9 @@ import org.springframework.validation.Validator;
 public class MenuValidator implements Validator {
   @Override
   public boolean supports(final Class<?> clazz) {
-    return clazz.isAssignableFrom(Menu.class) || clazz.isAssignableFrom(MenuPoJo.class);
+    return clazz.isAssignableFrom(Menu.class)
+        || clazz.isAssignableFrom(MenuRequest.class)
+        || clazz.isAssignableFrom(MenuPoJo.class);
   }
 
   @Override

@@ -1,17 +1,13 @@
 package org.ramer.admin.system.service.common;
 
-import org.ramer.admin.system.service.BaseService;
-import org.ramer.admin.system.entity.domain.common.CommonMedia;
-import org.ramer.admin.system.entity.pojo.common.CommonMediaPoJo;
 import java.util.Date;
 import java.util.List;
+import org.ramer.admin.system.entity.domain.common.CommonMedia;
+import org.ramer.admin.system.entity.pojo.common.CommonMediaPoJo;
+import org.ramer.admin.system.service.BaseService;
 import org.springframework.data.domain.Page;
 
-/**
- * 通用多媒体文件存储.
- *
- * @author ramer
- */
+/** @author ramer */
 public interface CommonMediaService extends BaseService<CommonMedia, CommonMediaPoJo> {
   List<CommonMedia> createBatch(List<CommonMedia> medias);
 

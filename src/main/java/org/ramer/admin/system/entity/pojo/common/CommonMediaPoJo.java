@@ -8,18 +8,22 @@ import org.ramer.admin.system.entity.domain.common.CommonMediaCategory;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 
 /**
- * 通用多媒体文件存储.
+ * 通用多媒体.
  *
- * @author Ramer @Date 1/10/2019
+ * @author ramer
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class CommonMediaPoJo extends AbstractEntityPoJo {
+
   private String code;
+
   private String url;
+
   private String remark;
+
   private Long categoryId;
 
   @Override
@@ -29,8 +33,8 @@ public class CommonMediaPoJo extends AbstractEntityPoJo {
     if (Objects.isNull(entity)) {
       return null;
     }
-    CommonMediaPoJo poJo = (CommonMediaPoJo) super.of(entity, clazz);
     CommonMedia obj = (CommonMedia) entity;
+    CommonMediaPoJo poJo = (CommonMediaPoJo) super.of(entity, clazz);
     final CommonMediaCategory category = obj.getCategory();
     if (!Objects.isNull(category)) {
       poJo.setCategoryId(category.getId());
@@ -38,7 +42,7 @@ public class CommonMediaPoJo extends AbstractEntityPoJo {
     return (T) poJo;
   }
 
-  public static CommonMediaPoJo of(CommonMedia media) {
-    return new CommonMediaPoJo().of(media, CommonMediaPoJo.class);
+  public static CommonMediaPoJo of(final CommonMedia entity) {
+    return new CommonMediaPoJo().of(entity, CommonMediaPoJo.class);
   }
 }

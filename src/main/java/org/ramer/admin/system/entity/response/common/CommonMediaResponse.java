@@ -1,12 +1,17 @@
 package org.ramer.admin.system.entity.response.common;
 
-import org.ramer.admin.system.entity.domain.common.CommonMedia;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.common.CommonMedia;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
+/**
+ * 通用多媒体.
+ *
+ * @author ramer
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,10 +30,14 @@ public class CommonMediaResponse {
 
   private Long categoryId;
 
-  public static CommonMediaResponse of(CommonMedia commonMedia) {
-    CommonMediaResponse response = new CommonMediaResponse();
-    BeanUtils.copyProperties(commonMedia, response);
-    return response;
+  public static CommonMediaResponse of(final CommonMedia commonMedia) {
+    if (Objects.isNull(commonMedia)) {
+      return null;
+    }
+    CommonMediaResponse poJo = new CommonMediaResponse();
+    // TODO-WARN:  将 Domain 对象转换成 Response 对象
+    BeanUtils.copyProperties(commonMedia, poJo);
+    return poJo;
   }
 
   public static List<CommonMediaResponse> of(List<CommonMedia> commonMedias) {

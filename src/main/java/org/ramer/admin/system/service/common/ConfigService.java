@@ -6,7 +6,6 @@ import org.ramer.admin.system.service.BaseService;
 
 /** @author ramer */
 public interface ConfigService extends BaseService<Config, ConfigPoJo> {
-
   /**
    * 获取网站描述信息.
    * <pre>
@@ -20,7 +19,4 @@ public interface ConfigService extends BaseService<Config, ConfigPoJo> {
   String getSiteInfo(String location);
 
   Config getByCode(String code);
-
-
-  Config updateNoFilter(Config conf);
 }

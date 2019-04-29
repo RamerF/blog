@@ -42,19 +42,19 @@ public class ApplicationInit implements ApplicationRunner {
           PrivilegeEnum.MANAGE.remark.concat(":").concat(PrivilegeEnum.MANAGE.remark));
       privilegeService.create(managePrivilege);
       // the access privileges for super admin default
-      Roles roles = new Roles();
-      roles.setName("超级管理员");
-      roles.setRemark("超级管理员");
+      Role role = new Role();
+      role.setName("超级管理员");
+      role.setRemark("超级管理员");
       Privilege globalPrivilege = new Privilege();
       globalPrivilege.setExp(PrivilegeEnum.GLOBAL.name.concat(":").concat(PrivilegeEnum.ALL.name));
       globalPrivilege.setRemark(
           PrivilegeEnum.GLOBAL.remark.concat(":").concat(PrivilegeEnum.ALL.remark));
       List<Privilege> privileges = new ArrayList<>();
       privileges.add(globalPrivilege);
-      roles.setPrivileges(privileges);
-      roles.setMenus(menuService.list(null));
+      role.setPrivileges(privileges);
+      role.setMenus(menuService.list(null));
       privilegeService.createBatch(privileges);
-      rolesService.create(roles);
+      rolesService.create(role);
       // init super user
       Manager manager = managerService.getByEmpNo("admin");
       if (manager == null) {
@@ -70,7 +70,7 @@ public class ApplicationInit implements ApplicationRunner {
         manager.setName("admin");
         manager.setValidDate(
             Date.from(LocalDateTime.now().plusYears(100).toInstant(ZoneOffset.of("+8"))));
-        manager.setRoleses(Collections.singletonList(roles));
+        manager.setRoleses(Collections.singletonList(role));
         managerService.create(manager);
 
         // init site info
@@ -122,7 +122,7 @@ public class ApplicationInit implements ApplicationRunner {
         Menu rolesMenu =
             menuService.create(
                 new Menu(
-                    systemMenu, true, "角色管理", "roles", "/manage/roles/index", 4, "fa-cog", "角色管理"));
+                    systemMenu, true, "角色管理", "role", "/manage/role/index", 4, "fa-cog", "角色管理"));
         Menu menuMenu =
             menuService.create(
                 new Menu(
@@ -136,14 +136,14 @@ public class ApplicationInit implements ApplicationRunner {
         menus.add(managerMenu);
         menus.add(rolesMenu);
         menus.add(menuMenu);
-        Roles superAdmin = rolesService.getById(1);
+        Role superAdmin = rolesService.getById(1);
         superAdmin.setMenus(menus);
         rolesService.create(superAdmin);
       }
       // user role
-      roles = new Roles();
-      roles.setName("普通用户");
-      roles.setRemark("普通用户");
+      role = new Role();
+      role.setName("普通用户");
+      role.setRemark("普通用户");
       privileges = new ArrayList<>();
       Privilege userPrivilege = new Privilege();
       // the access privileges for user default
@@ -151,9 +151,9 @@ public class ApplicationInit implements ApplicationRunner {
       userPrivilege.setRemark(
           PrivilegeEnum.USER.remark.concat(":").concat(PrivilegeEnum.ALL.remark));
       privileges.add(userPrivilege);
-      roles.setPrivileges(privileges);
+      role.setPrivileges(privileges);
       privilegeService.createBatch(privileges);
-      rolesService.create(roles);
+      rolesService.create(role);
 
       // 添加数据库字典,用于演示
       DataDictType dataDictType = new DataDictType();

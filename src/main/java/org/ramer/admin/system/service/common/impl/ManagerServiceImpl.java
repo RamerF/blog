@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
-import org.ramer.admin.system.entity.domain.common.Roles;
+import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.ManagerRepository;
@@ -34,8 +34,8 @@ public class ManagerServiceImpl implements ManagerService {
   @Override
   public synchronized Manager save(Manager manager, List<Long> roleIds) {
     if (roleIds != null && roleIds.size() > 0) {
-      List<Roles> roles = new ArrayList<>();
-      roleIds.forEach(roleId -> roles.add(Roles.of(roleId)));
+      List<Role> roles = new ArrayList<>();
+      roleIds.forEach(roleId -> roles.add(Role.of(roleId)));
       manager.setRoleses(roles);
       manager.setPassword(EncryptUtil.execEncrypt(manager.getPassword()));
     }
@@ -75,8 +75,8 @@ public class ManagerServiceImpl implements ManagerService {
       m.setGender(manager.getGender());
     }
     if (roleIds != null && roleIds.size() > 0) {
-      List<Roles> roles = new ArrayList<>();
-      roleIds.forEach(roleId -> roles.add(Roles.of(roleId)));
+      List<Role> roles = new ArrayList<>();
+      roleIds.forEach(roleId -> roles.add(Role.of(roleId)));
       m.setRoleses(roles);
     }
     return repository.saveAndFlush(m);

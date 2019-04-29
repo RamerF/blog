@@ -55,7 +55,7 @@ public class Manager extends AbstractEntity {
   @Where(clause = "state = " + Constant.STATE_ON)
   //  @JsonBackReference
   // TODO-WARN: 这里注释掉主要是端粒段列表显示,需要修改为手动获取,然后启用该注解
-  private List<Roles> roleses;
+  private List<Role> roleses;
 
   public static Manager of(Long id) {
     if (Objects.isNull(id)) {

@@ -14,6 +14,6 @@ public interface PrivilegeRepository extends BaseRepository<Privilege, Long> {
   List<Privilege> findByManager(@Param("managerId") long managerId, @Param("state") int state);
 
   @Query(
-      "select p from org.ramer.admin.system.entity.domain.common.Roles r inner join r.privileges p where r.id= :rolesId and p.state= :state")
+      "select p from org.ramer.admin.system.entity.domain.common.Role r inner join r.privileges p where r.id= :rolesId and p.state= :state")
   List<Privilege> findByRoles(@Param("rolesId") Long roleId, @Param("state") int state);
 }

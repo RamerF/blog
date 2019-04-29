@@ -1,6 +1,6 @@
 package org.ramer.admin.system.validator.common;
 
-import org.ramer.admin.system.entity.domain.common.Roles;
+import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.entity.pojo.common.RolesPoJo;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -12,12 +12,12 @@ import org.springframework.validation.Validator;
 public class RolesValidator implements Validator {
   @Override
   public boolean supports(final Class<?> clazz) {
-    return clazz.isAssignableFrom(Roles.class) || clazz.isAssignableFrom(RolesPoJo.class);
+    return clazz.isAssignableFrom(Role.class) || clazz.isAssignableFrom(RolesPoJo.class);
   }
 
   @Override
   public void validate(final Object target, final Errors errors) {
-    final Roles roles = (Roles) target;
+    final Role roles = (Role) target;
     if (roles == null) {
       errors.rejectValue("roles", "roles.null", "参数不能为空");
     } else {

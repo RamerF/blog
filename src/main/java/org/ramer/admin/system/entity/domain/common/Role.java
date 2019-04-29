@@ -10,13 +10,13 @@ import org.hibernate.annotations.Where;
 import org.hibernate.annotations.Table;
 
 /** 系统操作员角色. */
-@Entity(name = Roles.TABLE_NAME)
-@Table(appliesTo = Roles.TABLE_NAME, comment = "角色")
+@Entity(name = Role.TABLE_NAME)
+@Table(appliesTo = Role.TABLE_NAME, comment = "角色")
 @Data
 @NoArgsConstructor
 @ToString(exclude = {"menus", "privileges"})
 @EqualsAndHashCode(callSuper = true)
-public class Roles extends AbstractEntity {
+public class Role extends AbstractEntity {
   public static final String TABLE_NAME = "roles";
 
   @Column(nullable = false, length = 20, columnDefinition = "VARCHAR(20) NOT NULL")
@@ -43,15 +43,15 @@ public class Roles extends AbstractEntity {
       inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
   private List<Privilege> privileges;
 
-  private Roles(long id) {
+  private Role(long id) {
     setId(id);
   }
 
-  public Roles(String name) {
+  public Role(String name) {
     this.name = name;
   }
 
-  public static Roles of(long id) {
-    return new Roles(id);
+  public static Role of(long id) {
+    return new Role(id);
   }
 }

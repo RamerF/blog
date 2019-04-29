@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.Roles;
+import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.entity.pojo.common.RolesPoJo;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.service.common.*;
@@ -73,7 +73,7 @@ public class RolesController {
   ResponseEntity create(
       @RequestParam("menuIds[]") String[] menuIdsStr,
       @RequestParam("privilegeIds[]") String[] privilegeIdsStr,
-      @Valid Roles roles,
+      @Valid Role roles,
       BindingResult bindingResult)
       throws Exception {
     log.info(" RolesController.create : [{}]", roles);
@@ -106,7 +106,7 @@ public class RolesController {
     if (id <= 0) {
       throw new NumberFormatException("id 格式不正确");
     }
-    final Roles roles = service.getById(id);
+    final Role roles = service.getById(id);
     map.put(
         "selectedMenuIds",
         roles.getMenus().stream().map(AbstractEntity::getId).collect(Collectors.toList()));
@@ -127,7 +127,7 @@ public class RolesController {
       @PathVariable("id") String idStr,
       @RequestParam(value = "menuIds[]", required = false) String[] menuIdsStr,
       @RequestParam(value = "privilegeIds[]", required = false) String[] privilegeIdsStr,
-      @Valid Roles roles,
+      @Valid Role roles,
       BindingResult bindingResult) {
     final long id = TextUtil.validLong(idStr, 0);
     if (id <= 0) {

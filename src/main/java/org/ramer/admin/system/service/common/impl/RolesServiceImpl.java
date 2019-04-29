@@ -23,7 +23,7 @@ public class RolesServiceImpl implements RolesService {
 
   @Transactional
   @Override
-  public synchronized Roles create(Roles roles, List<Long> menuIds, List<Long> privilegeIds) {
+  public synchronized Role create(Role roles, List<Long> menuIds, List<Long> privilegeIds) {
     roles.setName(TextUtil.filter(roles.getName()));
     roles.setRemark(TextUtil.filter(roles.getRemark()));
     if (menuIds.size() > 0) {
@@ -41,7 +41,7 @@ public class RolesServiceImpl implements RolesService {
 
   @Transactional
   @Override
-  public synchronized Roles update(Roles roles, List<Long> menuIds, List<Long> privilegeIds) {
+  public synchronized Role update(Role roles, List<Long> menuIds, List<Long> privilegeIds) {
     return repository
         .findById(roles.getId())
         .map(r -> create(roles, menuIds, privilegeIds))
@@ -49,7 +49,7 @@ public class RolesServiceImpl implements RolesService {
   }
 
   @Override
-  public List<Roles> listByManager(long managerId) {
+  public List<Role> listByManager(long managerId) {
     return repository.findByManager(managerId, Constant.STATE_ON);
   }
 
@@ -59,7 +59,7 @@ public class RolesServiceImpl implements RolesService {
   }
 
   @Override
-  public List<Long> listMenuIds(Roles roles) {
+  public List<Long> listMenuIds(Role roles) {
     return roles.getMenus().stream()
         .mapToLong(AbstractEntity::getId)
         .boxed()
@@ -68,7 +68,7 @@ public class RolesServiceImpl implements RolesService {
 
   @Transactional
   @Override
-  public Roles create(Roles roles) {
+  public Role create(Role roles) {
     textFilter(roles, roles);
     return repository.saveAndFlush(roles);
   }
@@ -79,17 +79,17 @@ public class RolesServiceImpl implements RolesService {
   }
 
   @Override
-  public Roles getById(long id) {
+  public Role getById(long id) {
     return repository.findById(id).orElse(null);
   }
 
   @Override
-  public List<Roles> list(final String criteria) {
+  public List<Role> list(final String criteria) {
     return page(criteria, -1, -1).getContent();
   }
 
   @Override
-  public Page<Roles> page(final String criteria, final int page, final int size) {
+  public Page<Role> page(final String criteria, final int page, final int size) {
     final PageRequest pageable = pageRequest(page, size);
     return pageable == null
         ? new PageImpl<>(Collections.emptyList())
@@ -98,7 +98,7 @@ public class RolesServiceImpl implements RolesService {
 
   @Transactional
   @Override
-  public synchronized Roles update(Roles r) {
+  public synchronized Role update(Role r) {
     return Optional.ofNullable(getById(r.getId()))
         .map(
             roles -> {
@@ -115,13 +115,13 @@ public class RolesServiceImpl implements RolesService {
   }
 
   @Override
-  public void textFilter(Roles trans, Roles filtered) {
+  public void textFilter(Role trans, Role filtered) {
     filtered.setName(TextUtil.filter(trans.getName()));
     filtered.setRemark(TextUtil.filter(trans.getRemark()));
   }
 
   @Override
-  public Specification<Roles> getSpec(String criteria) {
+  public Specification<Role> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
         ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
         : (root, query, builder) ->

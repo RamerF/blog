@@ -2,35 +2,22 @@ package org.ramer.admin.system.validator.common;
 
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
+import org.ramer.admin.system.entity.request.common.DataDictRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
 
 /** @author ramer */
 @Component
 public class DataDictValidator implements Validator {
   @Override
   public boolean supports(final Class<?> clazz) {
-    return clazz.isAssignableFrom(DataDict.class) || clazz.isAssignableFrom(DataDictPoJo.class);
+    return clazz.isAssignableFrom(DataDict.class) || clazz.isAssignableFrom(DataDictRequest.class) || clazz.isAssignableFrom(DataDictPoJo.class);
   }
 
   @Override
   public void validate(final Object target, final Errors errors) {
-    DataDict dataDict = (DataDict) target;
-    if (dataDict == null) {
-      errors.rejectValue("dataDict", "dataDict.null", "参数不能为空");
-    } else {
-      if (StringUtils.isEmpty(dataDict.getName()) || dataDict.getName().length() > 25) {
-        errors.rejectValue("name", "dataDict.name.length", "名称 不能为空且小于25个字符");
-      }
-      if (StringUtils.isEmpty(dataDict.getCode()) || dataDict.getCode().length() > 25) {
-        errors.rejectValue("code", "dataDict.code.length", "code 不能为空且小于25个字符");
-      }
-      String remark = dataDict.getRemark();
-      if (!StringUtils.isEmpty(remark) && remark.length() > 100) {
-        errors.rejectValue("remark", "dataDict.remark.length", "备注 不能超过100个字符");
-      }
-    }
+    // TODO-WARN: 添加数据字典校验规则
   }
 }

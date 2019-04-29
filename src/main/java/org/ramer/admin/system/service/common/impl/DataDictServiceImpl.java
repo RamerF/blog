@@ -9,6 +9,7 @@ import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.DataDictRepository;
 import org.ramer.admin.system.repository.common.DataDictTypeRepository;
 import org.ramer.admin.system.service.common.DataDictService;
@@ -22,12 +23,12 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Service
 public class DataDictServiceImpl implements DataDictService {
-  @Resource private DataDictTypeRepository dictTypeRepository;
+  @Resource private DataDictTypeRepository typeRepository;
   @Resource private DataDictRepository repository;
 
   @Override
   public List<DataDictType> listType() {
-    return dictTypeRepository.findAll();
+    return typeRepository.findAll();
   }
 
   @Override
@@ -37,8 +38,6 @@ public class DataDictServiceImpl implements DataDictService {
 
   @Override
   public DataDict getByTypeCodeAndCode(String typeCode, String code) {
-    //    return repository.findByDataDictTypeCodeAndCodeAndState(
-    //        dictTypeRepository.findByCode(typeCode), code, Constant.STATE_ON);
     return repository.findByDataDictTypeCodeAndCodeAndState(typeCode, code, Constant.STATE_ON);
   }
 
@@ -65,41 +64,12 @@ public class DataDictServiceImpl implements DataDictService {
     DataDict dict = new DataDict();
     textFilter(dataDict, dict);
     log.info(" DataDictServiceImpl.create : [{}]", typeCode);
-    final DataDictType dataDictType = dictTypeRepository.findByCode(typeCode);
+    final DataDictType dataDictType = typeRepository.findByCode(typeCode);
     if (dataDictType == null) {
-      throw new CommonException("参数typeCode不正确");
+      throw new CommonException("参数[类型]不正确");
     }
     dict.setDataDictType(dataDictType);
     return repository.saveAndFlush(dict);
-  }
-
-  @Transactional
-  @Override
-  public synchronized DataDict create(DataDict dataDict) {
-    return create(dataDict, null);
-  }
-
-  @Override
-  public long count() {
-    return repository.count();
-  }
-
-  @Override
-  public DataDict getById(final long id) {
-    return repository.findById(id).orElse(null);
-  }
-
-  @Override
-  public List<DataDict> list(final String criteria) {
-    return page(criteria, -1, -1).getContent();
-  }
-
-  @Override
-  public Page<DataDict> page(final String criteria, final int page, final int size) {
-    final PageRequest pageable = pageRequest(page, size);
-    return pageable == null
-        ? new PageImpl<>(Collections.emptyList())
-        : repository.findAll(getSpec(criteria), pageable);
   }
 
   @Transactional
@@ -113,12 +83,6 @@ public class DataDictServiceImpl implements DataDictService {
               return repository.saveAndFlush(dict);
             })
         .orElse(null);
-  }
-
-  @Transactional
-  @Override
-  public synchronized void delete(long dicId) {
-    repository.deleteById(dicId);
   }
 
   @Override
@@ -141,5 +105,11 @@ public class DataDictServiceImpl implements DataDictService {
                     builder.like(root.get("name"), "%" + criteria + "%"),
                     builder.like(root.get("code"), "%" + criteria + "%"),
                     builder.like(root.get("remark"), "%" + criteria + "%")));
+  }
+
+  @SuppressWarnings({"unchecked"})
+  @Override
+  public <U extends BaseRepository<DataDict, Long>> U getRepository() throws CommonException {
+    return (U) repository;
   }
 }

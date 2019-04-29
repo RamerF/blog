@@ -1,10 +1,10 @@
 package org.ramer.admin.system.service.common;
 
+import java.util.List;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
 import org.ramer.admin.system.service.BaseService;
-import java.util.List;
 import org.springframework.data.domain.Page;
 
 /** @author ramer */

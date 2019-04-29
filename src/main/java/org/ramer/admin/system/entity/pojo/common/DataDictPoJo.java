@@ -7,15 +7,24 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 
-/** 系统数据字典. */
+/**
+ * 数据字典.
+ *
+ * @author ramer
+ */
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class DataDictPoJo extends AbstractEntityPoJo {
-  private Long dataDictTypeId;
+
   private String name;
+
   private String code;
+
   private String remark;
+
+  private Long dataDictTypeId;
 
   @Override
   @SuppressWarnings({"unchecked"})
@@ -24,14 +33,14 @@ public class DataDictPoJo extends AbstractEntityPoJo {
     if (Objects.isNull(entity)) {
       return null;
     }
-    DataDictPoJo poJo = (DataDictPoJo) super.of(entity, clazz);
     DataDict obj = (DataDict) entity;
+    DataDictPoJo poJo = (DataDictPoJo) super.of(entity, clazz);
     poJo.setDataDictTypeId(
         Optional.ofNullable(obj.getDataDictType()).map(AbstractEntity::getId).orElse(null));
     return (T) poJo;
   }
 
-  public static DataDictPoJo of(DataDict dataDict) {
-    return new DataDictPoJo().of(dataDict, DataDictPoJo.class);
+  public static DataDictPoJo of(final DataDict entity) {
+    return new DataDictPoJo().of(entity, DataDictPoJo.class);
   }
 }

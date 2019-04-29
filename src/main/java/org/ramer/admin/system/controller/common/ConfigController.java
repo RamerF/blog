@@ -22,7 +22,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@Controller("configc")
+@Controller("configmc")
 @PreAuthorize("hasAnyAuthority('global:read','config:read')")
 @RequestMapping( "/common/config")
 @Api(tags = "管理端: 系统配置接口")

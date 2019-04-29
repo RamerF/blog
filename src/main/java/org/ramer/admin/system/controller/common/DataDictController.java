@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller("dataDictmc")
 @PreAuthorize("hasAnyAuthority('global:read','dataDict:read')")
 @RequestMapping( "/common/dataDict")
-@Api(tags = "数据字典接口")
+@Api(tags = "管理端: 数据字典接口")
 @SuppressWarnings("UnusedDeclaration")
 public class DataDictController {
   @Resource private DataDictService service;

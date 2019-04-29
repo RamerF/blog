@@ -22,10 +22,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@Controller("menuc")
+@Controller("menumc")
 @PreAuthorize("hasAnyAuthority('global:read','menu:read')")
 @RequestMapping("/common/menu")
-@Api(tags = "菜单接口")
+@Api(tags = "管理端: 菜单接口")
 @SuppressWarnings("UnusedDeclaration")
 public class MenuController {
   @Resource private MenuService service;

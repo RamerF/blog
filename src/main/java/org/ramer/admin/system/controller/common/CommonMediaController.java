@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller("commonMediamc")
 @PreAuthorize("hasAnyAuthority('global:read','commonMedia:read')")
 @RequestMapping( "/common/commonMedia")
-@Api(tags = "通用多媒体接口")
+@Api(tags = "管理端: 通用多媒体接口")
 @SuppressWarnings("UnusedDeclaration")
 public class CommonMediaController {
   @Resource private CommonMediaService service;

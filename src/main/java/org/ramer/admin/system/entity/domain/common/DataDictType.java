@@ -22,13 +22,13 @@ public class DataDictType extends AbstractEntity {
             nullable = false,
             unique = true,
             length = 25,
-            columnDefinition = "varchar(25) not null unique")
+            columnDefinition = "VARCHAR(25) NOT NULL UNIQUE")
     private String code;
 
-    @Column(nullable = false, length = 25, columnDefinition = "varchar(25) not null unique")
+    @Column(nullable = false, length = 25, columnDefinition = "VARCHAR(25) NOT NULL UNIQUE")
     private String name;
 
-    @Column(length = 100, columnDefinition = "varchar(100)")
+    @Column(length = 100, columnDefinition = "VARCHAR(100)")
     private String remark;
 
     public static final String TYPE = "QUESTION_TYPE";

@@ -1,28 +1,31 @@
 package org.ramer.admin.system.service.common.impl;
 
-import org.ramer.admin.system.entity.Constant;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.Manager;
-import org.ramer.admin.system.entity.domain.common.Roles;
-import org.ramer.admin.system.repository.common.ManagerRepository;
-import org.ramer.admin.system.service.common.ManagerService;
-import org.ramer.admin.util.EncryptUtil;
-import org.ramer.admin.util.TextUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.domain.common.Manager;
+import org.ramer.admin.system.entity.domain.common.Roles;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.repository.BaseRepository;
+import org.ramer.admin.system.repository.common.ManagerRepository;
+import org.ramer.admin.system.service.common.ManagerService;
+import org.ramer.admin.system.util.EncryptUtil;
+import org.ramer.admin.system.util.TextUtil;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-@Service
+/** @author ramer */
 @Slf4j
+@Service
 public class ManagerServiceImpl implements ManagerService {
   @Resource private ManagerRepository repository;
+
   private static Map<String, ManagerLogin> LOGIN_STATUS_MAP = new HashMap<>();
   /** 用户端登录信息.key: empNo,value: uuid */
   private static Map<String, String> USER_LOGIN_MAP = new HashMap<>();
@@ -156,44 +159,14 @@ public class ManagerServiceImpl implements ManagerService {
     return repository.saveAndFlush(manager);
   }
 
-  @Override
-  public long count() {
-    return repository.count();
-  }
-
-  @Override
-  public Manager getById(long id) {
-    return repository.findById(id).orElse(null);
-  }
-
-  @Override
-  public List<Manager> list(final String criteria) {
-    return page(criteria, -1, -1).getContent();
-  }
-
-  @Override
-  public Page<Manager> page(final String criteria, final int page, final int size) {
-    final PageRequest pageable = pageRequest(page, size);
-    return pageable == null
-        ? new PageImpl<>(Collections.emptyList())
-        : repository.findAll(getSpec(criteria), pageable);
-  }
-
   @Transactional
   @Override
   public synchronized Manager update(Manager manager) {
     return update(
         manager,
         Optional.ofNullable(manager.getRoleses()).orElseGet(ArrayList::new).stream()
-            .mapToLong(AbstractEntity::getId)
-            .boxed()
+            .map(AbstractEntity::getId)
             .collect(Collectors.toList()));
-  }
-
-  @Transactional
-  @Override
-  public synchronized void delete(long id) {
-    repository.deleteById(id);
   }
 
   @Override
@@ -223,5 +196,11 @@ public class ManagerServiceImpl implements ManagerService {
   public static class ManagerLogin {
     private Integer count;
     private long during;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  @Override
+  public <U extends BaseRepository<Manager, Long>> U getRepository() throws CommonException {
+    return (U) repository;
   }
 }

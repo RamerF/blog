@@ -29,7 +29,7 @@ ${fieldList}
     }
     ${name} obj = (${name}) entity;
     ${name}PoJo poJo = (${name}PoJo) super.of(entity, clazz);
-    // TODO-WARN: 添加 Domain 转 PoJo 规则,关联对象的字段等
+    // TODO-WARN: 添加 Domain 转 PoJo 额外规则,赋值额外字段等
     // 例如: poJo.setXxxName(Optional.ofNullable(obj.getXxx()).map(Xxx::getName).orElse(null));
     return (T) poJo;
   }

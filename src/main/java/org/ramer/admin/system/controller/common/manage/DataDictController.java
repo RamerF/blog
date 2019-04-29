@@ -1,18 +1,18 @@
 package org.ramer.admin.system.controller.common.manage;
 
+import io.swagger.annotations.*;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.DataDictService;
+import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.DataDictValidator;
-import org.ramer.admin.util.TextUtil;
-import io.swagger.annotations.*;
-import java.util.Map;
-import javax.annotation.Resource;
-import javax.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

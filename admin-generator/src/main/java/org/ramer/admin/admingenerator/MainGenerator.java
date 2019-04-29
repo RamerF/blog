@@ -43,10 +43,15 @@ public class MainGenerator {
     final String path =
         MainGenerator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     Properties properties = new Properties();
-    final File configFile =
-        new File(path.substring(0, path.lastIndexOf("/")).concat("/config.ini"));
+    File configFile = new File(path.substring(0, path.lastIndexOf("/")).concat("/config.ini"));
+    // 文件优先级: resources/config/config.ini > config.ini
+    final File configFilePriority =
+        new File(path.substring(0, path.lastIndexOf("/")).concat("/config/config.ini"));
+    if (configFilePriority.exists()) {
+      configFile = configFilePriority;
+    }
     // 基础包路径
-    String basePath = null;
+    String basePath;
     if (configFile.exists()) {
       properties.load(
           new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));

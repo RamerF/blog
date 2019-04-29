@@ -14,7 +14,8 @@ hs_err_pid*
 logs
 src/main/java/org/ramer/admin/controller/TestController.java
 src/main/resources/config
-admin-springdata.iml
+admin-generator/src/main/resources/config
+admin-template.iml
 admin-generator.iml
 target
 .idea

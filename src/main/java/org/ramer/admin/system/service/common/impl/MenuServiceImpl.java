@@ -1,16 +1,16 @@
 package org.ramer.admin.system.service.common.impl;
 
+import java.util.*;
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.common.Menu;
 import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
 import org.ramer.admin.system.repository.common.MenuRepository;
 import org.ramer.admin.system.service.common.MenuService;
 import org.ramer.admin.system.service.common.PrivilegeService;
-import org.ramer.admin.util.TextUtil;
-import java.util.*;
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.util.TextUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

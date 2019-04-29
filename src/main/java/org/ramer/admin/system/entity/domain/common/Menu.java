@@ -23,28 +23,28 @@ public class Menu extends AbstractEntity {
   @Where(clause = "state = " + Constant.STATE_ON)
   private Menu parent;
   /** 是否最终节点 */
-  @Column(columnDefinition = "bit  comment '是否最终节点'")
+  @Column(columnDefinition = "BIT COMMENT '是否最终节点'")
   private Boolean leaf;
 
-  @Column(length = 25, columnDefinition = "varchar(25)")
+  @Column(length = 25, columnDefinition = "VARCHAR(25)")
   private String name;
   /** 菜单别名,用于权限表达式 */
   @Column(
       nullable = false,
       length = 100,
-      columnDefinition = "varchar(100) not null comment '菜单别名,用于权限表达式'")
+      columnDefinition = "VARCHAR(100) NOT NULL COMMENT '菜单别名,用于权限表达式'")
   private String alia;
 
-  @Column(length = 100, columnDefinition = "varchar(100)")
+  @Column(length = 100, columnDefinition = "VARCHAR(100)")
   private String url;
   /** 显示顺序 */
-  @Column(length = 11, columnDefinition = "int(11)")
+  @Column(length = 11, columnDefinition = "INT(11)")
   private Integer sort;
   /** ICON FONT 图标 */
-  @Column(length = 25, columnDefinition = "varchar(25) default null comment 'ICON FONT图标'")
+  @Column(length = 25, columnDefinition = "VARCHAR(25) DEFAULT NULL COMMENT 'ICON FONT图标'")
   private String icon;
 
-  @Column(length = 100, columnDefinition = "varchar(100)")
+  @Column(length = 100, columnDefinition = "VARCHAR(100) COMMENT '备注'")
   private String remark;
   //    @JoinColumn(name = "menu_id")
   //    @OneToMany(fetch = FetchType.EAGER)

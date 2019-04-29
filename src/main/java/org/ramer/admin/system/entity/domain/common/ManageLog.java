@@ -13,14 +13,14 @@ import org.hibernate.annotations.Table;
 public class ManageLog extends AbstractEntity {
   public static final String TABLE_NAME = "manage_log";
 
-  @Column(length = 200, columnDefinition = "varchar(200)")
+  @Column(length = 200, columnDefinition = "VARCHAR(200)")
   private String url;
 
   @OneToOne private Manager manager;
 
-  @Column(length = 20, columnDefinition = "varchar(20)")
+  @Column(length = 20, columnDefinition = "VARCHAR(20)")
   private String ip;
 
-  @Column(columnDefinition = "text")
+  @Column(columnDefinition = "TEXT")
   private String result;
 }

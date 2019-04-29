@@ -1,15 +1,13 @@
 package org.ramer.admin.system.entity.domain.common;
 
-import org.ramer.admin.system.entity.Constant;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.*;
-import javax.persistence.Entity;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Table;
-import org.hibernate.annotations.*;
-import org.springframework.format.annotation.*;
+import org.hibernate.annotations.Where;
+import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity(name = Manager.TABLE_NAME)
 @Table(appliesTo = Manager.TABLE_NAME, comment = "管理员")
@@ -20,32 +18,32 @@ import org.springframework.format.annotation.*;
 public class Manager extends AbstractEntity {
   public static final String TABLE_NAME = "manager";
 
-  @Column(nullable = false, length = 25, columnDefinition = "varchar(25) not null")
+  @Column(nullable = false, length = 25, columnDefinition = "VARCHAR(25) NOT NULL")
   private String empNo;
 
-  @Column(nullable = false, length = 100, columnDefinition = "varchar(100) not null")
+  @Column(nullable = false, length = 100, columnDefinition = "VARCHAR(100) NOT NULL")
   private String password;
 
-  @Column(nullable = false, length = 25, columnDefinition = "varchar(25) not null")
+  @Column(nullable = false, length = 25, columnDefinition = "VARCHAR(25) NOT NULL")
   private String name;
 
-  @Column(nullable = false, columnDefinition = "int not null")
+  @Column(nullable = false, columnDefinition = "INT NOT NULL")
   private Integer gender;
 
-  @Column(nullable = false, length = 11, columnDefinition = "varchar(11) not null")
+  @Column(nullable = false, length = 11, columnDefinition = "VARCHAR(11) NOT NULL")
   private String phone;
 
-  @Column(length = 50, columnDefinition = "varchar(50)")
+  @Column(length = 50, columnDefinition = "VARCHAR(50)")
   private String avatar;
   /** 审核状态 */
-  @Column(nullable = false, columnDefinition = "tinyint default 1")
+  @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 1")
   private Integer active;
 
   public String getActiveDesc() {
     return active == null ? "未知" : active.equals(Constant.ACTIVE_TRUE) ? "已审核" : "未审核";
   }
 
-  @Column(columnDefinition = "datetime default null")
+  @Column(columnDefinition = "DATETIME DEFAULT NULL")
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private Date validDate;
 
@@ -55,7 +53,8 @@ public class Manager extends AbstractEntity {
       joinColumns = {@JoinColumn(name = "manager_id")},
       inverseJoinColumns = {@JoinColumn(name = "roles_id")})
   @Where(clause = "state = " + Constant.STATE_ON)
-  @JsonBackReference
+  //  @JsonBackReference
+  // TODO-WARN: 这里注释掉主要是端粒段列表显示,需要修改为手动获取,然后启用该注解
   private List<Roles> roleses;
 
   public static Manager of(Long id) {

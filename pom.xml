@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.ramer.admin</groupId>
-    <artifactId>admin-springdata</artifactId>
+    <artifactId>admin-template</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>admin-springdata</name>
+    <name>admin-template</name>
     <url>http://maven.apache.org</url>
 
     <properties>

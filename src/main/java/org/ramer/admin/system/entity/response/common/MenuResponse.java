@@ -1,9 +1,9 @@
 package org.ramer.admin.system.entity.response.common;
 
-import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
-import org.ramer.admin.util.BeanUtils;
 import java.util.List;
 import lombok.*;
+import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
+import org.springframework.beans.BeanUtils;
 
 /** @author ramer */
 @Data
@@ -20,7 +20,7 @@ public final class MenuResponse {
 
   public static MenuResponse of(MenuPoJo menuPoJo) {
     MenuResponse response = new MenuResponse();
-    BeanUtils.getDozerBeanMapper().map(menuPoJo, response);
+    BeanUtils.copyProperties(menuPoJo, response);
     return response;
   }
 }

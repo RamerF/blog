@@ -19,10 +19,10 @@ import org.hibernate.annotations.Table;
 public class Roles extends AbstractEntity {
   public static final String TABLE_NAME = "roles";
 
-  @Column(nullable = false, length = 20, columnDefinition = "varchar(20) not null")
+  @Column(nullable = false, length = 20, columnDefinition = "VARCHAR(20) NOT NULL")
   private String name;
 
-  @Column(length = 100, columnDefinition = "varchar(100)")
+  @Column(length = 100, columnDefinition = "VARCHAR(100)")
   private String remark;
 
   @Where(clause = "state = " + Constant.STATE_ON)

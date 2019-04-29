@@ -249,47 +249,10 @@ public class Constant {
     public static final String LOGIN_MANAGER = "manager";
   }
 
-  /**
-   * <pre>
-   * @Author ruihao.zhai@gmail.com
-   * @Description 时间类型
-   * @Date 17:20 2019/2/19
-   * @Param
-   * @return
-   * </pre>
-   **/
-  public enum DateType {
-    /** 年 */
-    YEAR(4),
-    /** 月 */
-    MONTH(3),
-    /** 周* */
-    WEEK(2),
-    /** 日 */
-    DAY(1);
-    Integer id;
-
-    DateType(Integer id) {
-      this.id = id;
-    }
-
-    public static List<Integer> list() {
-      return Arrays.stream(DateType.values())
-          .map(dateType -> dateType.id)
-          .collect(Collectors.toList());
-    }
-
-    public static DateType of(Integer id) {
-      if (Objects.isNull(id)) {
-        return null;
-      }
-      for (DateType type : DateType.values()) {
-        if (type.id.equals(id)) {
-          return type;
-        }
-      }
-      return null;
-    }
+  /** 数据库字典类型CODE */
+  public static class DataDictTypeCode {
+    // 用于演示CODE
+    public static final String DEMO_CODE = "DEMO_CODE";
   }
 
   /** 资源文件CODE. */

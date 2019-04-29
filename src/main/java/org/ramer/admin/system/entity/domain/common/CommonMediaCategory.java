@@ -17,13 +17,13 @@ public class CommonMediaCategory extends AbstractEntity {
   public static final String TABLE_NAME = "common_media_category";
 
   /** {@link Constant.CommonMediaCode} */
-  @Column(columnDefinition = "varchar(255) not null comment '该字段确定来源'")
+  @Column(columnDefinition = "VARCHAR(255) NOT NULL COMMENT '该字段确定来源'")
   private String code;
 
-  @Column(columnDefinition = "varchar(255) not null comment '名称'")
+  @Column(columnDefinition = "VARCHAR(255) NOT NULL COMMENT '名称'")
   private String name;
 
-  @Column(columnDefinition = "varchar(255) comment '备注'")
+  @Column(columnDefinition = "VARCHAR(255) COMMENT '备注'")
   private String remark;
 
   public static CommonMediaCategory of(Long id) {

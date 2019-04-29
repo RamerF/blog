@@ -22,12 +22,12 @@ public class DataDict extends AbstractEntity {
   @JsonBackReference
   private DataDictType dataDictType;
 
-  @Column(nullable = false, length = 25, columnDefinition = "varchar(25) not null")
+  @Column(nullable = false, length = 25, columnDefinition = "VARCHAR(25) NOT NULL")
   private String name;
 
-  @Column(nullable = false, length = 25, columnDefinition = "varchar(25) not null")
+  @Column(nullable = false, length = 25, columnDefinition = "VARCHAR(25) NOT NULL")
   private String code;
 
-  @Column(length = 100, columnDefinition = "varchar(100)")
+  @Column(length = 100, columnDefinition = "VARCHAR(100)")
   private String remark;
 }

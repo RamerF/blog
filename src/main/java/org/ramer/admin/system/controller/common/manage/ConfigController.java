@@ -1,17 +1,17 @@
 package org.ramer.admin.system.controller.common.manage;
 
-import org.ramer.admin.system.entity.domain.common.Config;
-import org.ramer.admin.system.entity.pojo.common.ConfigPoJo;
-import org.ramer.admin.system.entity.response.CommonResponse;
-import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.system.service.common.ConfigService;
-import org.ramer.admin.system.validator.common.ConfigValidator;
-import org.ramer.admin.util.TextUtil;
 import io.swagger.annotations.*;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.domain.common.Config;
+import org.ramer.admin.system.entity.pojo.common.ConfigPoJo;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.service.common.CommonService;
+import org.ramer.admin.system.service.common.ConfigService;
+import org.ramer.admin.system.util.TextUtil;
+import org.ramer.admin.system.validator.common.ConfigValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

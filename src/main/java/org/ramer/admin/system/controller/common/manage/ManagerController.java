@@ -1,16 +1,6 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.Manager;
-import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
-import org.ramer.admin.system.entity.response.CommonResponse;
-import org.ramer.admin.system.exception.CommonException;
-import org.ramer.admin.system.service.common.*;
-import org.ramer.admin.system.validator.common.ManagerValidator;
-import org.ramer.admin.util.*;
-import org.ramer.admin.util.PathUtil.SavingFolder;
 import io.swagger.annotations.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,6 +9,15 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.domain.common.Manager;
+import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.service.common.*;
+import org.ramer.admin.system.util.*;
+import org.ramer.admin.system.util.PathUtil.SavingFolder;
+import org.ramer.admin.system.validator.common.ManagerValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,8 +79,7 @@ public class ManagerController {
       @RequestParam(value = "validDate", required = false) String validDateStr,
       @RequestParam(value = "roleIds[]", required = false) String[] roleIdsStr,
       @Valid Manager manager,
-      BindingResult bindingResult)
-      throws Exception {
+      BindingResult bindingResult) {
     log.info(
         " ManagerController.create : [{},{},{}]",
         JSON.toJSONString(manager),
@@ -140,8 +138,7 @@ public class ManagerController {
       @RequestParam(value = "validDate", required = false) String validDateStr,
       @RequestParam(value = "roleIds[]", required = false) String[] roleIdsStr,
       @Valid Manager manager,
-      BindingResult bindingResult)
-      throws Exception {
+      BindingResult bindingResult) {
     log.info(" ManagerController.update : [{},{}]", JSON.toJSONString(manager), validDateStr);
     final long id = TextUtil.validLong(idStr, 0);
     if (id <= 0) {
@@ -199,8 +196,8 @@ public class ManagerController {
 
   @RequestMapping("/setImg/{id}")
   @ResponseBody
-  ResponseEntity setImg(@PathVariable("id") String idStr, @RequestParam("file") MultipartFile file)
-      throws Exception {
+  ResponseEntity setImg(
+      @PathVariable("id") String idStr, @RequestParam("file") MultipartFile file) {
     final long id = TextUtil.validLong(idStr, 0);
     if (id <= 0) {
       return CommonResponse.wrongFormat("id");
@@ -225,38 +222,6 @@ public class ManagerController {
         : CommonResponse.fail("更新失败");
   }
 
-  //    @RequestMapping("/getImg")
-  //    @ResponseBody
-  //    ResponseEntity setImg(@RequestParam("id") Long id, ResourceHandlerRegistry registry) {
-  //        Manager person = service.getById(id);
-  //        // 获取shop图片目录的相对值路径
-  //        String imageUrl = person.getAvatar();
-  //        File file = new File(PathUtil.getResourceBasePath() + imageUrl, "userImage");
-  //
-  // registry.addResourceHandler("/image/**").addResourceLocations(PathUtil.getResourceBasePath() +
-  // imageUrl);
-  //        return null;
-  //    }
-
-  @GetMapping("/getRolesAndMenus")
-  @ResponseBody
-  ResponseEntity initUserInfoById(@ApiIgnore HttpSession session) {
-    final Manager person = (Manager) session.getAttribute("manager");
-    return Optional.ofNullable(service.getById(person.getId()))
-        .map(
-            manager -> {
-              JSONObject jsonObject = new JSONObject();
-              jsonObject.put("userName", manager.getName());
-              jsonObject.put("validate", manager.getValidDate().getTime());
-              jsonObject.put("phone", manager.getPhone());
-              jsonObject.put("gender", manager.getGender());
-              jsonObject.put("roles", rolesService.listNameByManager(manager.getId()));
-              jsonObject.put("menus", menuService.listNameByManager(manager.getId()));
-              return CommonResponse.ok(jsonObject);
-            })
-        .orElse(CommonResponse.ok(new JSONObject()));
-  }
-
   @PutMapping("/password/{id}")
   @PreAuthorize(
       "isAuthenticated() and #session.getAttribute('manager') != null and #session.getAttribute('manager').id.toString() eq #idStr")
@@ -272,11 +237,7 @@ public class ManagerController {
     ResponseEntity commonResponse;
     switch (result) {
       case -2:
-        commonResponse = CommonResponse.fail("原密码输入不正确");
-        break;
       case -1:
-        commonResponse = CommonResponse.fail("原密码输入不正确");
-        break;
       case 0:
         commonResponse = CommonResponse.fail("原密码输入不正确");
         break;

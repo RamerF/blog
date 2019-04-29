@@ -1,16 +1,16 @@
 package org.ramer.admin.system.service.common.impl;
 
-import org.ramer.admin.system.entity.Constant;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.repository.common.RolesRepository;
-import org.ramer.admin.system.service.common.RolesService;
-import org.ramer.admin.system.entity.domain.common.*;
-import org.ramer.admin.util.TextUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.domain.common.*;
+import org.ramer.admin.system.repository.common.RolesRepository;
+import org.ramer.admin.system.service.common.RolesService;
+import org.ramer.admin.system.util.TextUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

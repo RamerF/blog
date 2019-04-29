@@ -18,16 +18,16 @@ public abstract class AbstractEntity implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(columnDefinition = "tinyint default 1")
+  @Column(columnDefinition = "TINYINT DEFAULT 1")
   private Integer state = Constant.STATE_ON;
 
   @CreationTimestamp
-  @Column(columnDefinition = "datetime DEFAULT CURRENT_TIMESTAMP comment '创建时间'")
+  @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
   private Date createTime = new Date();
 
   @UpdateTimestamp
   @Column(
       columnDefinition =
-          "datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
+          "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'")
   private Date updateTime = new Date();
 }

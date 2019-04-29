@@ -1,6 +1,12 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.*;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.*;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
@@ -13,14 +19,8 @@ import org.ramer.admin.system.entity.response.common.*;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.OrganizeService;
+import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.OrganizeValidator;
-import org.ramer.admin.util.TextUtil;
-import io.swagger.annotations.*;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.annotation.Resource;
-import javax.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

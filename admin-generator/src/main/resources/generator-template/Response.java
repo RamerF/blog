@@ -20,6 +20,9 @@ import org.springframework.beans.BeanUtils;
 public class ${name}Response {
 ${fieldList}
   public static ${name}Response of(${name} ${alia}) {
+    if (Objects.isNull(${alia})) {
+      return null;
+    }
     ${name}Response poJo = new ${name}Response();
     // TODO-WARN:  将 Domain 对象转换成 Response 对象
     BeanUtils.copyProperties(${alia}, poJo);

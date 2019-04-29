@@ -1,5 +1,10 @@
 package org.ramer.admin.system.service.common.impl;
 
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
@@ -7,12 +12,7 @@ import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.common.DataDictRepository;
 import org.ramer.admin.system.repository.common.DataDictTypeRepository;
 import org.ramer.admin.system.service.common.DataDictService;
-import org.ramer.admin.util.TextUtil;
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.util.TextUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

@@ -1,21 +1,18 @@
 package org.ramer.admin.system.service.common.impl;
 
+import java.util.*;
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.common.Config;
 import org.ramer.admin.system.repository.common.ConfigRepository;
 import org.ramer.admin.system.service.common.ConfigService;
-import org.ramer.admin.util.TextUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.ramer.admin.system.util.TextUtil;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import java.util.*;
 
 /** @author ramer */
 @Slf4j

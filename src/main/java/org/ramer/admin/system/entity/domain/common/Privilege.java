@@ -15,10 +15,10 @@ import org.hibernate.annotations.Table;
 public class Privilege extends AbstractEntity {
   public static final String TABLE_NAME = "privilege";
   /** 权限表达式. eg: global:view */
-  @Column(length = 100, columnDefinition = "varchar(100) not null comment '权限表达式'")
+  @Column(length = 100, columnDefinition = "VARCHAR(100) not null COMMENT '权限表达式'")
   private String exp;
 
-  @Column(length = 50, columnDefinition = "varchar(50)")
+  @Column(length = 50, columnDefinition = "VARCHAR(50)")
   private String remark;
 
   public static Privilege of(long id) {

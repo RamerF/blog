@@ -115,7 +115,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
     BeanUtils.copyProperties(
         u,
         domain,
-        Stream.of(org.ramer.admin.util.BeanUtils.getNullPropertyNames(u))
+        Stream.of(org.ramer.admin.system.util.BeanUtils.getNullPropertyNames(u))
             .filter(prop -> !Arrays.asList(includeNullProperties).contains(prop))
             .toArray(String[]::new));
     u.of(u, domain);

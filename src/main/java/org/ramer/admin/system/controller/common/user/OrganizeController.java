@@ -1,16 +1,16 @@
 package org.ramer.admin.system.controller.common.user;
 
-import org.ramer.admin.system.entity.Constant.AccessPath;
-import org.ramer.admin.system.entity.response.CommonResponse;
-import org.ramer.admin.system.entity.response.common.OrganizeMemberResponse;
-import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.system.service.common.OrganizeService;
-import org.ramer.admin.util.TextUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.AccessPath;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.common.OrganizeMemberResponse;
+import org.ramer.admin.system.service.common.CommonService;
+import org.ramer.admin.system.service.common.OrganizeService;
+import org.ramer.admin.system.util.TextUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

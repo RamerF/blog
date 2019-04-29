@@ -86,7 +86,7 @@
         <appender-ref ref="org.hibernate.SQL"/>
     </logger>
     <!--<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>-->
-    <logger name="org.ramer.admin.interceptor.OperateLogInterceptor">
+    <logger name="org.ramer.admin.system.interceptor.OperateLogInterceptor">
         <appender-ref ref="operate"/>
     </logger>
     <root>

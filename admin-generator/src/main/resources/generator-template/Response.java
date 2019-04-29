@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.*;
+import ${basePath}.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -18,7 +19,7 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ${name}Response {
+public class ${name}Response extends AbstractEntityResponse {
 ${fieldList}
   public static ${name}Response of(final ${name} ${alia}) {
     if (Objects.isNull(${alia})) {

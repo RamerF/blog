@@ -51,7 +51,7 @@ public class CommonServiceImpl implements CommonService {
     menuPoJos.forEach(menuPoJo -> menusAll.add(MenuResponse.of(menuPoJo)));
     final List<MenuResponse> menus =
         menuPoJos.stream()
-            .filter(menuPoJo -> Objects.isNull(menuPoJo.getPId()))
+            .filter(menuPoJo -> Objects.isNull(menuPoJo.getParentId()))
             .map(MenuResponse::of)
             .collect(Collectors.toList());
     menusAll.removeAll(menus);
@@ -62,7 +62,7 @@ public class CommonServiceImpl implements CommonService {
       // 当前节点的子节点
       List<MenuResponse> child =
           menusAll.stream()
-              .filter(menuResponse -> menuResponse.getPId().equals(menu.getId()))
+              .filter(menuResponse -> menuResponse.getParentId().equals(menu.getId()))
               .collect(Collectors.toList());
       // 子节点具有叶子节点,入栈
       child.stream().filter(menuResponse -> !menuResponse.getLeaf()).forEach(retain::push);

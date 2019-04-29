@@ -3,6 +3,7 @@ package org.ramer.admin.system.entity.response.common;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -13,7 +14,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ManageLogResponse {
+@EqualsAndHashCode(callSuper = true)
+public class ManageLogResponse extends AbstractEntityResponse {
 
   private String url;
 

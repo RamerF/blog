@@ -2,12 +2,14 @@ package org.ramer.admin.system.entity.response.thirdparty;
 
 import lombok.*;
 import org.ramer.admin.system.entity.Constant.ResultCode;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 
 /** @author ramer */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ThirdPartyResponse {
+@EqualsAndHashCode(callSuper = true)
+public class ThirdPartyResponse extends AbstractEntityResponse {
   private boolean success;
   private String message;
   private String errcode;

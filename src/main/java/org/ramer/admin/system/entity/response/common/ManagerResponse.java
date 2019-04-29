@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.Manager;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -14,7 +15,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ManagerResponse {
+@EqualsAndHashCode(callSuper = true)
+public class ManagerResponse extends AbstractEntityResponse {
 
   private String empNo;
 

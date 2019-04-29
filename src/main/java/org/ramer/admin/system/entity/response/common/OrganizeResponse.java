@@ -1,7 +1,8 @@
 package org.ramer.admin.system.entity.response.common;
 
-import org.ramer.admin.system.entity.domain.common.Organize;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.common.Organize;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -12,7 +13,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizeResponse {
+@EqualsAndHashCode(callSuper = true)
+public class OrganizeResponse extends AbstractEntityResponse {
 
   private Long id;
 

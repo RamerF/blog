@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.Menu;
 import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -14,7 +15,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuResponse {
+@EqualsAndHashCode(callSuper = true)
+public class MenuResponse extends AbstractEntityResponse {
   private Long id;
 
   private Boolean leaf;

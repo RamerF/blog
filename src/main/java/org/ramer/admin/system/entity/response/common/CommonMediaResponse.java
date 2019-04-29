@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.CommonMedia;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -15,7 +16,8 @@ import org.springframework.util.CollectionUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommonMediaResponse {
+@EqualsAndHashCode(callSuper = true)
+public class CommonMediaResponse extends AbstractEntityResponse {
 
   private Long id;
   private Integer state;

@@ -1,13 +1,9 @@
 package org.ramer.admin.system.entity.response.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.DataDict;
-import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.common.DataDict;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -18,7 +14,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataDictResponse {
+@EqualsAndHashCode(callSuper = true)
+public class DataDictResponse extends AbstractEntityResponse {
 
   private String name;
 

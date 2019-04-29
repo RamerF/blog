@@ -3,6 +3,7 @@ package org.ramer.admin.system.entity.response.common;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.Config;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -13,7 +14,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConfigResponse {
+@EqualsAndHashCode(callSuper = true)
+public class ConfigResponse extends AbstractEntityResponse {
 
   private String code;
 

@@ -1,6 +1,7 @@
 package org.ramer.admin.system.entity.response.common;
 
 import lombok.*;
+import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 
 /**
  * 组织成员所属组织.
@@ -10,7 +11,8 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizeMemberRelationResponse {
+@EqualsAndHashCode(callSuper = true)
+public class OrganizeMemberRelationResponse extends AbstractEntityResponse {
   /** 成员id */
   private Long memberId;
   /** 成员名称 */

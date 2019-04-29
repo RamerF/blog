@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller("managermc")
 @PreAuthorize("hasAnyAuthority('global:read','manager:read')")
 @RequestMapping(AccessPath.MANAGE + "/common/manager")
-@Api(tags = "管理员接口")
+@Api(tags = "管理端: 管理员接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ManagerController {
   @Resource private ManagerService service;

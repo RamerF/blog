@@ -22,10 +22,10 @@
  import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@Controller("manageLogc")
+@Controller("manageLogmc")
 @PreAuthorize("hasAnyAuthority('global:read','manageLog:read')")
 @RequestMapping( "/common/manageLog")
-@Api(tags = "管理端日志接口")
+@Api(tags = "管理端: 日志接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ManageLogController {
   @Resource private ManageLogService service;

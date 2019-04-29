@@ -1,16 +1,16 @@
 package org.ramer.admin.system.service.common.impl;
 
-import java.util.Collections;
-import java.util.List;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.DataDictTypeRepository;
 import org.ramer.admin.system.service.common.DataDictTypeService;
 import org.ramer.admin.system.util.TextUtil;
-import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -27,40 +27,6 @@ public class DataDictTypeServiceImpl implements DataDictTypeService {
     return repository.saveAndFlush(dataDictType);
   }
 
-  @Override
-  public long count() {
-    return repository.count();
-  }
-
-  @Override
-  public DataDictType getById(final long id) {
-    return repository.findById(id).orElse(null);
-  }
-
-  @Override
-  public List<DataDictType> list(final String criteria) {
-    return page(criteria, -1, -1).getContent();
-  }
-
-  @Override
-  public Page<DataDictType> page(final String criteria, final int page, final int size) {
-    final PageRequest pageable = pageRequest(page, size);
-    if (pageable == null) {
-      new PageImpl<>(Collections.emptyList());
-    }
-    return StringUtils.isEmpty(criteria)
-        ? repository.findAll(pageable)
-        : repository.findAll(
-            (root, query, builder) ->
-                builder.and(
-                    builder.equal(root.get("state"), Constant.STATE_ON),
-                    builder.or(
-                        builder.like(root.get("name"), "%" + criteria + "%"),
-                        builder.like(root.get("code"), "%" + criteria + "%"),
-                        builder.like(root.get("remark"), "%" + criteria + "%"))),
-            pageable);
-  }
-
   @Transactional
   @Override
   public synchronized DataDictType update(DataDictType dataDictType) {
@@ -74,12 +40,6 @@ public class DataDictTypeServiceImpl implements DataDictTypeService {
         .orElse(null);
   }
 
-  @Transactional
-  @Override
-  public synchronized void delete(final long dicId) {
-    repository.deleteById(dicId);
-  }
-
   @Override
   public void textFilter(DataDictType trans, DataDictType filtered) {
     filtered.setName(TextUtil.filter(trans.getName()));
@@ -87,5 +47,22 @@ public class DataDictTypeServiceImpl implements DataDictTypeService {
     if (!StringUtils.isEmpty(trans.getCode())) {
       filtered.setCode(TextUtil.filter(trans.getCode()));
     }
+  }
+
+  @Override
+  public Specification<DataDictType> getSpec(final String criteria) {
+    return (root, query, builder) ->
+        builder.and(
+            builder.equal(root.get("state"), Constant.STATE_ON),
+            builder.or(
+                builder.like(root.get("name"), "%" + criteria + "%"),
+                builder.like(root.get("code"), "%" + criteria + "%"),
+                builder.like(root.get("remark"), "%" + criteria + "%")));
+  }
+
+  @SuppressWarnings({"unchecked"})
+  @Override
+  public <U extends BaseRepository<DataDictType, Long>> U getRepository() throws CommonException {
+    return (U) repository;
   }
 }

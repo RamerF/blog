@@ -1,5 +1,6 @@
 package ${basePath}${moduleName}.entity.request${subDir};
 
+import io.swagger.annotations.ApiModel;
 import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}.system.entity.request.AbstractEntityRequest;
 import ${basePath}.system.entity.domain.AbstractEntity;
@@ -18,6 +19,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel("${description}")
 public class ${name}Request extends AbstractEntityRequest {
 ${fieldList}
 }

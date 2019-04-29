@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class ${name}Response extends AbstractEntityResponse {
 ${fieldList}
   public static ${name}Response of(final ${name} ${alia}) {

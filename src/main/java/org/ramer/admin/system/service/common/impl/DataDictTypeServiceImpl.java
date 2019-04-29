@@ -1,7 +1,6 @@
 package org.ramer.admin.system.service.common.impl;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
@@ -19,26 +18,6 @@ import org.springframework.util.StringUtils;
 @Service
 public class DataDictTypeServiceImpl implements DataDictTypeService {
   @Resource private DataDictTypeRepository repository;
-
-  @Transactional
-  @Override
-  public synchronized DataDictType create(DataDictType dataDictType) {
-    textFilter(dataDictType, dataDictType);
-    return repository.saveAndFlush(dataDictType);
-  }
-
-  @Transactional
-  @Override
-  public synchronized DataDictType update(DataDictType dataDictType) {
-    return repository
-        .findById(dataDictType.getId())
-        .map(
-            dictType -> {
-              textFilter(dataDictType, dictType);
-              return repository.saveAndFlush(dictType);
-            })
-        .orElse(null);
-  }
 
   @Override
   public void textFilter(DataDictType trans, DataDictType filtered) {

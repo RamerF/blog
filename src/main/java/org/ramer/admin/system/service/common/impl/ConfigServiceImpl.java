@@ -51,18 +51,6 @@ public class ConfigServiceImpl implements ConfigService {
     return repository.saveAndFlush(conf);
   }
 
-  @Transactional
-  @Override
-  public synchronized Config update(Config conf) {
-    return Optional.ofNullable(getById(conf.getId()))
-        .map(
-            config -> {
-              textFilter(conf, config);
-              return repository.saveAndFlush(config);
-            })
-        .orElse(null);
-  }
-
   @Override
   public void textFilter(Config trans, Config filtered) {
     filtered.setValue(TextUtil.filter(trans.getValue()));

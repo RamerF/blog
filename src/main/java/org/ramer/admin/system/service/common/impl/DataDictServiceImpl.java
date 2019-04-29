@@ -72,19 +72,6 @@ public class DataDictServiceImpl implements DataDictService {
     return repository.saveAndFlush(dict);
   }
 
-  @Transactional
-  @Override
-  public synchronized DataDict update(DataDict dataDict) {
-    return repository
-        .findById(dataDict.getId())
-        .map(
-            dict -> {
-              textFilter(dataDict, dict);
-              return repository.saveAndFlush(dict);
-            })
-        .orElse(null);
-  }
-
   @Override
   public void textFilter(DataDict trans, DataDict filtered) {
     filtered.setName(TextUtil.filter(trans.getName()));

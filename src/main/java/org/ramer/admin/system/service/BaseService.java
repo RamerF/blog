@@ -25,6 +25,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
 
   @Transactional
   default T create(T t) throws RuntimeException {
+    textFilter(t, t);
     return getRepository().saveAndFlush(t);
   }
 
@@ -125,7 +126,11 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
   @Transactional
   default T update(T t) throws RuntimeException {
     return Optional.ofNullable(getById(t.getId()))
-        .map(o -> getRepository().saveAndFlush(t))
+        .map(
+            o -> {
+              textFilter(t, t);
+              return getRepository().saveAndFlush(t);
+            })
         .orElse(null);
   }
 

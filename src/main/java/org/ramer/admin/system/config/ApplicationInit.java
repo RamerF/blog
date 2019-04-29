@@ -53,7 +53,7 @@ public class ApplicationInit implements ApplicationRunner {
       privileges.add(globalPrivilege);
       roles.setPrivileges(privileges);
       roles.setMenus(menuService.list(null));
-      privilegeService.saveBatch(privileges);
+      privilegeService.createBatch(privileges);
       rolesService.create(roles);
       // init super user
       Manager manager = managerService.getByEmpNo("admin");
@@ -152,7 +152,7 @@ public class ApplicationInit implements ApplicationRunner {
           PrivilegeEnum.USER.remark.concat(":").concat(PrivilegeEnum.ALL.remark));
       privileges.add(userPrivilege);
       roles.setPrivileges(privileges);
-      privilegeService.saveBatch(privileges);
+      privilegeService.createBatch(privileges);
       rolesService.create(roles);
 
       // 添加数据库字典,用于演示

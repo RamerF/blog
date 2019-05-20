@@ -3,6 +3,7 @@ package org.ramer.admin.system.controller.common.manage;
 import io.swagger.annotations.*;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.common.Config;
@@ -55,7 +56,8 @@ public class ConfigController {
 
   @GetMapping
   @ApiOperation("添加系统参数页面")
-  String create() {
+  String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
     return "manage/config/create";
   }
 

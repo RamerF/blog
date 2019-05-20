@@ -1,3 +1,83 @@
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.bootstrap-table .fixed-table-pagination > .pagination-detail, .bootstrap-table .fixed-table-pagination > .pagination {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.float-left {
+    float: left !important;
+}
+
+.bootstrap-table .fixed-table-pagination > .pagination-detail, .bootstrap-table .fixed-table-pagination > .pagination {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.bootstrap-table .fixed-table-pagination > .pagination-detail .pagination-info {
+    line-height: 34px;
+    margin-right: 5px;
+}
+
+.bootstrap-table .fixed-table-pagination > .pagination-detail .page-list .btn-group {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.float-right {
+    float: right !important;
+}
+
 .search-container, .operator-contaienr {
     padding: 0 0 16px 16px;
+}
+
+.bootstrap-table .fixed-table-pagination > .pagination ul.pagination {
+    margin: 0;
+}
+
+.pagination {
+    display: -ms-flexbox;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
+
+.bootstrap-table .fixed-table-pagination > .pagination ul.pagination a {
+    padding: 6px 12px;
+    line-height: 1.428571429;
+}
+
+.page-item:first-child .page-link {
+    margin-left: 0;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.page-link:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
 }

@@ -65,7 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.exceptionHandling().accessDeniedPage("/forbidden");
     // TODO-TIP: 临时禁用
     http.csrf().disable();
-    //    http.authorizeRequests()
+    // 多个认证对象
+    //    http.antMatcher("/user/**")
+    //        .authorizeRequests()
     //        .antMatchers(
     //            "/v2/api-docs",
     //            "/swagger-resources/configuration/ui",

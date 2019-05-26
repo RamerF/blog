@@ -154,24 +154,20 @@
           return false;
         }
         globalPage = page.data;
-        // total pages
+        // 总页数
         let totalPages = globalPage.totalPages;
-        // current page number
-        let number = globalPage.number;
-        // total elements
-        let totalElements = globalPage.totalElements;
-        // size of per page
+        // 当前页号,从1开始
+        let number = Number(globalPage.number + 1);
+        // 总记录数
+        let totalElements = globalPage['totalElements'];
+        // 每页大小
         let size = globalPage.size;
         let pageContainer = $('<div class="pagination-container"></div>');
-        let staticInfo = `<p class="count" id="ajaxTableCount">从第`
-                         +
-                         `${(number * size + 1)}条到第${((number + 1) * size)}`
-                         + `条,总共${totalElements}条</p>`;
-        if (totalElements % size !== 0 && number + 1 === totalPages) {
-          staticInfo = `<p class="count" id="ajaxTableCount">从第`
-                       + `${(number * size + 1)}条到第${totalElements}`
-                       + `条,总共${totalElements}条</p>`;
-        }
+        let staticInfo = `<p class="count" id="ajaxTableCount">
+                            从第${(number * size + 1)}条
+                            到第${(totalElements % size !== 0 && number + 1 ===
+                                 totalPages) ? totalElements : number * size}条,
+                            总共${totalElements}条</p>`;
         $(pageContainer).append(staticInfo);
         initNumberBtn(pageContainer);
         let data = globalPage.content;
@@ -185,25 +181,20 @@
         updateNumberBtn(number, totalPages);
         $('button[id="prevBtn"],button[id="nextBtn"]').
         on('click', function(e) {
-          number = globalPage.number;
-          if ($(this).attr('id').indexOf('prev') > -1) {
-            _queryParams.page = number - 1;
-            number--;
-          } else {
-            _queryParams.page = number + 1;
-            number++;
-          }
+          number = globalPage.number + 1;
+          _queryParams.page = $(this).attr('id') === 'prevBtn'
+              ? --number
+              : ++number;
           updateNumberBtn(number, globalPage.totalPages);
           ajaxNewData(_url, _queryParams, size, tbodyNode);
         });
-        $('button[id*="pageBtn"]').click(function(e) {
-          let number = $(this).text();
-          if ($(this).hasClass('md-flat-btn') || isNaN(number)) {
+        $('button[id*="pageBtn"]').on('click', function(e) {
+          let numberClick = Number($(this).text());
+          if (!$(this).hasClass('mdc-button--raised') || isNaN(numberClick)) {
             return false;
           }
-          number -= 1;
-          updateNumberBtn(number, globalPage.totalPages);
-          _queryParams.page = number;
+          updateNumberBtn(numberClick, globalPage.totalPages);
+          _queryParams.page = number = numberClick;
           ajaxNewData(_url, _queryParams, size, tbodyNode);
         });
       },
@@ -211,7 +202,8 @@
         console.error('error to pull data');
         _errorCallback();
       }
-    });
+    })
+    ;
     _successCallback();
 
     function initNumberBtn(pageContainer) {
@@ -223,7 +215,7 @@
         for (let i = 1; i < 8; i++) {
           let li = $('<li></li>');
           let btn = $(
-              `<button class="mdc-button mdc-button--raised mdc-ripple-upgraded" id="pageBtn${i}">${i}</button>`);
+              `<button class="mdc-button mdc-ripple-upgraded" id="pageBtn${i}">${i}</button>`);
           $(li).append(btn);
           $(ul).append(li);
         }
@@ -243,46 +235,48 @@
     }
 
     function updateNumberBtn(number, totalPages) {
-      number = number + 1;
+      // number = number + 1;
       $('#pageBtn7').text(totalPages);
-      $('#prevBtn').prop('disabled', false);
-      $('#nextBtn').prop('disabled', false);
-      if (number == 1) {
-        $('#prevBtn').prop('disabled', 'disabled');
+      let $prevBtn = $('#prevBtn');
+      let $nextBtn = $('#nextBtn');
+      $prevBtn.prop('disabled', false);
+      $nextBtn.prop('disabled', false);
+      if (number === 1) {
+        $prevBtn.prop('disabled', 'disabled');
         colorPageBtn('#pageBtn1');
-      } else if (number == totalPages) {
-        $('#nextBtn').prop('disabled', 'disabled');
+      } else if (number === totalPages) {
+        $nextBtn.prop('disabled', 'disabled');
         colorPageBtn('#pageBtn7');
       }
       if (totalPages <= 7) {
         for (let i = 1; i <= totalPages; i++) {
           $('#pageBtn' + i).text(i);
-          if (i == number) {
-            colorPageBtn('#pageBtn' + number);
+          if (i === number) {
+            colorPageBtn('#pageBtn' + i);
           }
         }
         return false;
       }
       if (number <= 4) {
         for (let i = 2; i < 7; i++) {
-          if (i == 6) {
+          if (i === 6) {
             $('#pageBtn' + i).text('...');
           } else {
             $('#pageBtn' + i).text(i);
           }
-          if (i == number) {
+          if (i === number) {
             colorPageBtn('#pageBtn' + number);
           }
         }
       } else if (number > totalPages - 4) {
         let btnNum = 2;
         for (let i = totalPages - 5; i < totalPages; i++) {
-          if (btnNum == 2) {
+          if (btnNum === 2) {
             $('#pageBtn' + btnNum).text('...');
           } else {
             $('#pageBtn' + btnNum).text(i);
           }
-          if (i == number) {
+          if (i === number) {
             colorPageBtn('#pageBtn' + btnNum);
           }
           btnNum++;
@@ -300,34 +294,40 @@
     function colorPageBtn(selector) {
       $(selector).
       parents('ul').
-      find('button[class*="mdc-button--dense"]').
-      removeClass('mdc-button--dense').
-      addClass(
-          'mdc-button--raised');
+      find('button[class*="mdc-button"]').
+      addClass('mdc-button--raised');
       $(selector).
-      removeClass('mdc-button--raised').
-      addClass('mdc-button--dense');
+      removeClass('mdc-button--raised');
     }
 
     function ajaxNewData(url, ajaxData, size, tbody) {
       ajaxData.size = size;
-      $.get(url, ajaxData, function(page) {
-        globalPage = page;
-        let data = globalPage.content;
-        $(tbody).empty();
-        appendBodyData(data);
-        let staticInfo = 'from ' + (globalPage.number * globalPage.size + 1) +
-                         ' to  '
-                         + ((globalPage.number + 1) * globalPage.size) +
-                         ' ,total: ' + globalPage.totalElements;
-        if (globalPage.totalElements % globalPage.size != 0 &&
-            globalPage.number + 1 == globalPage.totalPages) {
-          staticInfo = 'from ' + (globalPage.number * globalPage.size + 1) +
-                       ' to  '
-                       + globalPage.totalElements + ' ,total: ' +
-                       globalPage.totalElements;
+      $.ajax({
+        url: url,
+        type: _type,
+        data: ajaxData,
+        contentType: _contentType,
+        success: function(page) {
+          console.log(JSON.stringify(page));
+          globalPage = page.data;
+          let data = globalPage.content;
+          $(tbody).empty();
+          appendBodyData(data);
+          let staticInfo = `从第${(globalPage.number * globalPage.size + 1)}条
+                            到第${((globalPage.number + 1) * globalPage.size)}条,
+                            总共: ${globalPage['totalElements']}条`;
+          if (globalPage['totalElements'] % globalPage.size !== 0 &&
+              globalPage.number + 1 === globalPage.totalPages) {
+            staticInfo = `从 第${(globalPage.number * globalPage.size + 1)}条
+                          到第${globalPage['totalElements']}条,
+                          总共: ${globalPage['totalElements']}条`;
+          }
+          $('#ajaxTableCount').text(staticInfo);
+          _successCallback();
+        },
+        error: function() {
+          console.log('获取数据失败...');
         }
-        $('#ajaxTableCount').text(staticInfo);
       });
     }
 
@@ -392,6 +392,8 @@
     }
 
     return new AjaxTable(ajaxData, _container);
-  };
+  }
+  ;
 
-}));
+}))
+;

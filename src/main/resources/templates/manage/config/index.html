@@ -7,7 +7,7 @@
 <head>
     <title>系统参数配置</title>
     <script th:src="@{/libs/layer/layer.js}"></script>
-    <link rel="stylesheet" th:href="@{/libs/layer/theme/default/layer.css}"/>
+    <!--<link rel="stylesheet" th:href="@{/libs/layer/theme/default/layer.css}"/>-->
     <link rel="stylesheet" th:href="@{/style/manage/config/index.css}"/>
 </head>
 <body>
@@ -21,153 +21,187 @@
     </th:block>
 </th:block>
 <div layout:fragment="main-container" class="main-container">
-    <div class="search-container">
-        <div class="mdc-text-field mdc-text-field--fullwidth mdc-text-field--with-trailing-icon"
-             data-mdc-auto-init="MDCTextField">
-            <input type="text" id="name" class="mdc-text-field__input" placeholder="请输入参数Code或名称" autocomplete="off">
-            <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">search</i>
-            <div class="mdc-line-ripple"></div>
+    <div id="mdc-data-table" class="mdc-data-table__container">
+        <div class="search-container">
+            <div class="mdc-text-field mdc-text-field--fullwidth mdc-text-field--with-trailing-icon"
+                 data-mdc-auto-init="MDCTextField">
+                <input type="text" id="name" class="mdc-text-field__input" placeholder="请输入参数Code或名称"
+                       autocomplete="off">
+                <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">search</i>
+                <div class="mdc-line-ripple"></div>
+            </div>
+            <!--        <button class="mdc-button mdc-button&#45;&#45;raised" onclick="search(this);">-->
+            <!--            <i class="material-icons mdc-button__icon" aria-hidden="true">search</i>-->
+            <!--            <span class="mdc-button__label">搜索</span>-->
+            <!--        </button>-->
         </div>
-        <!--        <button class="mdc-button mdc-button&#45;&#45;raised" onclick="search(this);">-->
-        <!--            <i class="material-icons mdc-button__icon" aria-hidden="true">search</i>-->
-        <!--            <span class="mdc-button__label">搜索</span>-->
-        <!--        </button>-->
+        <div class="operator-container">
+            <button class="mdc-button mdc-button--raised" onclick="refresh();" id="refreshBtn">
+                <span class="mdc-button__label">刷新</span>
+            </button>
+            <a class="mdc-button mdc-button--raised" th:href="@{/manage/config}">
+                <span class="mdc-button__label">添加</span>
+            </a>
+            <button class="mdc-button mdc-button--raised" onclick="update();">
+                <span class="mdc-button__label">修改</span>
+            </button>
+            <button class="mdc-button mdc-button--raised" onclick="del(this);">
+                <span class="mdc-button__label">删除</span>
+            </button>
+        </div>
     </div>
-    <div class="operator-contaienr">
-        <button class="mdc-button mdc-button--raised" onclick="refresh();">
-            <span class="mdc-button__label">刷新</span>
-        </button>
-        <a class="mdc-button mdc-button--raised" th:href="@{/manage/config}">
-            <span class="mdc-button__label">添加</span>
-        </a>
-        <button class="mdc-button mdc-button--raised" onclick="update();">
-            <span class="mdc-button__label">修改</span>
-        </button>
-        <button class="mdc-button mdc-button--raised" onclick="del(this);">
-            <span class="mdc-button__label">删除</span>
-        </button>
-    </div>
-    <!--  mdl-shadow--2dp mdl-data-table mdl-js-data-table  -->
-    <table id="table" class="mdl-data-table mdl-shadow--2dp">
-        <thead class="thead-fixed">
-        <tr>
-            <th id="checkAll" class="mdl-data-table__cell--non-numeric check-all">
-                <div class="mdc-form-field">
-                    <div class="mdc-checkbox">
-                        <input type="checkbox" class="mdc-checkbox__native-control" onclick="bindCheckAll(this)"/>
-                        <div class="mdc-checkbox__background">
-                            <svg class="mdc-checkbox__checkmark"
-                                 viewBox="0 0 24 24">
-                                <path class="mdc-checkbox__checkmark-path"
-                                      fill="none"
-                                      d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
-                            </svg>
-                            <div class="mdc-checkbox__mixedmark"></div>
-                        </div>
-                    </div>
-                </div>
-            </th>
-            <th class="mdl-data-table__cell--non-numeric">CODE</th>
-            <th class="mdl-data-table__cell--non-numeric">名称</th>
-            <th class="mdl-data-table__cell--non-numeric">参数值</th>
-            <th class="mdl-data-table__cell--non-numeric">备注</th>
-        </tr>
-        </thead>
-    </table>
 </div>
 <th:block layout:fragment="script">
     <!-- mdc 部分组件未实现,该部分使用老版本 -->
     <!--    <link rel="stylesheet" href="/libs/material-design-light/material.css"/>-->
-    <script type="text/javascript" src="/libs/material-design-light/material.js"></script>
+    <!--<script type="text/javascript" src="/libs/material-design-light/material.js"></script>-->
     <script src="/libs/bootstrap-table/bootstrap-table.js"></script>
     <script type="text/javascript">
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
         // new mdc.textField.MDCTextField(document.querySelector('.mdc-text-field'));
-        $('#table').bootstrapTable({ // 对应table标签的id
-          url: '/manage/config/list', // 获取表格数据的url
-          method: 'GET',
-          contentType: 'application/x-www-form-urlencoded',
-          dataType: 'json',
-          singleSelect: true,//单选
-          cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
-          striped: true,  //表格显示条纹，默认为false
-          pageSize: 2, // 页面数据条数
-          pageList: [5, 10, 15, 20], // 设置页面可以显示的数据条数
-          pageNumber: 1, // 首页页码
-          pagination: true,//是否分页
-          sidePagination: 'server',  // 设置为服务器端分页
-          showRefresh: false,
-          checkboxHeader: false,
-          clickToSelect: false,
-          maintainSelected: true,
-          queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
-            var name = $('#name');
-            if (name.val() === '') {
-              return {
-                size: params.limit,//params.limit, // 每页要显示的数据条数
-                page: (params.offset / params.limit) + 1, // 当前页
-              };
-            } else {
-              return {
-                criteria: name.val(),
-                size: params.limit,//params.limit, // 每页要显示的数据条数
-                page: (params.offset / params.limit) + 1, // 当前页
-              };
-            }
-          },
-            /* sortName: 'name', // 要排序的字段
-             sortOrder: 'desc', // 排序规则 */
+        // 代码重构
+        var ajaxTable = $('#mdc-data-table').ajaxTable({
+          url: '/manage/config/list',
+          queryParams: {},
+          container: '#mdc-data-table',
           columns: [
             {
-              field: 'id',
-              formatter: function(id) {
-                var div1Node = $('<div class="mdc-form-field"></div>');
-                var div2Node = $('<div class="mdc-checkbox"></div>');
-                var inputNode = $('<input type="checkbox" class="mdc-checkbox__native-control" value="' + id + '">');
-                var div3Node = $('<div class="mdc-checkbox__background"></div>');
-                var svgNode = $('<svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"></svg>');
-                var pathNode = $(
-                    '<path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>');
-                var div4Node = $('<div class="mdc-checkbox__mixedmark"></div>');
-                var labelNode = $('<label ></label>');
-                labelNode.append(inputNode);
-                div1Node.append(div2Node);
-                div2Node.append(inputNode);
-                div2Node.append(div3Node);
-                div3Node.append(svgNode);
-                div3Node.append(div4Node);
-                svgNode.append(pathNode);
-                return div1Node.prop('outerHTML');
-              },
+              data: 'code'
             },
             {
-              field: 'code',
-            }, {
-              field: 'name',
-            }, {
-              field: 'value',
-            }, {
-              field: 'remark',
+              data: 'name'
             },
+            {
+              data: 'value'
+            },
+            {
+              data: 'remark'
+            }
           ],
-          responseHandler: function(res) {
-            return {total: res.data.totalElements, rows: res.data.content};
-          },
-          onLoadSuccess: function() {
-            // bindCheckAll();
-            bindClickRow();
-            //加载成功时执行
-            //禁用全选
-            //$("input[name='btSelectAll']").attr("hidden", "true");
-            // const checkbox = new mdc.checkbox.MDCCheckbox(document.querySelector('.mdc-checkbox'));
-            // const formField = new mdc.formField.MDCFormField(document.querySelector('.mdc-form-field'));
-            // formField.input = checkbox;
-          },
-          onLoadError: function() {  //加载失败时执行
-          },
+          thead: [
+            {
+              data: 'CODE',
+              style: 'mdc-data-table__cell--non-numeric'
+              // width: '60px'
+            },
+            {
+              data: 'NAME',
+              style: 'mdc-data-table__cell--non-numeric'
+              // width: '60px'
+            },
+            {
+              data: '参数值',
+              style: 'mdc-data-table__cell--non-numeric'
+              // width: '60px'
+            },
+            {
+              data: '备注',
+              style: 'mdc-data-table__cell--non-numeric'
+              // width: '60px'
+            }
+          ],
+          // 是否分页
+          pagination: true,
+          // 页面数据条数
+          pageSize: 2,
+          // 设置页面可以显示的数据条数
+          pageList: [5, 10, 15, 20],
+          // 首页页码
+          pageNumber: 1,
+          editable: false,
+          callback: function() {
+          }
         });
+        $('#refreshBtn').click(function() {
+          console.log(ajaxTable.getSelectItems());
+        });
+        // 代码重构
+
+        // $('#table').bootstrapTable({ // 对应table标签的id
+        //   url: '/manage/config/list', // 获取表格数据的url
+        //   method: 'GET',
+        //   contentType: 'application/x-www-form-urlencoded',
+        //   dataType: 'json',
+        //   singleSelect: true,//单选
+        //   cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        //   striped: true,  //表格显示条纹，默认为false
+        //   pageSize: 2, // 页面数据条数
+        //   pageList: [5, 10, 15, 20], // 设置页面可以显示的数据条数
+        //   pageNumber: 1, // 首页页码
+        //   pagination: true,//是否分页
+        //   sidePagination: 'server',  // 设置为服务器端分页
+        //   showRefresh: false,
+        //   checkboxHeader: false,
+        //   clickToSelect: false,
+        //   maintainSelected: true,
+        //   queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+        //     var name = $('#name');
+        //     if (name.val() === '') {
+        //       return {
+        //         size: params.limit,//params.limit, // 每页要显示的数据条数
+        //         page: (params.offset / params.limit) + 1 // 当前页
+        //       };
+        //     } else {
+        //       return {
+        //         criteria: name.val(),
+        //         size: params.limit,//params.limit, // 每页要显示的数据条数
+        //         page: (params.offset / params.limit) + 1 // 当前页
+        //       };
+        //     }
+        //   },
+        //     /* sortName: 'name', // 要排序的字段
+        //      sortOrder: 'desc', // 排序规则 */
+        //   columns: [
+        //     {
+        //       field: 'id',
+        //       formatter: function(id) {
+        //         var div1Node = $('<div class="mdc-form-field"></div>');
+        //         var div2Node = $('<div class="mdc-checkbox"></div>');
+        //         var inputNode = $('<input type="checkbox" class="mdc-checkbox__native-control" value="' + id + '">');
+        //         var div3Node = $('<div class="mdc-checkbox__background"></div>');
+        //         var svgNode = $('<svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"></svg>');
+        //         var pathNode = $(
+        //             '<path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>');
+        //         var div4Node = $('<div class="mdc-checkbox__mixedmark"></div>');
+        //         var labelNode = $('<label ></label>');
+        //         labelNode.append(inputNode);
+        //         div1Node.append(div2Node);
+        //         div2Node.append(inputNode);
+        //         div2Node.append(div3Node);
+        //         div3Node.append(svgNode);
+        //         div3Node.append(div4Node);
+        //         svgNode.append(pathNode);
+        //         return div1Node.prop('outerHTML');
+        //       }
+        //     },
+        //     {
+        //       field: 'code'
+        //     }, {
+        //       field: 'name'
+        //     }, {
+        //       field: 'value'
+        //     }, {
+        //       field: 'remark'
+        //     }
+        //   ],
+        //   responseHandler: function(res) {
+        //     return {total: res.data.totalElements, rows: res.data.content};
+        //   },
+        //   onLoadSuccess: function() {
+        //     // bindCheckAll();
+        //     bindClickRow();
+        //     //加载成功时执行
+        //     //禁用全选
+        //     //$("input[name='btSelectAll']").attr("hidden", "true");
+        //     // const checkbox = new mdc.checkbox.MDCCheckbox(document.querySelector('.mdc-checkbox'));
+        //     // const formField = new mdc.formField.MDCFormField(document.querySelector('.mdc-form-field'));
+        //     // formField.input = checkbox;
+        //   },
+        //   onLoadError: function() {  //加载失败时执行
+        //   }
+        // });
 
       });
 
@@ -176,16 +210,6 @@
         $('#table').find('tr').each(function(a, b) {
           $(b).find('input[type=\'checkbox\']').click();
         });
-        return false;
-      }
-
-      function bindCheckAll(e) {
-        console.log('check all...');
-        $('#table').find('tr').each(function(a, b) {
-          $(b).find('input[type=\'checkbox\']').click();
-        });
-        e.stopPropagation();
-        e.preventDefault();
         return false;
       }
 
@@ -242,7 +266,7 @@
                 } else {
                   layer.alert(data.msg, {icon: 2});
                 }
-              },
+              }
             });
           });
         } else {

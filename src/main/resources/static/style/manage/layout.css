@@ -73,11 +73,11 @@ body {
 /*TODO-WARN: 替换最新 mdc table 样式,目前官方还未实现该组件 */
 
 /* material component web table */
-.mdl-shadow--2dp {
+.mdc-shadow--2dp {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
-.mdl-data-table {
+.mdc-data-table {
     width: 100%;
     position: relative;
     border: 1px solid rgba(0, 0, 0, 0.12);
@@ -87,36 +87,83 @@ body {
     background-color: rgb(255, 255, 255);
 }
 
-.mdl-data-table td:first-of-type, .mdl-data-table th:first-of-type {
+.mdc-data-table__container > div {
+    margin: 16px auto;
+}
+
+.mdc-data-table td:first-of-type, .mdc-data-table th:first-of-type {
     padding-left: 24px;
 }
 
-.mdl-data-table__cell--non-numeric.mdl-data-table__cell--non-numeric {
+.mdc-data-table__cell--non-numeric.mdc-data-table__cell--non-numeric {
     text-align: left;
 }
 
-.mdl-data-table th {
+.mdc-data-table th {
     position: relative;
-    vertical-align: bottom;
     text-overflow: ellipsis;
     font-weight: bold;
     line-height: 24px;
     letter-spacing: 0;
     height: 48px;
     font-size: 12px;
-    color: rgba(0, 0, 0, 0.54);
+    color: rgba(0, 0, 0, 0.87);
     padding-bottom: 8px;
     box-sizing: border-box;
 }
 
-.mdl-data-table td, .mdl-data-table th {
-    padding: 0 18px 12px 18px;
+.mdc-data-table td, .mdc-data-table th {
+    padding: 12px 18px;
     text-align: right;
 }
 
-.mdl-data-table .thead-fixed th {
+.mdc-data-table .thead-fixed th {
     padding-top: 8px;
     vertical-align: middle;
+}
+
+.mdc-data-table tbody tr.is-selected {
+    background-color: #e0e0e0;
+}
+
+.mdc-data-table tbody tr:hover {
+    background-color: #eee;
+}
+
+.pagination-container {
+    display: flex;
+}
+
+.pagination-container ul {
+    float: right;
+}
+
+.pagination-container .count {
+    flex: 1;
+}
+
+.pagination-container ul {
+    float: right;
+}
+
+.pagination-container ul li {
+    list-style: none;
+    float: left;
+    margin-left: 1px;
+}
+
+.pagination-container ul li:first-of-type button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.pagination-container ul li:last-of-type button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.pagination-container ul li:not(:first-of-type):not(:last-of-type) button {
+    border-radius: 0;
 }
 
 
@@ -124,10 +171,10 @@ body {
 
 
 /* custom */
-
-/*form*/
-.
-/*form*/
+.mdc-margin-panel {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
 
 /* custom */
 

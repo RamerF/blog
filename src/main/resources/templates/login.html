@@ -57,11 +57,11 @@
           data: {
             username: data.field.username,
             password: data.field.password,
-            '_csrf': $('#_csrf').val(),
+            '_csrf': $('#_csrf').val()
           },
           success: function(result) {
             if (result.result === true) {
-              var url = [[${session.SPRING_SECURITY_SAVED_REQUEST.redirectUrl}]];
+              var url = [[${session.SPRING_SECURITY_SAVED_REQUEST == null ? null:session.SPRING_SECURITY_SAVED_REQUEST.redirectUrl}]];
               window.location.href = url ? url : '/manage/index';
             } else {
               layer.msg(result.msg);
@@ -74,7 +74,7 @@
               window.location.reload();
             }
             $($('form>input')[3]).removeAttr('disabled');
-          },
+          }
         });
         return false;
       });

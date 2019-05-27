@@ -40,6 +40,7 @@ body {
 
 .main-container {
     padding: 0 16px;
+    min-width: 990px;
 }
 
 .app-bar {
@@ -171,9 +172,39 @@ body {
 
 
 /* custom */
-.mdc-margin-panel {
+.mdc-panel__margin-8 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.mdc-panel__margin-16 {
     margin-top: 16px;
     margin-bottom: 16px;
+}
+
+.mdc-text-field-row {
+    width: 100%;
+}
+
+.mdc-text-field-row {
+    min-width: 250px;
+}
+
+.mdc-text__align-left {
+    text-align: left;
+}
+
+.mdc-text__align-center {
+    text-align: center;
+}
+
+.mdc-text__align-right {
+    text-align: right;
+}
+
+.form-container {
+    width: 85%;
+    margin: 72px auto 0;
 }
 
 /* custom */

@@ -164,10 +164,10 @@
         let size = globalPage.size;
         let pageContainer = $('<div class="pagination-container"></div>');
         let staticInfo = `<p class="count" id="ajaxTableCount">
-                            从第${(number * size + 1)}条
-                            到第${(totalElements % size !== 0 && number + 1 ===
-                                 totalPages) ? totalElements : number * size}条,
-                            总共${totalElements}条</p>`;
+                            显示第 ${(globalPage.number * size + 1)}
+                            到第 ${(totalElements % size !== 0 && number + 1 ===
+                                  totalPages) ? totalElements : number * size} 条记录，
+                            总共 ${totalElements} 条记录 每页显示${_queryParams.size}条记录</p>`;
         $(pageContainer).append(staticInfo);
         initNumberBtn(pageContainer);
         let data = globalPage.content;
@@ -313,14 +313,14 @@
           let data = globalPage.content;
           $(tbody).empty();
           appendBodyData(data);
-          let staticInfo = `从第${(globalPage.number * globalPage.size + 1)}条
-                            到第${((globalPage.number + 1) * globalPage.size)}条,
-                            总共: ${globalPage['totalElements']}条`;
+          let staticInfo = `显示第 ${(globalPage.number * globalPage.size + 1)}
+                            到第 ${((globalPage.number + 1) * globalPage.size)} 条记录，
+                            总共 ${globalPage['totalElements']} 条记录 每页显示${_queryParams.size}条记录`;
           if (globalPage['totalElements'] % globalPage.size !== 0 &&
               globalPage.number + 1 === globalPage.totalPages) {
-            staticInfo = `从 第${(globalPage.number * globalPage.size + 1)}条
-                          到第${globalPage['totalElements']}条,
-                          总共: ${globalPage['totalElements']}条`;
+            staticInfo = `显示第 ${(globalPage.number * globalPage.size + 1)}
+                          到第 ${globalPage['totalElements']} 条记录，
+                          总共 ${globalPage['totalElements']} 条记录 每页显示${_queryParams.size}条记录`;
           }
           $('#ajaxTableCount').text(staticInfo);
           _successCallback();

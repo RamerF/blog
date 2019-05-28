@@ -39,7 +39,8 @@ public class ConfigController {
 
   @GetMapping("/index")
   @ApiOperation("系统参数页面")
-  String index() {
+  String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
     return "manage/config/index";
   }
 

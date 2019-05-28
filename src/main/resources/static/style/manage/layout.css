@@ -182,6 +182,14 @@ body {
     margin-bottom: 16px;
 }
 
+.mdc-panel__padding-8 {
+    padding: 8px;
+}
+
+.mdc-panel__padding-16 {
+    padding: 16px;
+}
+
 .mdc-text-field-row {
     width: 100%;
 }

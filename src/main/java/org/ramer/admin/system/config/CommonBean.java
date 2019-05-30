@@ -52,7 +52,7 @@ public class CommonBean {
     return new Docket(DocumentationType.SWAGGER_2)
         .apiInfo(apiInfo())
         .select()
-        .apis(RequestHandlerSelectors.basePackage("org.ramer.admin.controller"))
+        .apis(RequestHandlerSelectors.basePackage("org.ramer.admin"))
         .paths(PathSelectors.any())
         .build();
   }

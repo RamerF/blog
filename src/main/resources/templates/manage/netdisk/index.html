@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>磁盘文件管理</title>
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8"/>
+    <link rel="shortcut icon" href="https://www.thymeleaf.org/doc/images/favicon.ico" type="image/x-icon"/>
+    <script type="text/javascript" src="/libs/jquery/jquery.min.js"></script>
+    <script src="/libs/material-components-web/material-components-web.min.js"></script>
+    <script src="/script/utils/common-util.js"></script>
+    <link href="/libs/material-components-web/material-components-web.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/libs/material-components-web/material-icons.css">
+    <link rel="stylesheet" href="/style/manage/layout.css">
+    <script src="/libs/layer/layer.js"></script>
+    <style type="text/css" rel="stylesheet">
+        .main-container {
+            width: 80%;
+            height: 80%;
+            margin: auto auto;
+        }
+
+        input[type=file] {
+            display: none;
+        }
+
+        input[type=file] + label {
+
+        }
+
+        .file-container .mdc-list-item {
+            height: 80px;
+            word-wrap: break-word;
+        }
+
+        .mdc-list-item span {
+            line-height: 80px;
+        }
+
+        .mdc-list-item .del {
+            position: absolute;
+            right: 0;
+            color: #EF5350;
+            border-radius: 9%;
+            box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, .12);
+        }
+
+        .layui-layer-input {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+<div class="main-container mdc-card mdc-layout-grid mdc-panel__padding-16 mdc-panel__margin-16">
+    <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">磁盘文件管理</h2>
+    <div class="mdc-layout-grid__inner upload-container mdc-panel__margin-16">
+        <span class="mdc-button mdc-button--unelevated mdc-layout-grid__cell--span-2 mdc-text__align-center"
+              id="displayUploadFile">未选择任何文件</span>
+        <input type="file" id="uploadInput"/>
+        <label for="uploadInput"
+               class="uploadLabel mdc-ripple-upgraded mdc-button mdc-button--outlined mdc-layout-grid__cell--span-2">请选择文件</label>
+        <button id="uploadFile" class="mdc-button mdc-button--raised mdc-ripple-upgraded mdc-layout-grid__cell--span-1">
+            上传
+        </button>
+        <button id="back" class="mdc-button mdc-button--raised mdc-ripple-upgraded mdc-layout-grid__cell--span-1">
+            返回
+        </button>
+        <button id="createFolder"
+                class="mdc-button mdc-button--raised mdc-ripple-upgraded mdc-layout-grid__cell--span-2">
+            创建文件夹
+        </button>
+    </div>
+    <ul id="container" class="file-container mdc-list mdc-layout-grid__inner"></ul>
+</div>
+<script type="text/javascript">
+  $(function() {
+    // 自动注册 data-mdc-auto-init 元素
+    mdc.autoInit();
+    let path = '';
+    $('#back').click(function() {
+      path = path.length > 0 ? path.substr(0, path.lastIndexOf('\\')) : '';
+      console.log(path);
+      refreshFileList(path);
+    });
+    $('#createFolder').click(function() {
+      layer.prompt({title: '请输入文件夹名称'}, function(value, index) {
+        if ((value = value.trim()) === '') {
+          return false;
+        }
+        layer.close(index);
+        $.post('/manage/netdisk/createFolder', {path: path, name: value}, function(res) {
+          res.result === true ? refreshFileList(path, true) : layer.alert(res.msg);
+        });
+      });
+    });
+    refreshFileList(path);
+
+    let $container = $('#container');
+    $container.on('click', 'li.folder', function() {
+      path = $(this).children('span').get(0).dataset.path;
+      refreshFileList(path);
+      return false;
+    });
+    $container.on('click', 'li.file', function() {
+      downloadFile($(this).children('span').get(0).dataset.path);
+      return false;
+    });
+    $container.on('click', 'li>.del', function(e) {
+      let data = $(this).next('span').get(0);
+      deleteFile(data.dataset.path, data.dataset.dir);
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
+    });
+
+    $('#uploadFile').click(function() {
+      let file = $('#uploadInput')[0].files[0];
+      if (!file) {
+        layer.alert('请选择待上传文件');
+        return false;
+      }
+      let index = layer.load(1, {
+        shade: [0.1, '#000']
+      });
+      let formData = new FormData();
+      formData.append('file', file);
+      formData.append('path', path);
+      $.ajax({
+        url: '/manage/netdisk/uploadFile',
+        type: 'POST',
+        cache: false,
+        data: formData,
+        processData: false,
+        contentType: false
+      }).
+        done(function() {
+          refreshFileList(path);
+          layer.close(index);
+        }).
+        fail(function(res) {
+          layer.alert(JSON.stringify(res));
+          layer.close(index);
+        });
+      return false;
+    });
+
+    $('#uploadInput').change(function() {
+      let file = $(this).val();
+      let fileName = file.substr(file.lastIndexOf('\\') + 1);
+      console.log(fileName);
+      $('#displayUploadFile').text(fileName ? fileName : '未选择任何文件');
+    });
+
+    function refreshFileList(path, unloading) {
+      let index;
+      if (unloading === 'false') {
+        index = layer.load(1, {
+          shade: [0.1, '#fff']
+        });
+      }
+      $.get('/manage/netdisk/listFile', {path: path}, function(res) {
+        if (res.result === true) {
+          let $container = $('#container');
+          $container.empty();
+          res.data.forEach(function(item) {
+            let liNode = $(
+                '<li class="mdc-card mdc-list-item mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle"></li>');
+            let deleteNode = $('<i class="material-icons del">delete</i>');
+            let spanNode = $('<span class="mdc-list-item__text"></span>');
+            spanNode.html(item.dir === true ? item.name : item.name + '<br />点击下载');
+            spanNode.attr('data-path', item.path);
+            spanNode.attr('data-dir', item.dir);
+            liNode.addClass(item.dir === true ? 'folder' : 'file');
+            liNode.append(deleteNode).append(spanNode);
+            $container.append(liNode);
+            new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
+                (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
+          });
+        } else {
+          layer.alert(res.msg);
+        }
+        layer.close(index);
+      });
+    }
+
+    function downloadFile(path) {
+      window.location = '/manage/netdisk/downloadFile?path=' + path;
+    }
+
+    function deleteFile(filePath, isDir) {
+      if (filePath.trim() === '') {
+        return false;
+      }
+
+      layer.confirm(isDir === 'true' ? '删除文件夹将会删除包含的所有子文件,确认删除吗 ?' : '确认删除该文件吗 ?', {icon: 3, title: '警告'},
+          function(index) {
+            layer.close(index);
+            $.post('/manage/netdisk/deleteFile', {path: filePath}, function(res) {
+              res.result === true ? refreshFileList(path, true) : layer.alert(res.msg);
+            });
+          });
+    }
+
+    setInterval(function() {
+      refreshFileList(path, true);
+    }, 5000);
+  });
+</script>
+</body>
+</html>

@@ -392,8 +392,106 @@
     }
 
     return new AjaxTable(ajaxData, _container);
-  }
-  ;
+  };
 
-}))
-;
+  $.dialog = function(opts) {
+    let paras = $.extend({
+      title: '提示',
+      content: '提示内容',
+      type: 1,
+      cancelCallback: function() {
+      },
+      confirmCallback: function() {
+      }
+    }, opts || {});
+    let _title = paras.title;
+    let _content = paras.content;
+    let _type = paras.type;
+    let _cancelCallback = paras.cancelCallback;
+    let _confirmCallback = paras.confirmCallback;
+    let $container = $(`<div class="mdc-dialog"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="my-dialog-title"
+      aria-describedby="my-dialog-content">
+      <div class="mdc-dialog__container">
+      <div class="mdc-dialog__surface">
+        <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+        <h2 class="mdc-dialog__title" id="my-dialog-title">${_title}</h2>
+        <div class="mdc-dialog__content" id="my-dialog-content" tabindex="0">
+          ${_content}
+        </div>
+        <footer class="mdc-dialog__actions">
+          ${_type !== 1 ? `<button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
+            <span class="mdc-button__label">取消</span>
+          </button>` : ``}
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+          <span class="mdc-button__label">确定</span>
+        </button>
+        </footer>
+        </div>
+      </div>
+      <div class="mdc-dialog__scrim"></div>
+    </div>`);
+    $('body').append($container);
+    let dialog = new mdc.dialog.MDCDialog($container.get(0));
+    dialog.open();
+    dialog.listen('MDCDialog:opened', function(data) {
+      // Assuming contentElement references a common parent element with the rest of the page's content
+      $container.attr('aria-hidden', 'true');
+      console.log('open', data.srcElement);
+    });
+
+    dialog.listen('MDCDialog:closing', function(data) {
+      $container.removeAttr('aria-hidden');
+      console.log(data, data.srcElement);
+      $(this).remove();
+      data.detail.action === 'yes' ?
+          _confirmCallback(data) : _cancelCallback(data);
+    });
+  };
+
+  $.alert = function(opts) {
+    opts = opts || {};
+    $.dialog($.extend(opts, {type: 1}));
+  };
+
+  $.confirm = function(opts) {
+    opts = opts || {};
+    $.dialog($.extend(opts, {type: 2}));
+  };
+
+  $.prompt = function(opts) {
+    throw Error('暂未实现');
+    // opts = opts || {};
+    // $.dialog($.extend(opts, {type: 3}));
+  };
+
+  /***
+   * 校验给定字符串非空.
+   * @param str
+   * @returns {boolean}
+   */
+  $.nonEmpty = function(str) {
+    return typeof str !== 'undefined' && str !== null && str.trim().length > 0;
+  };
+  /***
+   * 校验字符串为空.
+   * @param str
+   * @returns {boolean}
+   */
+  $.isEmpty = function(str) {
+    return !$.nonEmpty(str);
+  };
+  /***
+   * 校验字符串是否为指定长度.
+   * @param str 待校验字符串
+   * @param allowEmpty 是否允许空,true: 是
+   * @param allowMaxLength 允许最大长度
+   * @param validity 校验失败提示信息
+   * @param regex 如果该参数不为空,前面的限制参数无效
+   */
+  $.valid = function(str, allowEmpty, allowMaxLength, validity, regex) {
+    // TODO-WARN: 校验公共方法
+  };
+}));

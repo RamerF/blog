@@ -18,137 +18,24 @@
     </th:block>
 </th:block>
 <div layout:fragment="main-container" class="main-container">
-    <div class="mdc-card form-container">
-        <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">添加参数配置</h2>
-        <div class="mdc-card__primary-actions" tabindex="0">
-            <form class="mdc-layout-grid">
-                <input th:if="${_csrf!=null}" type="hidden"
-                       th:name="${_csrf.parameterName}"
-                       id="_csrf"
-                       th:value="${_csrf.token}"/>
-                <div class="mdc-layout-grid__inner mdc-panel__margin-16">
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
-                        <div class="text-field-container">
-                            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                                 data-mdc-auto-init="MDCTextField">
-                                <input type="text" id="codeInput" name="code" class="mdc-text-field__input"
-                                       maxlength="20"
-                                       autocomplete="off">
-                                <div class="mdc-notched-outline">
-                                    <div class="mdc-notched-outline__leading"></div>
-                                    <div class="mdc-notched-outline__notch">
-                                        <label for="codeInput" class="mdc-floating-label">请输入CODE</label>
-                                    </div>
-                                    <div class="mdc-notched-outline__trailing"></div>
-                                </div>
-                            </div>
-                            <div class="mdc-text-field-helper-line">
-                                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                                    *必填</p>
-                                <div class="mdc-text-field-character-counter">0 / 20</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mdc-layout-grid__inner mdc-panel__margin-16">
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
-                        <div class="text-field-container">
-                            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                                 data-mdc-auto-init="MDCTextField">
-                                <input type="text" id="nameInput" name="name" class="mdc-text-field__input"
-                                       maxlength="20"
-                                       autocomplete="off">
-                                <div class="mdc-notched-outline">
-                                    <div class="mdc-notched-outline__leading"></div>
-                                    <div class="mdc-notched-outline__notch">
-                                        <label for="nameInput" class="mdc-floating-label">请输入名称</label>
-                                    </div>
-                                    <div class="mdc-notched-outline__trailing"></div>
-                                </div>
-                            </div>
-                            <div class="mdc-text-field-helper-line">
-                                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                                    *必填</p>
-                                <div class="mdc-text-field-character-counter">0 / 20</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mdc-layout-grid__inner mdc-panel__margin-16">
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
-                        <div class="text-field-container">
-                            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                                 data-mdc-auto-init="MDCTextField">
-                                <input type="text" id="valInput" name="value" class="mdc-text-field__input"
-                                       maxlength="20"
-                                       autocomplete="off">
-                                <div class="mdc-notched-outline">
-                                    <div class="mdc-notched-outline__leading"></div>
-                                    <div class="mdc-notched-outline__notch">
-                                        <label for="valInput" class="mdc-floating-label">请输入值</label>
-                                    </div>
-                                    <div class="mdc-notched-outline__trailing"></div>
-                                </div>
-                            </div>
-                            <div class="mdc-text-field-helper-line">
-                                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                                    *必填</p>
-                                <div class="mdc-text-field-character-counter">0 / 20</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mdc-layout-grid__inner mdc-panel__margin-16">
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
-                        <div class="text-field-container">
-                            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                                 data-mdc-auto-init="MDCTextField">
-                                <input type="text" id="remarkInput" name="remark" class="mdc-text-field__input"
-                                       maxlength="20"
-                                       autocomplete="off">
-                                <div class="mdc-notched-outline">
-                                    <div class="mdc-notched-outline__leading"></div>
-                                    <div class="mdc-notched-outline__notch">
-                                        <label for="remarkInput" class="mdc-floating-label">请输入备注</label>
-                                    </div>
-                                    <div class="mdc-notched-outline__trailing"></div>
-                                </div>
-                            </div>
-                            <div class="mdc-text-field-helper-line">
-                                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                                    *必填</p>
-                                <div class="mdc-text-field-character-counter">0 / 20</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mdc-layout-grid__inner mdc-card__actions">
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
-                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6 mdc-layout-grid--align-right mdc-card__action-buttons">
-                        <button class="mdc-button mdc-card__action mdc-card__action--button mdc-ripple-upgraded">
-                            增加
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="form-container">
-        <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">添加参数配置</h2>
-        <form class="mdc-layout-grid mdc-panel__padding-16">
+    <div class="form-container mdc-layout-grid">
+        <form id="form" class="mdc-card mdc-panel__padding-16" onsubmit="void(0);">
+            <input th:if="${_csrf!=null}" type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   id="_csrf"
+                   th:value="${_csrf.token}"/>
+            <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">添加参数配置</h2>
             <div class="mdc-layout-grid__inner mdc-panel__margin-16">
-                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4"></div>
-                <div class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
-                    <div class="mdc-card__primary-actions" tabindex="0">
-                        <div class="text-field-container">
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
+                    <div tabindex="0">
+                        <div class="text-field-container mdc-panel__margin-16">
                             <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                                  data-mdc-auto-init="MDCTextField">
-                                <input type="text" id="codeInput" name="code" class="mdc-text-field__input"
+                                <input type="text" id="codeInput" name="code"
+                                       class="mdc-text-field__input"
                                        maxlength="20"
+                                       minlength="1"
                                        autocomplete="off">
                                 <div class="mdc-notched-outline">
                                     <div class="mdc-notched-outline__leading"></div>
@@ -164,7 +51,7 @@
                                 <div class="mdc-text-field-character-counter">0 / 20</div>
                             </div>
                         </div>
-                        <div class="text-field-container">
+                        <div class="text-field-container mdc-panel__margin-16">
                             <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                                  data-mdc-auto-init="MDCTextField">
                                 <input type="text" id="nameInput" name="name" class="mdc-text-field__input"
@@ -184,7 +71,7 @@
                                 <div class="mdc-text-field-character-counter">0 / 20</div>
                             </div>
                         </div>
-                        <div class="text-field-container">
+                        <div class="text-field-container mdc-panel__margin-16">
                             <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                                  data-mdc-auto-init="MDCTextField">
                                 <input type="text" id="valInput" name="value" class="mdc-text-field__input"
@@ -204,11 +91,11 @@
                                 <div class="mdc-text-field-character-counter">0 / 20</div>
                             </div>
                         </div>
-                        <div class="text-field-container">
+                        <div class="text-field-container mdc-panel__margin-16">
                             <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                                  data-mdc-auto-init="MDCTextField">
                                 <input type="text" id="remarkInput" name="remark" class="mdc-text-field__input"
-                                       maxlength="20"
+                                       maxlength="50"
                                        autocomplete="off">
                                 <div class="mdc-notched-outline">
                                     <div class="mdc-notched-outline__leading"></div>
@@ -219,14 +106,18 @@
                                 </div>
                             </div>
                             <div class="mdc-text-field-helper-line">
-                                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                                    *必填</p>
-                                <div class="mdc-text-field-character-counter">0 / 20</div>
+                                <div class="mdc-text-field-character-counter">0 / 50</div>
                             </div>
                         </div>
-                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6 mdc-layout-grid--align-right mdc-card__action-buttons">
-                            <button class="mdc-button mdc-card__action mdc-card__action--button mdc-ripple-upgraded">
-                                增加
+                        <div class="mdc-layout-grid__inner mdc-card__action-buttons">
+                            <a href="/manage/config/index"
+                               class="mdc-button mdc-card__action mdc-layout-grid__cell--span-4 mdc-button--raised mdc-ripple-upgraded">
+                                返回
+                            </a>
+                            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4"></div>
+                            <button id="addBtn"
+                                    class="mdc-button mdc-layout-grid__cell--span-4 mdc-button--raised mdc-ripple-upgraded">
+                                添加
                             </button>
                         </div>
                     </div>
@@ -239,6 +130,27 @@
     <script type="text/javascript">
       $(function() {
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+        $('#addBtn').click(function() {
+          $.alert();
+          return false;
+          let $form = $('#form');
+          let data = {};
+          $form.serializeArray().forEach(function(item) {
+            data[item.name] = item.value;
+          });
+          document.querySelectorAll('.mdc-text-field').forEach(function(item) {
+            console.log(new mdc.textField.MDCTextField(item));
+            new mdc.textField.MDCTextField(item);
+            console.log(new mdc.textField.MDCTextField(item).value);
+          });
+          console.log(JSON.stringify(data));
+          $.post('/manage/config', data, function(res) {
+            res.result === true ? layer.alert(res.msg, function() {
+              window.location.href = '/manage/config/index';
+            }) : layer.alert(res.msg);
+          });
+          return false;
+        });
       });
     </script>
 </div>

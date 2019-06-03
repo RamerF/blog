@@ -111,12 +111,12 @@
                         </div>
                         <div class="mdc-layout-grid__inner mdc-card__action-buttons">
                             <a href="/manage/config/index"
-                               class="mdc-button mdc-card__action mdc-layout-grid__cell--span-4 mdc-button--raised mdc-ripple-upgraded">
+                               class="mdc-button mdc-layout-grid__cell mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop  mdc-card__action mdc-button--raised mdc-ripple-upgraded">
                                 返回
                             </a>
                             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4"></div>
                             <button id="addBtn"
-                                    class="mdc-button mdc-layout-grid__cell--span-4 mdc-button--raised mdc-ripple-upgraded">
+                                    class="mdc-button mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded">
                                 添加
                             </button>
                         </div>
@@ -131,7 +131,7 @@
       $(function() {
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
         $('#addBtn').click(function() {
-          $.alert();
+          $.alert({title: '警告', content: '内容'});
           return false;
           let $form = $('#form');
           let data = {};
@@ -139,7 +139,7 @@
             data[item.name] = item.value;
           });
           document.querySelectorAll('.mdc-text-field').forEach(function(item) {
-            console.log(new mdc.textField.MDCTextField(item));
+            console.debug(new mdc.textField.MDCTextField(item));
             new mdc.textField.MDCTextField(item);
             console.log(new mdc.textField.MDCTextField(item).value);
           });

@@ -453,6 +453,11 @@
 
   $.alert = function(opts) {
     opts = opts || {};
+    if (typeof opts === 'string') {
+      let content = opts;
+      opts = {};
+      opts.content = content;
+    }
     $.dialog($.extend(opts, {type: 1}));
   };
 
@@ -487,11 +492,38 @@
    * 校验字符串是否为指定长度.
    * @param str 待校验字符串
    * @param allowEmpty 是否允许空,true: 是
+   * @param allowMinLength 允许最小长度
    * @param allowMaxLength 允许最大长度
-   * @param validity 校验失败提示信息
+   * @param inValidMsg 校验失败提示信息
    * @param regex 如果该参数不为空,前面的限制参数无效
    */
-  $.valid = function(str, allowEmpty, allowMaxLength, validity, regex) {
-    // TODO-WARN: 校验公共方法
+  $.valid = function(
+      str, allowEmpty, allowMinLength, allowMaxLength, inValidMsg, regex) {
+    if (!allowEmpty && (typeof str === 'undefined' || str.trim().length < 1)) {
+      $.alert(inValidMsg);
+      return false;
+    }
+    if (typeof str === 'undefined' || str.trim().length < 1) {
+      str = '';
+    }
+    if (regex && !new RegExp(regex).test(str)) {
+      $.alert({
+        content: inValidMsg
+      });
+      return false;
+    }
+    if (allowMinLength && str.length < allowMinLength) {
+      $.alert({
+        content: inValidMsg
+      });
+      return false;
+    }
+    if (allowMaxLength && str.length > allowMaxLength) {
+      $.alert({
+        content: inValidMsg
+      });
+      return false;
+    }
+    return true;
   };
 }));

@@ -6,22 +6,24 @@ import javax.persistence.Query;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.Transformers;
 import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /** */
 @NoRepositoryBean
 @SuppressWarnings("UnusedDeclaration")
 public interface BaseRepository<T extends AbstractEntity, ID>
-    extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+    extends JpaRepository<T, ID>, JpaSpecificationExecutor<T>, QuerydslPredicateExecutor<T> {
   T findByIdAndState(ID id, int state);
 
   @Override
   default long count() {
-    return count((root, query, builder) -> builder.equal(root.get("state"), Constant.STATE_ON));
+    return count((root, query, builder) -> builder.equal(root.get("state"), State.STATE_ON));
   };
 
   @Override
@@ -29,14 +31,14 @@ public interface BaseRepository<T extends AbstractEntity, ID>
     findById(id)
         .ifPresent(
             entity -> {
-              entity.setState(Constant.STATE_OFF);
+              entity.setState(State.STATE_OFF);
               saveAndFlush(entity);
             });
   }
 
   @Override
   default void delete(T entity) {
-    entity.setState(Constant.STATE_OFF);
+    entity.setState(State.STATE_OFF);
     saveAndFlush(entity);
   }
 
@@ -44,7 +46,7 @@ public interface BaseRepository<T extends AbstractEntity, ID>
     long time = System.currentTimeMillis();
     List<T> ts = findAllById(ids);
     for (T t : ts) {
-      t.setState(Constant.STATE_OFF);
+      t.setState(State.STATE_OFF);
       t.setCreateTime(new Date());
       saveAndFlush(t);
     }
@@ -53,14 +55,14 @@ public interface BaseRepository<T extends AbstractEntity, ID>
   @Override
   default List<T> findAll() {
     return findAll(
-        (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON)));
+        (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON)));
   }
 
-  /** state等于{@code Constant.STATE_ON}. */
+  /** state等于{@code State.STATE_ON}. */
   @Override
   default Page<T> findAll(Pageable pageable) {
     return findAll(
-        (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON)),
+        (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON)),
         pageable);
   }
 
@@ -88,9 +90,9 @@ public interface BaseRepository<T extends AbstractEntity, ID>
     if (valid == null) {
 
     } else if (valid) {
-      example.setState(Constant.STATE_ON);
+      example.setState(State.STATE_ON);
     } else {
-      example.setState(Constant.STATE_OFF);
+      example.setState(State.STATE_OFF);
     }
     Example<T> ex = Example.of(example, matcher);
     return findAll(ex, pageable);

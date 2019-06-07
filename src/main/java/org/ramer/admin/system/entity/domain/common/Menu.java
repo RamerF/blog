@@ -1,12 +1,12 @@
 package org.ramer.admin.system.entity.domain.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.Constant;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Where;
 import org.hibernate.annotations.Table;
+import org.hibernate.annotations.Where;
+import org.ramer.admin.system.entity.Constant.State;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 @Entity(name = Menu.TABLE_NAME)
 @Table(appliesTo = Menu.TABLE_NAME, comment = "菜单")
@@ -20,7 +20,7 @@ public class Menu extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "pid")
   @JsonBackReference
-  @Where(clause = "state = " + Constant.STATE_ON)
+  @Where(clause = "state = " + State.STATE_ON)
   private Menu parent;
   /** 是否最终节点 */
   @Column(columnDefinition = "BIT COMMENT '是否最终节点'")

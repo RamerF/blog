@@ -11,9 +11,9 @@ public interface ConfigService extends BaseService<Config, ConfigPoJo> {
    * <pre>
    * @param location:
    *      option value:<br/>
-   *      {@code Constant.SITE_TITLE}<br/>
-   *      {@code Constant.SITE_NAME}<br/>
-   *      {@code Constant.SITE_COPYRIGHT}
+   *      {@link Constant#SITE_TITLE}<br/>
+   *      {@link Constant#SITE_NAME}<br/>
+   *      {@link Constant#SITE_COPYRIGHT}
    * </pre>
    */
   String getSiteInfo(String location);

@@ -4,7 +4,7 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.Config;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
@@ -38,13 +38,13 @@ public class ConfigServiceImpl implements ConfigService {
 
   @Override
   public Config getByCode(String code) {
-    return repository.findByCode(code);
+    return repository.findByCodeAndState(code, State.STATE_ON);
   }
 
   @Transactional
   @Override
   public synchronized Config create(Config conf) {
-    if (repository.findByCodeAndState(conf.getCode(), Constant.STATE_ON) != null) {
+    if (repository.findByCodeAndState(conf.getCode(), State.STATE_ON) != null) {
       throw new CommonException("CODE 已存在");
     }
     textFilter(conf, conf);
@@ -61,10 +61,10 @@ public class ConfigServiceImpl implements ConfigService {
   @Override
   public Specification<Config> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
+                builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(
                     builder.like(root.get("code"), "%" + criteria + "%"),
                     builder.like(root.get("name"), "%" + criteria + "%")));

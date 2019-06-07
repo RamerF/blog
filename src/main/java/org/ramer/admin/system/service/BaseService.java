@@ -1,16 +1,17 @@
 package org.ramer.admin.system.service;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.request.AbstractEntityRequest;
-import org.ramer.admin.system.exception.CommonException;
-import org.ramer.admin.system.repository.BaseRepository;
-import org.ramer.admin.system.entity.Constant;
-import org.ramer.admin.system.entity.Constant.Txt;
-import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 import javax.transaction.Transactional;
+import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
+import org.ramer.admin.system.entity.Constant.Txt;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
+import org.ramer.admin.system.entity.request.AbstractEntityRequest;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.repository.BaseRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,7 +31,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
   }
 
   /**
-   * 条件state={@code Constant.STATE_ON}的总记录数
+   * 条件state={@link State#STATE_ON}的总记录数
    *
    * @return long
    */
@@ -53,7 +54,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
     return getRepository().findById(id).orElse(null);
   }
 
-  default List<T> getByIds(final List<Long> ids) {
+  default List<T> listByIds(final List<Long> ids) {
     return getRepository().findAllById(ids);
   }
 
@@ -150,10 +151,10 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
   /** 获取模糊查询条件,子类应该根据需要覆写该方法. */
   default Specification<T> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
+                builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(builder.like(root.get("name"), "%" + criteria + "%")));
   }
 

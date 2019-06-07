@@ -1,12 +1,10 @@
 package org.ramer.admin.system.service.common.impl;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
-import org.ramer.admin.system.entity.Constant.CommonMediaCode;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.CommonMedia;
 import org.ramer.admin.system.entity.domain.common.CommonMediaCategory;
 import org.ramer.admin.system.exception.CommonException;
@@ -33,7 +31,6 @@ public class CommonMediaServiceImpl implements CommonMediaService {
     if (CollectionUtils.isEmpty(medias)) {
       return new ArrayList<>();
     }
-    AtomicBoolean taiQu = new AtomicBoolean(false);
     Map<Long, CommonMediaCategory> mediaCategoryMap = new HashMap<>();
     medias.stream()
         .filter(media -> media.getCategoryId() != null && media.getCategory() != null)
@@ -45,9 +42,6 @@ public class CommonMediaServiceImpl implements CommonMediaService {
                 mediaCategoryMap.put(media.getCategory().getId(), mediaCategory);
               }
               media.setCategory(mediaCategory);
-              if (media.getCode().equals(CommonMediaCode.TAI_QU)) {
-                taiQu.set(true);
-              }
             });
     return repository.saveAll(medias);
   }
@@ -63,7 +57,7 @@ public class CommonMediaServiceImpl implements CommonMediaService {
     if (pageable == null) {
       return new PageImpl<>(Collections.emptyList());
     }
-    return repository.findByCodeAndState(code, Constant.STATE_ON, pageable);
+    return repository.findByCodeAndState(code, State.STATE_ON, pageable);
   }
 
   @Override
@@ -88,10 +82,10 @@ public class CommonMediaServiceImpl implements CommonMediaService {
   @Override
   public Specification<CommonMedia> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
+                builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(builder.like(root.get("categoryName"), "%" + criteria + "%")));
   }
 

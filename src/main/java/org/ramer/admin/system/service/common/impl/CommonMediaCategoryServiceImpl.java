@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.CommonMediaCategory;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
@@ -20,7 +20,7 @@ public class CommonMediaCategoryServiceImpl implements CommonMediaCategoryServic
 
   @Override
   public List<CommonMediaCategory> getByCode(final String code) {
-    return repository.findByCodeAndState(code, Constant.STATE_ON);
+    return repository.findByCodeAndState(code, State.STATE_ON);
   }
 
   @Override

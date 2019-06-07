@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.Constant.PrivilegeEnum;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.Privilege;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
@@ -45,12 +45,12 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
   @Override
   public List<Privilege> listByManagerId(long menuId) {
-    return repository.findByManager(menuId, Constant.STATE_ON);
+    return repository.findByManager(menuId, State.STATE_ON);
   }
 
   @Override
   public List<Privilege> listByRoles(Long rolesId) {
-    return repository.findByRoles(rolesId, Constant.STATE_ON);
+    return repository.findByRoles(rolesId, State.STATE_ON);
   }
 
   @org.springframework.transaction.annotation.Transactional
@@ -63,10 +63,10 @@ public class PrivilegeServiceImpl implements PrivilegeService {
   @Override
   public Specification<Privilege> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
+                builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(
                     builder.like(root.get("exp"), "%" + criteria + "%"),
                     builder.like(root.get("remark"), "%" + criteria + "%")));

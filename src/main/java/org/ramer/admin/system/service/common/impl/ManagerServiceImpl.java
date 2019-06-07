@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.domain.common.Role;
@@ -49,13 +50,13 @@ public class ManagerServiceImpl implements ManagerService {
 
   @Override
   public Manager getByEmpNo(String empNo) {
-    return repository.findByEmpNoAndState(empNo, Constant.STATE_ON);
+    return repository.findByEmpNoAndState(empNo, State.STATE_ON);
   }
 
   @Transactional
   @Override
   public synchronized Manager update(Manager manager, List<Long> roleIds) {
-    Manager m = repository.findByIdAndState(manager.getId(), Constant.STATE_ON);
+    Manager m = repository.findByIdAndState(manager.getId(), State.STATE_ON);
     if (m == null) {
       return null;
     }
@@ -154,7 +155,7 @@ public class ManagerServiceImpl implements ManagerService {
       manager.setActive(Constant.ACTIVE_FALSE);
     }
     if (manager.getState() == null) {
-      manager.setState(Constant.STATE_OFF);
+      manager.setState(State.STATE_OFF);
     }
     return repository.saveAndFlush(manager);
   }
@@ -182,10 +183,10 @@ public class ManagerServiceImpl implements ManagerService {
   @Override
   public Specification<Manager> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
+                builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(
                     builder.like(root.get("empNo"), "%" + criteria + "%"),
                     builder.like(root.get("name"), "%" + criteria + "%"),

@@ -1,12 +1,13 @@
 package org.ramer.admin.system.entity.domain;
 
-import org.ramer.admin.system.entity.Constant;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.ramer.admin.system.entity.Constant.State;
 
 /** domain类的父类 */
 @Data
@@ -19,7 +20,7 @@ public abstract class AbstractEntity implements Serializable {
   private Long id;
 
   @Column(columnDefinition = "TINYINT DEFAULT 1")
-  private Integer state = Constant.STATE_ON;
+  private Integer state = State.STATE_ON;
 
   @CreationTimestamp
   @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")

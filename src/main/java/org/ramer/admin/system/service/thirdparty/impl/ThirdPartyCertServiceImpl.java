@@ -2,7 +2,7 @@ package org.ramer.admin.system.service.thirdparty.impl;
 
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.thirdparty.ThirdPartyCertificate;
 import org.ramer.admin.system.entity.domain.thirdparty.ThirdPartyLog;
 import org.ramer.admin.system.repository.thirdparty.ThirdPartyCertRepository;
@@ -53,7 +53,7 @@ public class ThirdPartyCertServiceImpl implements ThirdPartyCertService {
         : repository.findAll(
             (root, query, builder) ->
                 builder.and(
-                    builder.equal(root.get("state"), Constant.STATE_ON),
+                    builder.equal(root.get("state"), State.STATE_ON),
                     builder.like(root.get("name"), "%" + name + "%")),
             pageable);
   }

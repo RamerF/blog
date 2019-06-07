@@ -1,6 +1,11 @@
 package org.ramer.admin.system.service.common.impl;
 
-import org.ramer.admin.system.entity.Constant;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.domain.common.Organize;
 import org.ramer.admin.system.entity.response.common.OrganizeMemberRelationResponse;
@@ -8,11 +13,6 @@ import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.OrganizeRepository;
 import org.ramer.admin.system.service.common.OrganizeService;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /** @author ramer */
@@ -48,7 +48,7 @@ public class OrganizeServiceImpl implements OrganizeService {
 
   @Override
   public List<OrganizeMemberRelationResponse> listRelation(final Long managersId) {
-    return repository.findOrganizeMemberRelation(managersId, Constant.STATE_ON).stream()
+    return repository.findOrganizeMemberRelation(managersId, State.STATE_ON).stream()
         .collect(Collectors.groupingBy(OrganizeMemberRelationResponse::getMemberId))
         .get(managersId);
   }

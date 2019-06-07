@@ -4,7 +4,7 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.Menu;
 import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
 import org.ramer.admin.system.exception.CommonException;
@@ -27,12 +27,12 @@ public class MenuServiceImpl implements MenuService {
 
   @Override
   public List<Menu> listByManager(Long managerId) {
-    return repository.findByManager(managerId, Constant.STATE_ON);
+    return repository.findByManager(managerId, State.STATE_ON);
   }
 
   @Override
   public List<MenuPoJo> listNameByManager(Long managerId) {
-    return repository.findNameByManager(managerId, Constant.STATE_ON);
+    return repository.findNameByManager(managerId, State.STATE_ON);
   }
 
   @Transactional
@@ -100,10 +100,10 @@ public class MenuServiceImpl implements MenuService {
   @Override
   public Specification<Menu> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
         builder.and(
-            builder.equal(root.get("state"), Constant.STATE_ON),
+            builder.equal(root.get("state"), State.STATE_ON),
             builder.and(
                 builder.like(root.get("name"), "%" + criteria + "%"),
                 builder.like(root.get("remark"), "%" + criteria + "%")));

@@ -3,7 +3,7 @@ package org.ramer.admin.system.service.common.impl;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
@@ -36,10 +36,10 @@ public class ManageLogServiceImpl implements ManageLogService {
   @Override
   public Specification<ManageLog> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
+                builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(
                     builder.like(root.get("url"), "%" + criteria + "%"),
                     builder.like(root.get("result"), "%" + criteria + "%")));

@@ -63,7 +63,7 @@ public class ApplicationInit implements ApplicationRunner {
         manager.setActive(1);
         manager.setPhone("18990029043");
         manager.setGender(Gender.MALE.ordinal());
-        manager.setState(Constant.STATE_ON);
+        manager.setState(State.STATE_ON);
         manager.setCreateTime(new Date());
         manager.setUpdateTime(new Date());
         manager.setPassword(EncryptUtil.execEncrypt("admin"));

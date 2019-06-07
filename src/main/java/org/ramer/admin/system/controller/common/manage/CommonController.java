@@ -7,8 +7,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.Constant.AccessPath;
+import org.ramer.admin.system.entity.Constant.ConfigCode;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.response.CommonResponse;
@@ -60,7 +60,7 @@ public class CommonController {
   @GetMapping("/login")
   @ApiOperation("登录页")
   public String login(Map<String, Object> map) {
-    map.put("title", configService.getSiteInfo(Constant.SITE_TITLE));
+    map.put("title", configService.getSiteInfo(ConfigCode.SITE_TITLE));
     return "login";
   }
 

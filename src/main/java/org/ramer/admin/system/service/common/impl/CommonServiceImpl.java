@@ -9,9 +9,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
-import org.ramer.admin.system.entity.Constant.SessionKey;
-import org.ramer.admin.system.entity.Constant.Txt;
+import org.ramer.admin.system.entity.Constant.*;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
@@ -71,9 +69,9 @@ public class CommonServiceImpl implements CommonService {
     }
     map.put("menus", menus);
     JSONObject siteJson = new JSONObject();
-    siteJson.put("title", configService.getSiteInfo(Constant.SITE_TITLE));
-    siteJson.put("name", configService.getSiteInfo(Constant.SITE_NAME));
-    siteJson.put("copyright", configService.getSiteInfo(Constant.SITE_COPYRIGHT));
+    siteJson.put("title", configService.getSiteInfo(ConfigCode.SITE_TITLE));
+    siteJson.put("name", configService.getSiteInfo(ConfigCode.SITE_NAME));
+    siteJson.put("copyright", configService.getSiteInfo(ConfigCode.SITE_COPYRIGHT));
     map.put("site", siteJson);
   }
 

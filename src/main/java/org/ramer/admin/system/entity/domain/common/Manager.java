@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.Table;
 import org.hibernate.annotations.Where;
 import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -52,7 +53,7 @@ public class Manager extends AbstractEntity {
       name = "manager_roles",
       joinColumns = {@JoinColumn(name = "manager_id")},
       inverseJoinColumns = {@JoinColumn(name = "roles_id")})
-  @Where(clause = "state = " + Constant.STATE_ON)
+  @Where(clause = "state = " + State.STATE_ON)
   //  @JsonBackReference
   // TODO-WARN: 这里注释掉主要是端粒段列表显示,需要修改为手动获取,然后启用该注解
   private List<Role> roleses;

@@ -18,9 +18,6 @@ public class Constant {
   public static final int DEFAULT_PAGE_SIZE = 10;
   // 默认list字符串分隔符
   public static final String DEFAULT_STRING_SPLIT = ",";
-  public static final String SITE_TITLE = "SITE_TITLE";
-  public static final String SITE_NAME = "SITE_NAME";
-  public static final String SITE_COPYRIGHT = "SITE_COPYRIGHT";
   public static final String DEFAULT_CHARSET_ENCODE = "UTF-8";
   public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
 
@@ -110,10 +107,12 @@ public class Constant {
     public static final String NOT_IMPLEMENT = "方法未实现";
   }
 
-  /** 可用状态 */
-  public static final int STATE_ON = 1;
-  /** 不可用状态 */
-  public static final int STATE_OFF = -1;
+  public static class State {
+    /** 可用状态 */
+    public static final int STATE_ON = 1;
+    /** 不可用状态 */
+    public static final int STATE_OFF = -1;
+  }
 
   /** 可登录 */
   public static final int ACTIVE_TRUE = 1;
@@ -256,91 +255,8 @@ public class Constant {
   }
 
   /** 资源文件CODE. */
-  public class CommonMediaCode {
-    /** 台区 */
-    public static final String TAI_QU = "TAI_QU";
-  }
+  public class CommonMediaCode {}
 
-  public static class SystemMessage {
-
-    public enum Type {
-      TASK("TASK", "任务消息"),
-      WORK_ORDER("WORK_ORDER", "工单消息"),
-      HANDLE("HANDLE", "审批消息"),
-      YXGL("YXGL", "营销管理消息");
-      String value;
-      String remark;
-
-      Type(String s, String r) {
-        value = s;
-        remark = r;
-      }
-
-      public String getValue() {
-        return value;
-      }
-    }
-
-    public enum Status {
-      DOWNLOADED(1, "已被下载"),
-      UN_DOWNLOAD(-1, "未被下载");
-      Integer value;
-      String remark;
-
-      Status(Integer i, String r) {
-        value = i;
-        remark = r;
-      }
-
-      public Integer getValue() {
-        return value;
-      }
-    }
-  }
-
-  /** 百度推送相关的常量或枚举量 */
-  public static class BaiduPush {
-    // 百度分配的api_key
-    public static final String API_KEY = "3THdI8IlSIDYjPCkD2MTGpir";
-    // 百度分配的secret_key
-    public static final String SECRET_KEY = "yRgHUgW1EVtxgz7DddCIooE5mSpAG9A9";
-
-    // 百度推送定义的消息类型
-    public enum MessageType {
-      // PUSH_TYPE_MESSAGE:透传消息   PUSH_TYPE_NOTIFICATION:通知消息
-      MESSAGE(0, "透传消息"),
-      NOTIFICATION(1, "通知消息【本系统中发送的‘工单’，‘审批’，‘任务’消息都是通知消息】");
-      Integer value;
-      String remark;
-
-      MessageType(int v, String r) {
-        value = v;
-        remark = r;
-      }
-
-      public Integer getValue() {
-        return value;
-      }
-    }
-
-    public enum DeviceType {
-      // DEVICE_TYPE_ANDROID:Android设备   DEVICE_TYPE_IOS:苹果设备
-      ANDROID(3, "Android设备"),
-      IOS(4, "苹果设备");
-
-      Integer value;
-      String remark;
-
-      DeviceType(int vle, String rmk) {
-        value = vle;
-        remark = rmk;
-      }
-
-      public Integer getValue() {
-        return value;
-      }
-    }
-  }
   /** 前端绑定操作: 0: 删除,1: 添加 */
   public enum BindingOperate {
     DELETE,
@@ -356,5 +272,12 @@ public class Constant {
       Arrays.asList(BindingOperate.values()).forEach(val -> list.add(val.ordinal()));
       return list;
     }
+  }
+
+  /** 系统配置CODE */
+  public static class ConfigCode {
+    public static final String SITE_TITLE = "SITE_TITLE";
+    public static final String SITE_NAME = "SITE_NAME";
+    public static final String SITE_COPYRIGHT = "SITE_COPYRIGHT";
   }
 }

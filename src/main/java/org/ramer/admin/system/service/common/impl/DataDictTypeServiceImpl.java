@@ -2,7 +2,7 @@ package org.ramer.admin.system.service.common.impl;
 
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
@@ -32,7 +32,7 @@ public class DataDictTypeServiceImpl implements DataDictTypeService {
   public Specification<DataDictType> getSpec(final String criteria) {
     return (root, query, builder) ->
         builder.and(
-            builder.equal(root.get("state"), Constant.STATE_ON),
+            builder.equal(root.get("state"), State.STATE_ON),
             builder.or(
                 builder.like(root.get("name"), "%" + criteria + "%"),
                 builder.like(root.get("code"), "%" + criteria + "%"),

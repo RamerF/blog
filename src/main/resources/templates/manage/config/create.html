@@ -150,6 +150,7 @@
             let maxLength = $input.attr('maxlength');
             let validTip = $input.attr('validtip');
             if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败')) {
+              $input.focus();
               return false;
             }
           }

@@ -4,6 +4,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.service.common.ManagerService;
 import org.ramer.admin.system.util.EncryptUtil;
@@ -33,7 +34,7 @@ public class SecurityEncrypt implements AuthenticationProvider {
       throw new BadCredentialsException("bad password");
     }
     final Manager manager = managerService.getByEmpNo(empNo);
-    if (manager.getState().equals(Constant.STATE_OFF)
+    if (manager.getState().equals(State.STATE_OFF)
         || manager.getValidDate() == null
         || manager.getValidDate().before(new Date())
         || manager.getActive().equals(Constant.ACTIVE_FALSE)) {

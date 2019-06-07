@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.exception.CommonException;
@@ -14,9 +14,7 @@ import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.RoleRepository;
 import org.ramer.admin.system.service.common.RoleService;
 import org.ramer.admin.system.util.TextUtil;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /** @author ramer */
 @Slf4j
@@ -44,12 +42,12 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public List<Role> listByManager(long managerId) {
-    return repository.findByManager(managerId, Constant.STATE_ON);
+    return repository.findByManager(managerId, State.STATE_ON);
   }
 
   @Override
   public List<String> listNameByManager(long managerId) {
-    return repository.findNameByManager(managerId, Constant.STATE_ON);
+    return repository.findNameByManager(managerId, State.STATE_ON);
   }
 
   @Override
@@ -70,16 +68,6 @@ public class RoleServiceImpl implements RoleService {
   public void textFilter(Role trans, Role filtered) {
     filtered.setName(TextUtil.filter(trans.getName()));
     filtered.setRemark(TextUtil.filter(trans.getRemark()));
-  }
-
-  @Override
-  public Specification<Role> getSpec(String criteria) {
-    return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
-        : (root, query, builder) ->
-            builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
-                builder.or(builder.like(root.get("name"), "%" + criteria + "%")));
   }
 
   @SuppressWarnings({"unchecked"})

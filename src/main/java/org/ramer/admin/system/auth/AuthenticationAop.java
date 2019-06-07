@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.Constant.ResultCode;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.thirdparty.ThirdPartyCertificate;
 import org.ramer.admin.system.entity.domain.thirdparty.ThirdPartyLog;
 import org.ramer.admin.system.entity.response.thirdparty.ThirdPartyResponse;
@@ -47,7 +47,7 @@ public class AuthenticationAop {
       if (certificate == null) {
         return new ThirdPartyResponse(false, ResultCode.E0001);
       }
-      if (certificate.getState().equals(Constant.STATE_OFF)) {
+      if (certificate.getState().equals(State.STATE_OFF)) {
         return new ThirdPartyResponse(false, ResultCode.E0002);
       }
       if (RMIUtil.md5Encode(certificate.getSecret().concat(data)).equalsIgnoreCase(signed)) {

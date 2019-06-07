@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Config;
 import org.ramer.admin.system.entity.pojo.common.ConfigPoJo;
 import org.ramer.admin.system.entity.response.CommonResponse;
@@ -24,7 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @Controller
 @PreAuthorize("hasAnyAuthority('global:read','config:read')")
-@RequestMapping("/manage/config")
+@RequestMapping(AccessPath.MANAGE + "/config")
 @Api(tags = "管理端: 系统参数接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ConfigController {

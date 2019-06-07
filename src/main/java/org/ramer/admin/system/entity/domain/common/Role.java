@@ -1,13 +1,13 @@
 package org.ramer.admin.system.entity.domain.common;
 
-import org.ramer.admin.system.entity.Constant;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Where;
 import org.hibernate.annotations.Table;
+import org.hibernate.annotations.Where;
+import org.ramer.admin.system.entity.Constant.State;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 /** 系统操作员角色. */
 @Entity(name = Role.TABLE_NAME)
@@ -25,7 +25,7 @@ public class Role extends AbstractEntity {
   @Column(length = 100, columnDefinition = "VARCHAR(100)")
   private String remark;
 
-  @Where(clause = "state = " + Constant.STATE_ON)
+  @Where(clause = "state = " + State.STATE_ON)
   @ManyToMany
   @JoinTable(
       name = "roles_menu",

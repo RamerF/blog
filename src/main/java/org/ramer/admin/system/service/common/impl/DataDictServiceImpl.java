@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.exception.CommonException;
@@ -33,17 +33,17 @@ public class DataDictServiceImpl implements DataDictService {
 
   @Override
   public DataDict getByCode(final String code) {
-    return repository.findByCodeAndState(code, Constant.STATE_ON);
+    return repository.findByCodeAndState(code, State.STATE_ON);
   }
 
   @Override
   public DataDict getByTypeCodeAndCode(String typeCode, String code) {
-    return repository.findByDataDictTypeCodeAndCodeAndState(typeCode, code, Constant.STATE_ON);
+    return repository.findByDataDictTypeCodeAndCodeAndState(typeCode, code, State.STATE_ON);
   }
 
   @Override
   public List<DataDict> listByTypeCode(final String typeCode, final String criteria) {
-    return repository.findByDataDictTypeCodeAndState(typeCode, Constant.STATE_ON);
+    return repository.findByDataDictTypeCodeAndState(typeCode, State.STATE_ON);
   }
 
   @Override
@@ -53,9 +53,9 @@ public class DataDictServiceImpl implements DataDictService {
     }
     return StringUtils.isEmpty(criteria)
         ? repository.findByTypeCodeAndState(
-            typeCode, Constant.STATE_ON, PageRequest.of(page - 1, size))
+            typeCode, State.STATE_ON, PageRequest.of(page - 1, size))
         : repository.findByTypeCodeAndState(
-            typeCode, "%" + criteria + "%", Constant.STATE_ON, PageRequest.of(page - 1, size));
+            typeCode, "%" + criteria + "%", State.STATE_ON, PageRequest.of(page - 1, size));
   }
 
   @Transactional
@@ -84,10 +84,10 @@ public class DataDictServiceImpl implements DataDictService {
   @Override
   public Specification<DataDict> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
-        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), Constant.STATE_ON))
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
             builder.and(
-                builder.equal(root.get("state"), Constant.STATE_ON),
+                builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(
                     builder.like(root.get("name"), "%" + criteria + "%"),
                     builder.like(root.get("code"), "%" + criteria + "%"),

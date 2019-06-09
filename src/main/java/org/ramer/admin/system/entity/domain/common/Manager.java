@@ -2,12 +2,12 @@ package org.ramer.admin.system.entity.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Table;
 import org.hibernate.annotations.Where;
-import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,32 +20,38 @@ import org.springframework.format.annotation.DateTimeFormat;
 @EqualsAndHashCode(callSuper = true)
 public class Manager extends AbstractEntity {
   public static final String TABLE_NAME = "manager";
-
-  @Column(nullable = false, length = 25, columnDefinition = "VARCHAR(25) NOT NULL")
+  /** 工号 */
+  @Column(columnDefinition = "VARCHAR(25) NOT NULL COMMENT '工号'")
   private String empNo;
 
-  @Column(nullable = false, length = 100, columnDefinition = "VARCHAR(100) NOT NULL")
+  /** 密码 */
+  @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '密码'")
   private String password;
 
-  @Column(nullable = false, length = 25, columnDefinition = "VARCHAR(25) NOT NULL")
+  /** 姓名 */
+  @Column(columnDefinition = "VARCHAR(10) NOT NULL COMMENT '姓名'")
   private String name;
 
-  @Column(nullable = false, columnDefinition = "INT NOT NULL")
+  /** 性别 */
+  @Column(columnDefinition = "TINYINT(4) COMMENT '性别'")
   private Integer gender;
 
-  @Column(nullable = false, length = 11, columnDefinition = "VARCHAR(11) NOT NULL")
+  /** 联系电话 */
+  @Column(columnDefinition = "VARCHAR(11) NOT NULL COMMENT '联系电话'")
   private String phone;
 
-  @Column(length = 50, columnDefinition = "VARCHAR(50)")
+  /** 头图 */
+  @Column(length = 50, columnDefinition = "VARCHAR(50) COMMENT '头图'")
   private String avatar;
   /** 审核状态 */
-  @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 1")
-  private Integer active;
+  @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '审核状态'")
+  private Boolean isActive = false;
 
-  public String getActiveDesc() {
-    return active == null ? "未知" : active.equals(Constant.ACTIVE_TRUE) ? "已审核" : "未审核";
-  }
+  //  public String getActiveDesc() {
+  //    return active == null ? "未知" : active.equals(Constant.ACTIVE_TRUE) ? "已审核" : "未审核";
+  //  }
 
+  /** 头图 */
   @Column(columnDefinition = "DATETIME DEFAULT NULL")
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime validDate;

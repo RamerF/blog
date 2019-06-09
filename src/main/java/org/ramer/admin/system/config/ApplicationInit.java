@@ -58,7 +58,7 @@ public class ApplicationInit implements ApplicationRunner {
       if (manager == null) {
         manager = new Manager();
         manager.setEmpNo("admin");
-        manager.setActive(1);
+        manager.setIsActive(true);
         manager.setPhone("18990029043");
         manager.setGender(Gender.MALE.ordinal());
         manager.setState(State.STATE_ON);

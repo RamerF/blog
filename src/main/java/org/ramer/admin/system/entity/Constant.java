@@ -114,11 +114,6 @@ public class Constant {
     public static final int STATE_OFF = -1;
   }
 
-  /** 可登录 */
-  public static final int ACTIVE_TRUE = 1;
-  /** 不可登录 */
-  public static final int ACTIVE_FALSE = 0;
-
   /** 数据字典CODE */
   public class DataDictCode {
     /** 电表状态 */

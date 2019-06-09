@@ -67,10 +67,8 @@ public class ManagerServiceImpl implements ManagerService {
       m.setPhone(manager.getPhone());
     }
     textFilter(manager, m);
-    if (manager.getActive() != null
-        && (manager.getActive() == Constant.ACTIVE_TRUE
-            || manager.getActive() == Constant.ACTIVE_FALSE)) {
-      m.setActive(manager.getActive());
+    if (manager.getIsActive() != null) {
+      m.setIsActive(manager.getIsActive());
     }
     if (Constant.Gender.ordinalList().contains(manager.getGender())) {
       m.setGender(manager.getGender());
@@ -151,8 +149,8 @@ public class ManagerServiceImpl implements ManagerService {
   @Override
   public Manager create(Manager manager) {
     textFilter(manager, manager);
-    if (manager.getActive() == null) {
-      manager.setActive(Constant.ACTIVE_FALSE);
+    if (manager.getIsActive() == null) {
+      manager.setIsActive(false);
     }
     if (manager.getState() == null) {
       manager.setState(State.STATE_OFF);

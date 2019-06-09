@@ -140,6 +140,11 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
     getRepository().deleteById(id);
   }
 
+  @Transactional
+  default void deleteBatch(final List<Long> ids) throws RuntimeException {
+    getRepository().deleteByIds(ids);
+  }
+
   /**
    * 过滤某些属性可能包含的特殊字符.
    *

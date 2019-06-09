@@ -1,8 +1,12 @@
 package org.ramer.admin.system.config;
 
-import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
@@ -13,12 +17,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
-import org.springframework.web.filter.HttpPutFormContentFilter;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import okhttp3.ConnectionPool;
-import okhttp3.OkHttpClient;
 import springfox.documentation.builders.*;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -30,6 +28,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class CommonBean {
+  @Value("${spring.swagger.enable}")
+  private boolean enableSwagger;
+
   @Bean
   public OkHttpClient okHttpClient() {
     return new OkHttpClient.Builder()
@@ -51,6 +52,7 @@ public class CommonBean {
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2)
         .apiInfo(apiInfo())
+        .enable(enableSwagger)
         .select()
         .apis(RequestHandlerSelectors.basePackage("org.ramer.admin"))
         .paths(PathSelectors.any())
@@ -64,11 +66,6 @@ public class CommonBean {
         .contact(new Contact("Tang Xiaofeng", "", ""))
         .version("1.0")
         .build();
-  }
-
-  @Bean
-  public HttpPutFormContentFilter httpPutFormContentFilter() {
-    return new HttpPutFormContentFilter();
   }
 
   @Bean

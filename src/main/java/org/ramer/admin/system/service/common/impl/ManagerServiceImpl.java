@@ -37,7 +37,7 @@ public class ManagerServiceImpl implements ManagerService {
     if (roleIds != null && roleIds.size() > 0) {
       List<Role> roles = new ArrayList<>();
       roleIds.forEach(roleId -> roles.add(Role.of(roleId)));
-      manager.setRoleses(roles);
+      manager.setRoles(roles);
       manager.setPassword(EncryptUtil.execEncrypt(manager.getPassword()));
     }
     return create(manager);
@@ -78,7 +78,7 @@ public class ManagerServiceImpl implements ManagerService {
     if (roleIds != null && roleIds.size() > 0) {
       List<Role> roles = new ArrayList<>();
       roleIds.forEach(roleId -> roles.add(Role.of(roleId)));
-      m.setRoleses(roles);
+      m.setRoles(roles);
     }
     return repository.saveAndFlush(m);
   }
@@ -165,7 +165,7 @@ public class ManagerServiceImpl implements ManagerService {
   public synchronized Manager update(Manager manager) {
     return update(
         manager,
-        Optional.ofNullable(manager.getRoleses()).orElseGet(ArrayList::new).stream()
+        Optional.ofNullable(manager.getRoles()).orElseGet(ArrayList::new).stream()
             .map(AbstractEntity::getId)
             .collect(Collectors.toList()));
   }

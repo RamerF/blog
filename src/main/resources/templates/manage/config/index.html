@@ -5,9 +5,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}">
 <head>
-    <title>系统参数配置</title>
-    <script th:src="@{/libs/layer/layer.js}"></script>
-    <!--<link rel="stylesheet" th:href="@{/libs/layer/theme/default/layer.css}"/>-->
+    <title>系统配置配置</title>
     <link rel="stylesheet" th:href="@{/style/manage/config/index.css}"/>
 </head>
 <body>
@@ -36,34 +34,28 @@
             <!--        </button>-->
         </div>
         <div class="operator-container">
-            <button class="mdc-button mdc-button--raised" onclick="refresh();" id="refreshBtn">
+            <button class="mdc-button mdc-button--raised" id="refreshBtn">
                 <span class="mdc-button__label">刷新</span>
             </button>
             <a class="mdc-button mdc-button--raised" th:href="@{/manage/config}">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" onclick="update();">
-                <span class="mdc-button__label">修改</span>
+            <button class="mdc-button mdc-button--raised" id="editBtn">
+                <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" onclick="del(this);">
+            <button class="mdc-button mdc-button--raised" id="delBtn">
                 <span class="mdc-button__label">删除</span>
             </button>
         </div>
     </div>
 </div>
 <th:block layout:fragment="script">
-    <!-- mdc 部分组件未实现,该部分使用老版本 -->
-    <!--    <link rel="stylesheet" href="/libs/material-design-light/material.css"/>-->
-    <!--<script type="text/javascript" src="/libs/material-design-light/material.js"></script>-->
-    <script src="/libs/bootstrap-table/bootstrap-table.js"></script>
     <script type="text/javascript">
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
-        // new mdc.textField.MDCTextField(document.querySelector('.mdc-text-field'));
-        // 代码重构
-        var ajaxTable = $('#mdc-data-table').ajaxTable({
-          url: '/manage/config/list',
+        let mdcDataTable = $('#mdc-data-table').mdcDataTable({
+          url: '/manage/config/page',
           queryParams: {},
           container: '#mdc-data-table',
           columns: [
@@ -105,7 +97,7 @@
           // 是否分页
           pagination: true,
           // 页面数据条数
-          pageSize: 2,
+          pageSize: 5,
           // 设置页面可以显示的数据条数
           pageList: [5, 10, 15, 20],
           // 首页页码
@@ -115,94 +107,39 @@
           }
         });
         $('#refreshBtn').click(function() {
-          console.log(ajaxTable.getSelectItems());
+          mdcDataTable.refresh();
         });
-        // 代码重构
-
-        // $('#table').bootstrapTable({ // 对应table标签的id
-        //   url: '/manage/config/list', // 获取表格数据的url
-        //   method: 'GET',
-        //   contentType: 'application/x-www-form-urlencoded',
-        //   dataType: 'json',
-        //   singleSelect: true,//单选
-        //   cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
-        //   striped: true,  //表格显示条纹，默认为false
-        //   pageSize: 2, // 页面数据条数
-        //   pageList: [5, 10, 15, 20], // 设置页面可以显示的数据条数
-        //   pageNumber: 1, // 首页页码
-        //   pagination: true,//是否分页
-        //   sidePagination: 'server',  // 设置为服务器端分页
-        //   showRefresh: false,
-        //   checkboxHeader: false,
-        //   clickToSelect: false,
-        //   maintainSelected: true,
-        //   queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
-        //     var name = $('#name');
-        //     if (name.val() === '') {
-        //       return {
-        //         size: params.limit,//params.limit, // 每页要显示的数据条数
-        //         page: (params.offset / params.limit) + 1 // 当前页
-        //       };
-        //     } else {
-        //       return {
-        //         criteria: name.val(),
-        //         size: params.limit,//params.limit, // 每页要显示的数据条数
-        //         page: (params.offset / params.limit) + 1 // 当前页
-        //       };
-        //     }
-        //   },
-        //     /* sortName: 'name', // 要排序的字段
-        //      sortOrder: 'desc', // 排序规则 */
-        //   columns: [
-        //     {
-        //       field: 'id',
-        //       formatter: function(id) {
-        //         var div1Node = $('<div class="mdc-form-field"></div>');
-        //         var div2Node = $('<div class="mdc-checkbox"></div>');
-        //         var inputNode = $('<input type="checkbox" class="mdc-checkbox__native-control" value="' + id + '">');
-        //         var div3Node = $('<div class="mdc-checkbox__background"></div>');
-        //         var svgNode = $('<svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"></svg>');
-        //         var pathNode = $(
-        //             '<path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>');
-        //         var div4Node = $('<div class="mdc-checkbox__mixedmark"></div>');
-        //         var labelNode = $('<label ></label>');
-        //         labelNode.append(inputNode);
-        //         div1Node.append(div2Node);
-        //         div2Node.append(inputNode);
-        //         div2Node.append(div3Node);
-        //         div3Node.append(svgNode);
-        //         div3Node.append(div4Node);
-        //         svgNode.append(pathNode);
-        //         return div1Node.prop('outerHTML');
-        //       }
-        //     },
-        //     {
-        //       field: 'code'
-        //     }, {
-        //       field: 'name'
-        //     }, {
-        //       field: 'value'
-        //     }, {
-        //       field: 'remark'
-        //     }
-        //   ],
-        //   responseHandler: function(res) {
-        //     return {total: res.data.totalElements, rows: res.data.content};
-        //   },
-        //   onLoadSuccess: function() {
-        //     // bindCheckAll();
-        //     bindClickRow();
-        //     //加载成功时执行
-        //     //禁用全选
-        //     //$("input[name='btSelectAll']").attr("hidden", "true");
-        //     // const checkbox = new mdc.checkbox.MDCCheckbox(document.querySelector('.mdc-checkbox'));
-        //     // const formField = new mdc.formField.MDCFormField(document.querySelector('.mdc-form-field'));
-        //     // formField.input = checkbox;
-        //   },
-        //   onLoadError: function() {  //加载失败时执行
-        //   }
-        // });
-
+        $('#editBtn').click(function() {
+          let selectItems = mdcDataTable.getSelectItems();
+          if (selectItems.length !== 1) {
+            $.alert('请选择一条记录');
+            return false;
+          }
+          window.location.href = '/manage/config/' + selectItems[0].id;
+        });
+        $('#delBtn').click(function() {
+          let selectItems = mdcDataTable.getSelectItems();
+          if (selectItems.length < 1) {
+            $.alert('请至少选择一条记录');
+            return false;
+          }
+          console.debug(selectItems);
+          $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
+            let ids = [];
+            selectItems.forEach(function(item) {
+              ids.push(item.id);
+            });
+            $.delete('/manage/config/deleteBatch', {'ids': ids.toString()}, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+              let delCount = selectItems.length;
+              mdcDataTable.refresh({}, delCount);
+            }, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+            });
+          });
+        });
       });
 
       function bindClickRow() {
@@ -217,64 +154,6 @@
         $('#table').bootstrapTable('refresh', {query: {'criteria': $(obj).prev().val()}});
       }
 
-      //刷新表
-      function refresh() {
-        $('#table').bootstrapTable('refresh');
-      }
-
-      //添加参数
-      function create() {
-        layer.open({
-          type: 2,
-          area: ['600px', '400px'],
-          fix: false, //不固定
-          maxmin: true,
-          shadeClose: true,
-          shade: 0.4,
-          title: '添加',
-          content: '/manage/config'
-        });
-      }
-
-      //修改参数
-      function update() {
-        if ($('#table').bootstrapTable('getSelections').length == 1) {
-          x_admin_show('修改', '/manage/config/' + $('#table').bootstrapTable('getSelections')[0].id, 600, 400);
-        } else {
-          layer.msg('请选择一条需要修改的数据。', {icon: 2});
-        }
-      }
-
-      //删除参数
-      function del(obj) {
-        $(obj).attr('disabled', 'disabled');
-        $(obj).css('background', '#ccc');
-        if ($('#table').bootstrapTable('getSelections').length === 1) {
-          layer.confirm('确认要删除吗？', {icon: 3, title: '信息'}, function() {
-            //发异步删除数据
-            $.ajax({
-              url: '/manage/config/' + $('#table').bootstrapTable('getSelections')[0].id,
-              type: 'post',
-              data: {'_method': 'delete', '_csrf': '[[${_csrf!=null?_csrf.token:null}]]'},
-              success: function(data) {
-                $(obj).removeAttr('disabled');
-                $(obj).css('background', '#009688');
-                if (data.result === true) {
-                  //刷新表
-                  refresh();
-                  layer.msg(data.data, {icon: 1, time: 1000});
-                } else {
-                  layer.alert(data.msg, {icon: 2});
-                }
-              }
-            });
-          });
-        } else {
-          layer.msg('请选择一条需要删除的数据。', {icon: 2});
-          $(obj).removeAttr('disabled');
-          $(obj).css('background', '#009688');
-        }
-      }
     </script>
 </th:block>
 </body>

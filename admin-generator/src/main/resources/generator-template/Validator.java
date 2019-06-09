@@ -14,11 +14,18 @@ import org.springframework.validation.Validator;
 public class ${name}Validator implements Validator {
   @Override
   public boolean supports(final Class<?> clazz) {
-    return clazz.isAssignableFrom(${name}.class) || clazz.isAssignableFrom(${name}Request.class) || clazz.isAssignableFrom(${name}PoJo.class);
+    return clazz.isAssignableFrom(${name}.class)
+        || clazz.isAssignableFrom(${name}Request.class)
+        || clazz.isAssignableFrom(${name}PoJo.class);
   }
 
   @Override
   public void validate(final Object target, final Errors errors) {
-    // TODO-WARN: 添加${description}校验规则
+    ${name}Request config = (${name}Request) target;
+    if (${alia} == null) {
+      errors.rejectValue(null, "${alia}.null", "${description} 不能为空");
+    } else {
+      // TODO-WARN: 添加${description}校验规则
+    }
   }
 }

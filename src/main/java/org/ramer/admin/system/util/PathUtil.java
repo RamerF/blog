@@ -1,7 +1,7 @@
 package org.ramer.admin.system.util;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.ResourcePath;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +36,7 @@ public class PathUtil {
         path = "/";
         break;
     }
-    Date date = new Date();
+    LocalDateTime date = LocalDateTime.now();
     return path.concat(new SimpleDateFormat("yyyy").format(date))
         .concat(FILE_SEPARATOR)
         .concat(new SimpleDateFormat("MM").format(date))

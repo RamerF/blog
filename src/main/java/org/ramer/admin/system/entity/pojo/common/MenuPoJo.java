@@ -1,5 +1,6 @@
 package org.ramer.admin.system.entity.pojo.common;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 import lombok.*;
@@ -43,8 +44,8 @@ public class MenuPoJo extends AbstractEntityPoJo {
       final String icon,
       final Long pId,
       final int sort,
-      final Date createTime,
-      final Date updateTime) {
+      final LocalDateTime createTime,
+      final LocalDateTime updateTime) {
     setId(id);
     setState(state);
     setName(name);

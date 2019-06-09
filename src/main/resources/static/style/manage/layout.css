@@ -136,16 +136,8 @@ body {
     display: flex;
 }
 
-.pagination-container ul {
-    float: right;
-}
-
 .pagination-container .count {
     flex: 1;
-}
-
-.pagination-container ul {
-    float: right;
 }
 
 .pagination-container ul li {

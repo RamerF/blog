@@ -1,8 +1,7 @@
 package org.ramer.admin.system.service.common.impl;
 
-import java.util.*;
+import java.util.Optional;
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.Config;
@@ -10,7 +9,6 @@ import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.ConfigRepository;
 import org.ramer.admin.system.service.common.ConfigService;
-import org.ramer.admin.system.util.TextUtil;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,42 +18,15 @@ import org.springframework.util.StringUtils;
 @Service
 public class ConfigServiceImpl implements ConfigService {
   @Resource private ConfigRepository repository;
-  private final Map<String, String> SITE_INFO_MAP = new HashMap<>();
 
   @Override
   public String getSiteInfo(String location) {
-    return Optional.ofNullable(SITE_INFO_MAP.get(location))
-        .orElseGet(
-            () -> {
-              final Config siteInfo = getByCode(location);
-              if (siteInfo == null) {
-                return location;
-              }
-              SITE_INFO_MAP.put(location, siteInfo.getValue());
-              return siteInfo.getValue();
-            });
+    return Optional.ofNullable(getByCode(location)).map(Config::getValue).orElse(location);
   }
 
   @Override
   public Config getByCode(String code) {
     return repository.findByCodeAndState(code, State.STATE_ON);
-  }
-
-  @Transactional
-  @Override
-  public synchronized Config create(Config conf) {
-    if (repository.findByCodeAndState(conf.getCode(), State.STATE_ON) != null) {
-      throw new CommonException("CODE 已存在");
-    }
-    textFilter(conf, conf);
-    return repository.saveAndFlush(conf);
-  }
-
-  @Override
-  public void textFilter(Config trans, Config filtered) {
-    filtered.setValue(TextUtil.filter(trans.getValue()));
-    filtered.setName(TextUtil.filter(trans.getName()));
-    filtered.setRemark(TextUtil.filter(trans.getRemark()));
   }
 
   @Override

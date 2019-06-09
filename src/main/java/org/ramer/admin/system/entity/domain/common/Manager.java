@@ -1,5 +1,7 @@
 package org.ramer.admin.system.entity.domain.common;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.time.LocalDateTime;
 import java.util.*;
 import javax.persistence.*;
 import lombok.*;
@@ -14,7 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(appliesTo = Manager.TABLE_NAME, comment = "管理员")
 @Data
 @NoArgsConstructor
-@ToString(exclude = {"roleses"})
+@ToString(exclude = {"roles"})
 @EqualsAndHashCode(callSuper = true)
 public class Manager extends AbstractEntity {
   public static final String TABLE_NAME = "manager";
@@ -46,7 +48,7 @@ public class Manager extends AbstractEntity {
 
   @Column(columnDefinition = "DATETIME DEFAULT NULL")
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  private Date validDate;
+  private LocalDateTime validDate;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
@@ -54,9 +56,8 @@ public class Manager extends AbstractEntity {
       joinColumns = {@JoinColumn(name = "manager_id")},
       inverseJoinColumns = {@JoinColumn(name = "roles_id")})
   @Where(clause = "state = " + State.STATE_ON)
-  //  @JsonBackReference
-  // TODO-WARN: 这里注释掉主要是端粒段列表显示,需要修改为手动获取,然后启用该注解
-  private List<Role> roleses;
+  @JsonBackReference
+  private List<Role> roles;
 
   public static Manager of(Long id) {
     if (Objects.isNull(id)) {

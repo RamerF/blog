@@ -1,5 +1,7 @@
 package ${basePath}${moduleName}.entity.response${subDir};
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import ${basePath}.system.entity.domain.AbstractEntity;
 import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
@@ -20,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "${description}")
 public class ${name}Response extends AbstractEntityResponse {
 ${fieldList}
   public static ${name}Response of(final ${name} ${alia}) {

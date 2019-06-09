@@ -1,4 +1,4 @@
- package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common;
 
 import io.swagger.annotations.*;
 import java.util.Map;
@@ -14,6 +14,7 @@ import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.ConfigService;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.ConfigValidator;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller("configmc")
 @PreAuthorize("hasAnyAuthority('global:read','config:read')")
-@RequestMapping( "/common/config")
-@Api(tags = "管理端: 系统配置接口")
+@RequestMapping("/common/config")
+@Api(tags = "管理端s: 系统配置接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ConfigController {
   @Resource private ConfigService service;
@@ -46,7 +47,7 @@ public class ConfigController {
   @GetMapping("/list")
   @ResponseBody
   @ApiOperation("获取系统配置列表")
-  public ResponseEntity list(
+  public ResponseEntity<CommonResponse<PageImpl<ConfigResponse>>> list(
       @RequestParam(value = "page", required = false, defaultValue = "1") String pageStr,
       @RequestParam(value = "size", required = false, defaultValue = "10") String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
@@ -65,21 +66,16 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','config:create')")
   @ApiOperation("添加系统配置")
-  public ResponseEntity create(@Valid ConfigRequest configRequest, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(@Valid ConfigRequest configRequest, BindingResult bindingResult)
+      throws Exception {
     log.info(" ConfigController.create : [{}]", configRequest);
-    return commonService.create(
-        service, Config.class, configRequest, bindingResult);
+    return commonService.create(service, Config.class, configRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新系统配置页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
-    return commonService.update(
-        service,
-        ConfigPoJo.class,
-        idStr,
-        "config/update",
-        map, "config");
+    return commonService.update(service, ConfigPoJo.class, idStr, "config/update", map, "config");
   }
 
   @PutMapping("/{id}")
@@ -87,7 +83,9 @@ public class ConfigController {
   @PreAuthorize("hasAnyAuthority('global:write','config:write')")
   @ApiOperation("更新系统配置")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid ConfigRequest configRequest, BindingResult bindingResult)
+      @PathVariable("id") String idStr,
+      @Valid ConfigRequest configRequest,
+      BindingResult bindingResult)
       throws Exception {
     log.info(" ConfigController.update : [{}]", configRequest);
     final long id = TextUtil.validLong(idStr, -1);
@@ -95,8 +93,7 @@ public class ConfigController {
       return CommonResponse.wrongFormat("id");
     }
     configRequest.setId(id);
-    return commonService.update(
-        service, Config.class, configRequest, idStr, bindingResult);
+    return commonService.update(service, Config.class, configRequest, idStr, bindingResult);
   }
 
   @DeleteMapping("/{id}")

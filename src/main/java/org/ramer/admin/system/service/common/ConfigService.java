@@ -1,5 +1,6 @@
 package org.ramer.admin.system.service.common;
 
+import org.ramer.admin.system.entity.Constant.ConfigCode;
 import org.ramer.admin.system.entity.domain.common.Config;
 import org.ramer.admin.system.entity.pojo.common.ConfigPoJo;
 import org.ramer.admin.system.service.BaseService;
@@ -11,9 +12,9 @@ public interface ConfigService extends BaseService<Config, ConfigPoJo> {
    * <pre>
    * @param location:
    *      option value:<br/>
-   *      {@link Constant#SITE_TITLE}<br/>
-   *      {@link Constant#SITE_NAME}<br/>
-   *      {@link Constant#SITE_COPYRIGHT}
+   *      {@link ConfigCode#SITE_TITLE}<br/>
+   *      {@link ConfigCode#SITE_NAME}<br/>
+   *      {@link ConfigCode#SITE_COPYRIGHT}
    * </pre>
    */
   String getSiteInfo(String location);

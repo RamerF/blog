@@ -1,11 +1,9 @@
 package org.ramer.admin.system.config;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.*;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant;
 import org.ramer.admin.system.entity.Constant.*;
 import org.ramer.admin.system.entity.domain.common.Config;
 import org.ramer.admin.system.entity.domain.common.*;
@@ -64,13 +62,12 @@ public class ApplicationInit implements ApplicationRunner {
         manager.setPhone("18990029043");
         manager.setGender(Gender.MALE.ordinal());
         manager.setState(State.STATE_ON);
-        manager.setCreateTime(new Date());
-        manager.setUpdateTime(new Date());
+        manager.setCreateTime(LocalDateTime.now());
+        manager.setUpdateTime(LocalDateTime.now());
         manager.setPassword(EncryptUtil.execEncrypt("admin"));
         manager.setName("admin");
-        manager.setValidDate(
-            Date.from(LocalDateTime.now().plusYears(100).toInstant(ZoneOffset.of("+8"))));
-        manager.setRoleses(Collections.singletonList(role));
+        manager.setValidDate(LocalDateTime.now().plusYears(100));
+        manager.setRoles(Collections.singletonList(role));
         managerService.create(manager);
 
         // init site info

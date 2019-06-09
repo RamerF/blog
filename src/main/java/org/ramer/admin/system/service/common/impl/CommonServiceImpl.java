@@ -187,7 +187,7 @@ public class CommonServiceImpl implements CommonService {
 
   @Override
   public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity delete(final S invoke, final String idStr) {
+      ResponseEntity<CommonResponse<Object>> delete(final S invoke, final String idStr) {
     long id = TextUtil.validLong(idStr, 0);
     if (id < 1) {
       return CommonResponse.wrongFormat("id");
@@ -203,7 +203,20 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public <T extends AbstractEntity, E> ResponseEntity list(
+  public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
+      ResponseEntity<CommonResponse<Object>> deleteBatch(final S invoke, final List<Long> ids) {
+    try {
+      invoke.deleteBatch(ids);
+    } catch (Exception e) {
+      log.warn(" CommonServiceImpl.deleteBatch : [{}]", e.getMessage());
+      return CommonResponse.fail(
+          StringUtils.isEmpty(e.getMessage()) ? Txt.FAIL_EXEC : e.getMessage());
+    }
+    return CommonResponse.ok(null, Txt.SUCCESS_EXEC_DELETE);
+  }
+
+  @Override
+  public <T extends AbstractEntity, E> ResponseEntity<CommonResponse<List<E>>> list(
       final List<T> lists, final Function<T, E> function, final Predicate<E> filterFunction) {
     return CommonResponse.ok(
         Objects.isNull(filterFunction)
@@ -212,14 +225,20 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public <T extends AbstractEntity> ResponseEntity page(
-      final Page<T> page, final Function<T, ?> function) {
+  public <T extends AbstractEntity, R> ResponseEntity<CommonResponse<PageImpl<R>>> page(
+      final Page<T> page, final Function<T, R> function) {
     return CommonResponse.ok(
         new PageImpl<>(
             page.getContent().stream().map(function).collect(Collectors.toList()),
             page.getPageable(),
             page.getTotalElements()));
   }
+  //
+  //  @Override
+  //  public <T extends AbstractEntity, R> ResponseEntity<CommonResponse<R>> page(
+  //      final Page<T> page, final Function<T, R> function) {
+  //    return null;
+  //  }
 
   @Override
   public String collectBindingResult(BindingResult bindingResult) {

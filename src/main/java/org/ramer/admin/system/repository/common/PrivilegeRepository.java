@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PrivilegeRepository extends BaseRepository<Privilege, Long> {
   @Query(
-      "select p from org.ramer.admin.system.entity.domain.common.Manager m inner join m.roleses r inner join r.privileges p where m.id= :managerId and p.state= :state")
+      "select p from org.ramer.admin.system.entity.domain.common.Manager m inner join m.roles r inner join r.privileges p where m.id= :managerId and p.state= :state")
   List<Privilege> findByManager(@Param("managerId") long managerId, @Param("state") int state);
 
   @Query(

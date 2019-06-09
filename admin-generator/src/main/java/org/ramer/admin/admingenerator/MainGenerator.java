@@ -423,6 +423,10 @@ public class MainGenerator {
               if (field.getType().getName().contains("List")) {
                 fieldBuilder
                     .append(lineSeparator)
+                    .append("  @ApiModelProperty(value = \"")
+                    .append(field.getName())
+                    .append("\")")
+                    .append(lineSeparator)
                     .append("  private List<Long> ")
                     .append(field.getName())
                     .append("Ids;")
@@ -430,6 +434,10 @@ public class MainGenerator {
               } else {
                 final String simpleName = field.getType().getSimpleName();
                 fieldBuilder
+                    .append(lineSeparator)
+                    .append("  @ApiModelProperty(value = \"")
+                    .append(simpleName)
+                    .append("\")")
                     .append(lineSeparator)
                     .append("  private ")
                     .append(simpleName)
@@ -447,6 +455,10 @@ public class MainGenerator {
         .forEach(
             field ->
                 fieldBuilder
+                    .append(lineSeparator)
+                    .append("  @ApiModelProperty(value = \"")
+                    .append(field.getName())
+                    .append("\")")
                     .append(lineSeparator)
                     .append("  private Long ")
                     .append(field.getName())

@@ -36,6 +36,8 @@ spring:
       testWhileIdle: true
       validationQuery: select 1
       maxOpenPreparedStatements: 50
+  swagger:
+    enable: true
 logging:
   level:
     root: info

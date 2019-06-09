@@ -1,15 +1,17 @@
 package org.ramer.admin.system.service.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
-import org.ramer.admin.system.entity.request.AbstractEntityRequest;
-import org.ramer.admin.system.service.BaseService;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.servlet.http.HttpSession;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
+import org.ramer.admin.system.entity.request.AbstractEntityRequest;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.service.BaseService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import springfox.documentation.annotations.ApiIgnore;
@@ -32,7 +34,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity create(S invoke, T entity, BindingResult bindingResult) throws Exception;
+      ResponseEntity create(S invoke, T entity, BindingResult bindingResult);
 
   /**
    * 跳转到更新页面.校验更新url正确性,写入对象用于回显.
@@ -52,8 +54,7 @@ public interface CommonService {
           String idStr,
           String page,
           Map<String, Object> map,
-          String propName)
-          throws Exception;
+          String propName);
 
   /**
    * 更新.
@@ -67,8 +68,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity update(S invoke, T entity, String idStr, BindingResult bindingResult)
-          throws Exception;
+      ResponseEntity update(S invoke, T entity, String idStr, BindingResult bindingResult);
 
   /**
    * 创建.
@@ -90,8 +90,7 @@ public interface CommonService {
           Class<T> clazz,
           final R entity,
           final BindingResult bindingResult,
-          String... includeNullProperties)
-          throws Exception;
+          String... includeNullProperties);
 
   /**
    * 更新.
@@ -115,20 +114,31 @@ public interface CommonService {
           final R entity,
           String idStr,
           final BindingResult bindingResult,
-          String... includeNullProperties)
-          throws Exception;
+          String... includeNullProperties);
 
   /**
    * 逻辑删除.
    *
-   * @param invoke 服务层实现类.
-   * @param idStr 页面传递的id.
    * @param <T> 服务层实现类.
    * @param <E> 要删除的对象.
+   * @param invoke 服务层实现类.
+   * @param idStr 待删除对象id.
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity delete(S invoke, String idStr) throws Exception;
+      ResponseEntity<CommonResponse<Object>> delete(S invoke, String idStr);
+
+  /**
+   * 逻辑删除批量.
+   *
+   * @param <T> 服务层实现类.
+   * @param <E> 要删除的对象.
+   * @param invoke 服务层实现类.
+   * @param ids 待删除对象id集合.
+   * @return {@link ResponseEntity}
+   */
+  <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
+      ResponseEntity<CommonResponse<Object>> deleteBatch(S invoke, List<Long> ids);
 
   /**
    * 转换集合对象.将List domain对象转换为 List 任意对象,并封装为页面响应对象.
@@ -140,7 +150,7 @@ public interface CommonService {
    * @param <E> 任意对象(通常是response|poJo对象)
    * @return {@link ResponseEntity}
    */
-  <T extends AbstractEntity, E> ResponseEntity list(
+  <T extends AbstractEntity, E> ResponseEntity<CommonResponse<List<E>>> list(
       List<T> lists, final Function<T, E> function, final Predicate<E> filterFunction);
 
   /**
@@ -151,7 +161,8 @@ public interface CommonService {
    * @param <T> domain对象
    * @return {@link ResponseEntity}
    */
-  <T extends AbstractEntity> ResponseEntity page(Page<T> page, final Function<T, ?> function);
+  <T extends AbstractEntity, R> ResponseEntity<CommonResponse<PageImpl<R>>> page(
+      final Page<T> page, final Function<T, R> function);
 
   /**
    * 拼接表单错误信息.

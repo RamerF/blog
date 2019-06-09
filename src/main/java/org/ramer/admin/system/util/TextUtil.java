@@ -1,7 +1,9 @@
 package org.ramer.admin.system.util;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 import org.ramer.admin.system.entity.Constant;
 import org.springframework.util.Assert;
@@ -96,9 +98,10 @@ public class TextUtil {
    * @param pattern 时间格式化pattern
    * @return 返回date,如果字符串格式不匹配返回defaultValue.
    */
-  public static Date validDate(String dateStr, String pattern, Date defaultValue) {
+  public static LocalDateTime validDate(String dateStr, String pattern, LocalDateTime defaultValue) {
     try {
-      return new SimpleDateFormat(pattern).parse(dateStr);
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+      return LocalDateTime.from(formatter.parse(dateStr));
     } catch (Exception e) {
       return defaultValue;
     }

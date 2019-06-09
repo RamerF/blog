@@ -1,7 +1,7 @@
 package org.ramer.admin.system.entity.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,11 +24,11 @@ public abstract class AbstractEntity implements Serializable {
 
   @CreationTimestamp
   @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
-  private Date createTime = new Date();
+  private LocalDateTime createTime = LocalDateTime.now();
 
   @UpdateTimestamp
   @Column(
       columnDefinition =
           "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'")
-  private Date updateTime = new Date();
+  private LocalDateTime updateTime = LocalDateTime.now();
 }

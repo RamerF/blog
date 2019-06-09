@@ -44,11 +44,13 @@ public class ${name}Controller {
     return "${alia}/index";
   }
 
-  @GetMapping("/list")
+  @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取${description}列表")
-  public ResponseEntity list(
-      @RequestParam(value = "page", required = false, defaultValue = "1") String pageStr,
+  public ResponseEntity<CommonResponse<PageImpl<${name}Response>>> page(
+      @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
+          @RequestParam(value = "page", required = false, defaultValue = "1")
+          String pageStr,
       @RequestParam(value = "size", required = false, defaultValue = "10") String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);

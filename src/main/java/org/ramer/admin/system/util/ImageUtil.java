@@ -2,7 +2,7 @@ package org.ramer.admin.system.util;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -21,7 +21,7 @@ public class ImageUtil {
   public static String getRandomFileName() {
     // 获取随机五位数
     int random = r.nextInt(89999) + 10000;
-    String nowTimeStr = sDateFormat.format(new Date());
+    String nowTimeStr = sDateFormat.format(LocalDateTime.now());
     return nowTimeStr + random;
   }
 

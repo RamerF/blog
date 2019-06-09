@@ -36,7 +36,7 @@ public class CustomUserService implements UserDetailsService {
             .orElse(true);
     if (!allowLogin) {
       throw new CommonException(
-          "错误次数过多,请" + ((during.get() - new Date().getTime()) / (1000 * 60)) + "分钟后再试");
+          "错误次数过多,请" + ((during.get() - System.currentTimeMillis()) / (1000 * 60)) + "分钟后再试");
     }
     Manager manager = managerService.getByEmpNo(empNo);
     log.debug("loadUserByUsername  empNo: [{}]", empNo);

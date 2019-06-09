@@ -1,5 +1,6 @@
 package org.ramer.admin.system.repository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -47,7 +48,7 @@ public interface BaseRepository<T extends AbstractEntity, ID>
     List<T> ts = findAllById(ids);
     for (T t : ts) {
       t.setState(State.STATE_OFF);
-      t.setCreateTime(new Date());
+      t.setCreateTime(LocalDateTime.now());
       saveAndFlush(t);
     }
   }

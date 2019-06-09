@@ -1,5 +1,6 @@
 package org.ramer.admin.system.entity.response.common;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
@@ -21,8 +22,8 @@ public class CommonMediaResponse extends AbstractEntityResponse {
 
   private Long id;
   private Integer state;
-  private Date createTime;
-  private Date updateTime;
+  private LocalDateTime createTime;
+  private LocalDateTime updateTime;
 
   private String code;
 

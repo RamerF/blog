@@ -15,15 +15,15 @@ import org.hibernate.annotations.Table;
 public class Config extends AbstractEntity {
   public static final String TABLE_NAME = "config";
 
-  @Column(nullable = false, length = 50, columnDefinition = "VARCHAR(50) NOT NULL")
+  @Column(nullable = false, columnDefinition = "VARCHAR(50) NOT NULL COMMENT 'CODE'")
   private String code;
 
-  @Column(nullable = false, length = 50, columnDefinition = "VARCHAR(50) NOT NULL")
+  @Column(nullable = false, columnDefinition = "VARCHAR(50) NOT NULL COMMENT '名称'")
   private String name;
 
-  @Column(nullable = false, columnDefinition = "TEXT NOT NULL")
+  @Column(nullable = false, columnDefinition = "VARCHAR(100) NOT NULL COMMENT '值'")
   private String value;
 
-  @Column(columnDefinition = "TEXT")
+  @Column(columnDefinition = "TEXT COMMENT '备注'")
   private String remark;
 }

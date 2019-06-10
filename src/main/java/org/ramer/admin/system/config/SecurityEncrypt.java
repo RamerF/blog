@@ -1,6 +1,5 @@
 package org.ramer.admin.system.config;
 
-import java.time.LocalDateTime;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.State;
@@ -33,10 +32,7 @@ public class SecurityEncrypt implements AuthenticationProvider {
       throw new BadCredentialsException("bad password");
     }
     final Manager manager = managerService.getByEmpNo(empNo);
-    if (manager.getState().equals(State.STATE_OFF)
-        || manager.getValidDate() == null
-        || manager.getValidDate().isBefore(LocalDateTime.now())
-        || !manager.getIsActive()) {
+    if (manager.getState().equals(State.STATE_OFF) || !manager.getIsActive()) {
       throw new BadCredentialsException("bad password");
     }
     return new UsernamePasswordAuthenticationToken(user, credentials, user.getAuthorities());

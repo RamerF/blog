@@ -2,7 +2,6 @@ package org.ramer.admin.system.controller.common.manage;
 
 import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.*;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -90,8 +89,6 @@ public class ManagerController {
         || !manager.getPassword().matches("^[a-zA-Z]\\w{5,17}$")) {
       return CommonResponse.fail("密码 必须以字母开头,长度在6~18之间,只能包含字符,数字和下划线");
     }
-    LocalDateTime validDate = TextUtil.validDate(validDateStr, "yyyy-MM-dd HH:mm:ss", null);
-    manager.setValidDate(validDate);
     if (bindingResult.hasErrors()) {
       return CommonResponse.fail(commonService.collectBindingResult(bindingResult));
     }
@@ -145,9 +142,6 @@ public class ManagerController {
     if (id <= 0) {
       return CommonResponse.wrongFormat("id");
     }
-    LocalDateTime validDate = TextUtil.validDate(validDateStr, "yyyy-MM-dd HH:mm:ss", null);
-    manager.setValidDate(validDate);
-    manager.setId(id);
     if (bindingResult.hasErrors()) {
       return CommonResponse.fail(commonService.collectBindingResult(bindingResult));
     }

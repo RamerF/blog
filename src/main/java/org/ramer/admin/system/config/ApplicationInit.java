@@ -66,7 +66,6 @@ public class ApplicationInit implements ApplicationRunner {
         manager.setUpdateTime(LocalDateTime.now());
         manager.setPassword(EncryptUtil.execEncrypt("admin"));
         manager.setName("admin");
-        manager.setValidDate(LocalDateTime.now().plusYears(100));
         manager.setRoles(Collections.singletonList(role));
         managerService.create(manager);
 

@@ -1,7 +1,6 @@
 package org.ramer.admin.system.entity.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.Table;
 import org.hibernate.annotations.Where;
 import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity(name = Manager.TABLE_NAME)
 @Table(appliesTo = Manager.TABLE_NAME, comment = "管理员")
@@ -47,20 +45,8 @@ public class Manager extends AbstractEntity {
   @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '审核状态'")
   private Boolean isActive = false;
 
-  //  public String getActiveDesc() {
-  //    return active == null ? "未知" : active.equals(Constant.ACTIVE_TRUE) ? "已审核" : "未审核";
-  //  }
-
-  /** 头图 */
-  @Column(columnDefinition = "DATETIME DEFAULT NULL")
-  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  private LocalDateTime validDate;
-
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "manager_roles",
-      joinColumns = {@JoinColumn(name = "manager_id")},
-      inverseJoinColumns = {@JoinColumn(name = "roles_id")})
+  @JoinTable
   @Where(clause = "state = " + State.STATE_ON)
   @JsonBackReference
   private List<Role> roles;

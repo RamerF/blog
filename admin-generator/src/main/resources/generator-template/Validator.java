@@ -21,7 +21,7 @@ public class ${name}Validator implements Validator {
 
   @Override
   public void validate(final Object target, final Errors errors) {
-    ${name}Request config = (${name}Request) target;
+    ${name}Request ${alia} = (${name}Request) target;
     if (${alia} == null) {
       errors.rejectValue(null, "${alia}.null", "${description} 不能为空");
     } else {

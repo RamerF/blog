@@ -94,7 +94,7 @@ public class ManagerController {
     }
     try {
       manager =
-          service.save(
+          service.create(
               manager,
               Stream.of(Optional.ofNullable(roleIdsStr).orElseGet(() -> new String[] {}))
                   .map((validLong) -> TextUtil.validLong(validLong, 0))

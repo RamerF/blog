@@ -1,7 +1,5 @@
 package org.ramer.admin.system.service.common;
 
-import java.util.Date;
-import java.util.List;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.service.BaseService;
@@ -9,11 +7,6 @@ import org.ramer.admin.system.service.common.impl.ManagerServiceImpl.ManagerLogi
 
 /** @author ramer */
 public interface ManagerService extends BaseService<Manager, ManagerPoJo> {
-  Manager save(Manager o, List<Long> roleIds);
-
-  List<Manager> listAfterDate(Date updateTime);
-
-  Manager update(Manager o, List<Long> roleIds);
 
   Manager getByEmpNo(String empNo);
 

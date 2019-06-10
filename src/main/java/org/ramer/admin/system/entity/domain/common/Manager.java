@@ -21,23 +21,18 @@ public class Manager extends AbstractEntity {
   /** 工号 */
   @Column(columnDefinition = "VARCHAR(25) NOT NULL COMMENT '工号'")
   private String empNo;
-
   /** 密码 */
   @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '密码'")
   private String password;
-
   /** 姓名 */
   @Column(columnDefinition = "VARCHAR(10) NOT NULL COMMENT '姓名'")
   private String name;
-
   /** 性别 */
   @Column(columnDefinition = "TINYINT(4) COMMENT '性别'")
   private Integer gender;
-
   /** 联系电话 */
   @Column(columnDefinition = "VARCHAR(11) NOT NULL COMMENT '联系电话'")
   private String phone;
-
   /** 头图 */
   @Column(length = 50, columnDefinition = "VARCHAR(50) COMMENT '头图'")
   private String avatar;

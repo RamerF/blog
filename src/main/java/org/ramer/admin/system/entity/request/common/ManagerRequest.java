@@ -1,13 +1,10 @@
 package org.ramer.admin.system.entity.request.common;
 
-import org.ramer.admin.system.entity.domain.common.Manager;
-import org.ramer.admin.system.entity.request.AbstractEntityRequest;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.Date;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.*;
+import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 
 /**
  * 管理员.
@@ -18,22 +15,30 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel("管理员")
 public class ManagerRequest extends AbstractEntityRequest {
 
+  @ApiModelProperty(value = "String")
   private String empNo;
 
+  @ApiModelProperty(value = "String")
   private String password;
 
+  @ApiModelProperty(value = "String")
   private String name;
 
+  @ApiModelProperty(value = "Integer")
   private Integer gender;
 
+  @ApiModelProperty(value = "String")
   private String phone;
 
+  @ApiModelProperty(value = "String")
   private String avatar;
 
-  private Integer active;
+  @ApiModelProperty(value = "Boolean")
+  private Boolean isActive;
 
-  private Date validDate;
-
+  @ApiModelProperty(value = "roles")
+  private List<Long> rolesIds;
 }

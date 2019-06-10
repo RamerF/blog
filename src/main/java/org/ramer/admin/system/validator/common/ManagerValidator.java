@@ -13,11 +13,18 @@ import org.springframework.validation.Validator;
 public class ManagerValidator implements Validator {
   @Override
   public boolean supports(final Class<?> clazz) {
-    return clazz.isAssignableFrom(Manager.class) || clazz.isAssignableFrom(ManagerRequest.class) || clazz.isAssignableFrom(ManagerPoJo.class);
+    return clazz.isAssignableFrom(Manager.class)
+        || clazz.isAssignableFrom(ManagerRequest.class)
+        || clazz.isAssignableFrom(ManagerPoJo.class);
   }
 
   @Override
   public void validate(final Object target, final Errors errors) {
-    // TODO-WARN: 添加管理员校验规则
+    ManagerRequest manager = (ManagerRequest) target;
+    if (manager == null) {
+      errors.rejectValue(null, "manager.null", "管理员 不能为空");
+    } else {
+      // TODO-WARN: 添加管理员校验规则
+    }
   }
 }

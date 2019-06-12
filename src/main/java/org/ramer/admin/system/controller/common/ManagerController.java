@@ -58,53 +58,6 @@ public class ManagerController {
         service.page(criteria, pageAndSize[0], pageAndSize[1]), ManagerResponse::of);
   }
 
-  @GetMapping
-  @ApiOperation("添加管理员页面")
-  public String create() {
-    return "manager/create";
-  }
 
-  @PostMapping
-  @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:create','manager:create')")
-  @ApiOperation("添加管理员")
-  public ResponseEntity create(@Valid ManagerRequest managerRequest, BindingResult bindingResult)
-      throws Exception {
-    log.info(" ManagerController.create : [{}]", managerRequest);
-    return commonService.create(service, Manager.class, managerRequest, bindingResult);
-  }
 
-  @GetMapping("/{id}")
-  @ApiOperation("更新管理员页面")
-  public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
-    return commonService.update(
-        service, ManagerPoJo.class, idStr, "manager/update", map, "manager");
-  }
-
-  @PutMapping("/{id}")
-  @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:write','manager:write')")
-  @ApiOperation("更新管理员")
-  public ResponseEntity update(
-      @PathVariable("id") String idStr,
-      @Valid ManagerRequest managerRequest,
-      BindingResult bindingResult)
-      throws Exception {
-    log.info(" ManagerController.update : [{}]", managerRequest);
-    final long id = TextUtil.validLong(idStr, -1);
-    if (id < 1) {
-      return CommonResponse.wrongFormat("id");
-    }
-    managerRequest.setId(id);
-    return commonService.update(service, Manager.class, managerRequest, idStr, bindingResult);
-  }
-
-  @DeleteMapping("/{id}")
-  @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:delete','manager:delete')")
-  @ApiOperation("删除管理员")
-  public ResponseEntity delete(@PathVariable("id") String idStr) throws Exception {
-    log.info(" ManagerController.delete : [{}]", idStr);
-    return commonService.delete(service, idStr);
-  }
 }

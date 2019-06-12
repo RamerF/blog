@@ -68,7 +68,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','${alia}:create')")
   @ApiOperation("添加${description}")
-  public ResponseEntity create(@Valid ${name}Request ${alia}Request, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(@Valid ${name}Request ${alia}Request, BindingResult bindingResult) {
     log.info(" ${name}Controller.create : [{}]", ${alia}Request);
     return commonService.create(
         service, ${name}.class, ${alia}Request, bindingResult);
@@ -76,7 +76,7 @@ public class ${name}Controller {
 
   @GetMapping("/{id}")
   @ApiOperation("更新${description}页面")
-  public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
+  public String update(@PathVariable("id") String idStr, Map<String, Object> map) {
     return commonService.update(
         service,
         ${name}PoJo.class,
@@ -90,8 +90,7 @@ public class ${name}Controller {
   @PreAuthorize("hasAnyAuthority('global:write','${alia}:write')")
   @ApiOperation("更新${description}")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid ${name}Request ${alia}Request, BindingResult bindingResult)
-      throws Exception {
+      @PathVariable("id") String idStr, @Valid ${name}Request ${alia}Request, BindingResult bindingResult) {
     log.info(" ${name}Controller.update : [{}]", ${alia}Request);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
@@ -106,7 +105,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
   @ApiOperation("删除${description}")
-  public ResponseEntity delete(@PathVariable("id") String idStr) throws Exception {
+  public ResponseEntity delete(@PathVariable("id") String idStr) {
     log.info(" ${name}Controller.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }

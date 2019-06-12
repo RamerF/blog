@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -92,21 +91,7 @@ public class ManagerController {
     if (bindingResult.hasErrors()) {
       return CommonResponse.fail(commonService.collectBindingResult(bindingResult));
     }
-    try {
-      manager =
-          service.create(
-              manager,
-              Stream.of(Optional.ofNullable(roleIdsStr).orElseGet(() -> new String[] {}))
-                  .map((validLong) -> TextUtil.validLong(validLong, 0))
-                  .filter(roleId -> roleId != 0)
-                  .collect(Collectors.toList()));
-      return manager == null
-          ? CommonResponse.fail("记录已存在")
-          : manager.getId() > 0 ? CommonResponse.ok(null) : CommonResponse.fail("添加失败");
-    } catch (Exception e) {
-      log.warn(" ManagerController.create : [{}]", e.getMessage());
-      return CommonResponse.fail("添加失败,数据格式异常");
-    }
+    return null;
   }
 
   @GetMapping("/{id}")
@@ -148,21 +133,7 @@ public class ManagerController {
     if (!StringUtils.isEmpty(manager.getPassword())) {
       manager.setPassword(EncryptUtil.execEncrypt(manager.getPassword()));
     }
-    try {
-      manager =
-          service.update(
-              manager,
-              Stream.of(Optional.ofNullable(roleIdsStr).orElseGet(() -> new String[] {}))
-                  .map((validLong) -> TextUtil.validLong(validLong, 0))
-                  .filter(roleId -> roleId != 0)
-                  .collect(Collectors.toList()));
-      return manager == null
-          ? CommonResponse.fail("记录不存在")
-          : manager.getId() > 0 ? CommonResponse.ok(null, "更新成功") : CommonResponse.fail("更新失败");
-    } catch (Exception e) {
-      log.warn(" ManagerController.update : [{}]", e.getMessage());
-      return CommonResponse.fail("更新失败,数据格式异常");
-    }
+    return null;
   }
 
   @PutMapping("/roles/{id}")
@@ -176,17 +147,7 @@ public class ManagerController {
       return CommonResponse.wrongFormat("id");
     }
     Manager manager = service.getById(id);
-    manager =
-        service.update(
-            manager,
-            Stream.of(roleIdsStr)
-                .map((validLong) -> TextUtil.validLong(validLong, 0))
-                .filter(roleId -> roleId != 0)
-                .collect(Collectors.toList()));
-    if (manager != null && manager.getId() > 0) {
-      return CommonResponse.ok(null);
-    }
-    return CommonResponse.fail("更新角色失败,请稍后再试");
+    return null;
   }
 
   @RequestMapping("/setImg/{id}")

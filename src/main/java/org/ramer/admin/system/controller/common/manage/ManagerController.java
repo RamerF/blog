@@ -64,7 +64,7 @@ public class ManagerController {
   @GetMapping
   @ApiOperation("添加管理员页面")
   public String create() {
-    return "manager/create";
+    return "manage/manager/create";
   }
 
   @PostMapping

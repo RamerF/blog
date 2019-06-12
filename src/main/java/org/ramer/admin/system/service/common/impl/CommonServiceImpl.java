@@ -3,8 +3,7 @@ package org.ramer.admin.system.service.common.impl;
 import com.alibaba.fastjson.JSONObject;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -171,6 +170,7 @@ public class CommonServiceImpl implements CommonService {
           String idStr,
           final BindingResult bindingResult,
           String... includeNullProperties) {
+    // TODO-WARN: 加入一个函数式接口参数,没有参数没有返回
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
       return CommonResponse.wrongFormat("id");

@@ -2,8 +2,7 @@ package org.ramer.admin.system.service.common;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import javax.servlet.http.HttpSession;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;

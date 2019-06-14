@@ -1,4 +1,4 @@
- package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common;
 
 import io.swagger.annotations.*;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller("rolemc")
 @PreAuthorize("hasAnyAuthority('global:read','role:read')")
-@RequestMapping( "/common/role")
+@RequestMapping("/common/role")
 @Api(tags = "角色接口")
 @SuppressWarnings("UnusedDeclaration")
 public class RoleController {
@@ -65,21 +65,16 @@ public class RoleController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','role:create')")
   @ApiOperation("添加角色")
-  public ResponseEntity create(@Valid RoleRequest roleRequest, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(@Valid RoleRequest roleRequest, BindingResult bindingResult)
+      throws Exception {
     log.info(" RoleController.create : [{}]", roleRequest);
-    return commonService.create(
-        service, Role.class, roleRequest, bindingResult);
+    return commonService.create(service, Role.class, roleRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新角色页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
-    return commonService.update(
-        service,
-        RolePoJo.class,
-        idStr,
-        "role/update",
-        map, "role");
+    return commonService.update(service, RolePoJo.class, idStr, "role/update", map, "role", null);
   }
 
   @PutMapping("/{id}")
@@ -95,8 +90,7 @@ public class RoleController {
       return CommonResponse.wrongFormat("id");
     }
     roleRequest.setId(id);
-    return commonService.update(
-        service, Role.class, roleRequest, idStr, bindingResult);
+    return commonService.update(service, Role.class, roleRequest, idStr, bindingResult);
   }
 
   @DeleteMapping("/{id}")

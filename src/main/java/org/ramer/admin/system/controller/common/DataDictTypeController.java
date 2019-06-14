@@ -76,7 +76,7 @@ public class DataDictTypeController {
   @ApiOperation("更新数据字典类型页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
     return commonService.update(
-        service, DataDictTypePoJo.class, idStr, "dataDictType/update", map, "dataDictType");
+        service, DataDictTypePoJo.class, idStr, "dataDictType/update", map, "dataDictType", null);
   }
 
   @PutMapping("/{id}")

@@ -80,7 +80,7 @@ public class ManagerController {
   @ApiOperation("更新管理员页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) {
     return commonService.update(
-        service, ManagerPoJo.class, idStr, "manage/manager/update", map, "manager");
+        service, ManagerPoJo.class, idStr, "manage/manager/update", map, "manager", null);
   }
 
   @PutMapping("/{id}")

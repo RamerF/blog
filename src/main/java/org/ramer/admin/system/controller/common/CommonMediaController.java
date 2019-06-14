@@ -1,4 +1,4 @@
- package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common;
 
 import io.swagger.annotations.*;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller("commonMediamc")
 @PreAuthorize("hasAnyAuthority('global:read','commonMedia:read')")
-@RequestMapping( "/common/commonMedia")
+@RequestMapping("/common/commonMedia")
 @Api(tags = "管理端: 通用多媒体接口")
 @SuppressWarnings("UnusedDeclaration")
 public class CommonMediaController {
@@ -65,21 +65,17 @@ public class CommonMediaController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','commonMedia:create')")
   @ApiOperation("添加通用多媒体")
-  public ResponseEntity create(@Valid CommonMediaRequest commonMediaRequest, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(
+      @Valid CommonMediaRequest commonMediaRequest, BindingResult bindingResult) throws Exception {
     log.info(" CommonMediaController.create : [{}]", commonMediaRequest);
-    return commonService.create(
-        service, CommonMedia.class, commonMediaRequest, bindingResult);
+    return commonService.create(service, CommonMedia.class, commonMediaRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新通用多媒体页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
     return commonService.update(
-        service,
-        CommonMediaPoJo.class,
-        idStr,
-        "commonMedia/update",
-        map, "commonMedia");
+        service, CommonMediaPoJo.class, idStr, "commonMedia/update", map, "commonMedia", null);
   }
 
   @PutMapping("/{id}")
@@ -87,7 +83,9 @@ public class CommonMediaController {
   @PreAuthorize("hasAnyAuthority('global:write','commonMedia:write')")
   @ApiOperation("更新通用多媒体")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid CommonMediaRequest commonMediaRequest, BindingResult bindingResult)
+      @PathVariable("id") String idStr,
+      @Valid CommonMediaRequest commonMediaRequest,
+      BindingResult bindingResult)
       throws Exception {
     log.info(" CommonMediaController.update : [{}]", commonMediaRequest);
     final long id = TextUtil.validLong(idStr, -1);

@@ -2,7 +2,8 @@ package org.ramer.admin.system.service.common;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.servlet.http.HttpSession;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
@@ -36,7 +37,7 @@ public interface CommonService {
       ResponseEntity create(S invoke, T entity, BindingResult bindingResult);
 
   /**
-   * 跳转到更新页面.校验更新url正确性,写入对象用于回显.
+   * 跳转到更新页面.校验更新url正确性,写入POJO对象用于回显.
    *
    * @param invoke 服务层实现类.
    * @param clazz 当前写入对象的Class.
@@ -44,6 +45,7 @@ public interface CommonService {
    * @param page 页面路径.
    * @param map 用于写入数据到request.
    * @param propName 写入的属性名
+   * @param runnable 自定义操作,如果该值不为空,将不会写入POJO对象,通常用于写入额外的信息或写入domain对象
    * @return 返回更新页面
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
@@ -53,7 +55,8 @@ public interface CommonService {
           String idStr,
           String page,
           Map<String, Object> map,
-          String propName);
+          String propName,
+          Runnable runnable);
 
   /**
    * 更新.

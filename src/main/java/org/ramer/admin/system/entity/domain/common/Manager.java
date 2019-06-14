@@ -42,8 +42,8 @@ public class Manager extends AbstractEntity {
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable
-  @Where(clause = "state = " + State.STATE_ON)
   @JsonBackReference
+  @Where(clause = "state = " + State.STATE_ON)
   private List<Role> roles;
 
   public static Manager of(Long id) {

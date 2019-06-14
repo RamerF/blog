@@ -1,4 +1,4 @@
- package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common;
 
 import io.swagger.annotations.*;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller("dataDictmc")
 @PreAuthorize("hasAnyAuthority('global:read','dataDict:read')")
-@RequestMapping( "/common/dataDict")
+@RequestMapping("/common/dataDict")
 @Api(tags = "管理端: 数据字典接口")
 @SuppressWarnings("UnusedDeclaration")
 public class DataDictController {
@@ -65,21 +65,17 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','dataDict:create')")
   @ApiOperation("添加数据字典")
-  public ResponseEntity create(@Valid DataDictRequest dataDictRequest, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(@Valid DataDictRequest dataDictRequest, BindingResult bindingResult)
+      throws Exception {
     log.info(" DataDictController.create : [{}]", dataDictRequest);
-    return commonService.create(
-        service, DataDict.class, dataDictRequest, bindingResult);
+    return commonService.create(service, DataDict.class, dataDictRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新数据字典页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
     return commonService.update(
-        service,
-        DataDictPoJo.class,
-        idStr,
-        "dataDict/update",
-        map, "dataDict");
+        service, DataDictPoJo.class, idStr, "dataDict/update", map, "dataDict", null);
   }
 
   @PutMapping("/{id}")
@@ -87,7 +83,9 @@ public class DataDictController {
   @PreAuthorize("hasAnyAuthority('global:write','dataDict:write')")
   @ApiOperation("更新数据字典")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid DataDictRequest dataDictRequest, BindingResult bindingResult)
+      @PathVariable("id") String idStr,
+      @Valid DataDictRequest dataDictRequest,
+      BindingResult bindingResult)
       throws Exception {
     log.info(" DataDictController.update : [{}]", dataDictRequest);
     final long id = TextUtil.validLong(idStr, -1);
@@ -95,8 +93,7 @@ public class DataDictController {
       return CommonResponse.wrongFormat("id");
     }
     dataDictRequest.setId(id);
-    return commonService.update(
-        service, DataDict.class, dataDictRequest, idStr, bindingResult);
+    return commonService.update(service, DataDict.class, dataDictRequest, idStr, bindingResult);
   }
 
   @DeleteMapping("/{id}")

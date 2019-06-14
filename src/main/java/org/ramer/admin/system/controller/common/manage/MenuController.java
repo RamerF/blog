@@ -88,7 +88,8 @@ public class MenuController {
   String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map)
       throws Exception {
     map.put("menus", service.list(null));
-    return commonService.update(service, MenuPoJo.class, idStr, "manage/menu/update", map, "menu");
+    return commonService.update(
+        service, MenuPoJo.class, idStr, "manage/menu/update", map, "menu", null);
   }
 
   @PutMapping("/{id}")

@@ -1,20 +1,19 @@
- package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common;
 
-import org.ramer.admin.system.entity.Constant.AccessPath;
-import org.ramer.admin.system.entity.domain.common.Privilege;
-import org.ramer.admin.system.entity.pojo.common.PrivilegePoJo;
-import org.ramer.admin.system.entity.request.common.PrivilegeRequest;
-import org.ramer.admin.system.entity.response.common.PrivilegeResponse;
-import org.ramer.admin.system.entity.response.CommonResponse;
-import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.system.service.common.PrivilegeService;
-import org.ramer.admin.system.util.TextUtil;
-import org.ramer.admin.system.validator.common.PrivilegeValidator;
 import io.swagger.annotations.*;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.domain.common.Privilege;
+import org.ramer.admin.system.entity.pojo.common.PrivilegePoJo;
+import org.ramer.admin.system.entity.request.common.PrivilegeRequest;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.common.PrivilegeResponse;
+import org.ramer.admin.system.service.common.CommonService;
+import org.ramer.admin.system.service.common.PrivilegeService;
+import org.ramer.admin.system.util.TextUtil;
+import org.ramer.admin.system.validator.common.PrivilegeValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller("privilegemc")
 @PreAuthorize("hasAnyAuthority('global:read','privilege:read')")
-@RequestMapping( "/common/privilege")
+@RequestMapping("/common/privilege")
 @Api(tags = "管理端: 权限接口")
 @SuppressWarnings("UnusedDeclaration")
 public class PrivilegeController {
@@ -66,21 +65,17 @@ public class PrivilegeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','privilege:create')")
   @ApiOperation("添加权限")
-  public ResponseEntity create(@Valid PrivilegeRequest privilegeRequest, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(
+      @Valid PrivilegeRequest privilegeRequest, BindingResult bindingResult) throws Exception {
     log.info(" PrivilegeController.create : [{}]", privilegeRequest);
-    return commonService.create(
-        service, Privilege.class, privilegeRequest, bindingResult);
+    return commonService.create(service, Privilege.class, privilegeRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新权限页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
     return commonService.update(
-        service,
-        PrivilegePoJo.class,
-        idStr,
-        "privilege/update",
-        map, "privilege");
+        service, PrivilegePoJo.class, idStr, "privilege/update", map, "privilege", null);
   }
 
   @PutMapping("/{id}")
@@ -88,7 +83,9 @@ public class PrivilegeController {
   @PreAuthorize("hasAnyAuthority('global:write','privilege:write')")
   @ApiOperation("更新权限")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid PrivilegeRequest privilegeRequest, BindingResult bindingResult)
+      @PathVariable("id") String idStr,
+      @Valid PrivilegeRequest privilegeRequest,
+      BindingResult bindingResult)
       throws Exception {
     log.info(" PrivilegeController.update : [{}]", privilegeRequest);
     final long id = TextUtil.validLong(idStr, -1);
@@ -96,8 +93,7 @@ public class PrivilegeController {
       return CommonResponse.wrongFormat("id");
     }
     privilegeRequest.setId(id);
-    return commonService.update(
-        service, Privilege.class, privilegeRequest, idStr, bindingResult);
+    return commonService.update(service, Privilege.class, privilegeRequest, idStr, bindingResult);
   }
 
   @DeleteMapping("/{id}")

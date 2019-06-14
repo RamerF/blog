@@ -1,6 +1,7 @@
 package org.ramer.admin.system.entity.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Table;
@@ -11,46 +12,51 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 @Entity(name = Menu.TABLE_NAME)
 @Table(appliesTo = Menu.TABLE_NAME, comment = "菜单")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Menu extends AbstractEntity {
   public static final String TABLE_NAME = "menu";
 
+  /** 是否最终节点 */
+  @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '是否最终节点'")
+  @Builder.Default
+  private Boolean isLeaf = false;
+  /** 名称 */
+  @Column(columnDefinition = "VARCHAR(25) COMMENT '名称'")
+  private String name;
+  /** 菜单别名,用于权限表达式 */
+  @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '菜单别名,用于权限表达式'")
+  private String alia;
+  /** 地址 */
+  @Column(columnDefinition = "VARCHAR(100) COMMENT '地址'")
+  private String url;
+  /** 排序权重 */
+  @Column(columnDefinition = "TINYINT(4) COMMENT '排序权重'")
+  @Builder.Default
+  private Integer sortWeight = 0;
+  /** ICON FONT 图标 */
+  @Column(columnDefinition = "VARCHAR(25) DEFAULT 'people' COMMENT 'ICON FONT图标'")
+  @Builder.Default
+  private String icon = "people";
+
+  @Column(columnDefinition = "VARCHAR(100) COMMENT '备注'")
+  private String remark;
+
+  @Column(name = "parent_id")
+  private Long parentId;
+
   @ManyToOne
-  @JoinColumn(name = "pid")
+  @JoinColumn(name = "parent_id", insertable = false, updatable = false)
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
   private Menu parent;
-  /** 是否最终节点 */
-  @Column(columnDefinition = "BIT COMMENT '是否最终节点'")
-  private Boolean leaf;
 
-  @Column(length = 25, columnDefinition = "VARCHAR(25)")
-  private String name;
-  /** 菜单别名,用于权限表达式 */
-  @Column(
-      nullable = false,
-      length = 100,
-      columnDefinition = "VARCHAR(100) NOT NULL COMMENT '菜单别名,用于权限表达式'")
-  private String alia;
-
-  @Column(length = 100, columnDefinition = "VARCHAR(100)")
-  private String url;
-  /** 显示顺序 */
-  @Column(length = 11, columnDefinition = "INT(11)")
-  private Integer sort;
-  /** ICON FONT 图标 */
-  @Column(length = 25, columnDefinition = "VARCHAR(25) DEFAULT NULL COMMENT 'ICON FONT图标'")
-  private String icon;
-
-  @Column(length = 100, columnDefinition = "VARCHAR(100) COMMENT '备注'")
-  private String remark;
-  //    @JoinColumn(name = "menu_id")
-  //    @OneToMany(fetch = FetchType.EAGER)
-  //    private List<Privilege> privileges;
-
-  public static Menu of(long id) {
+  public static Menu of(Long id) {
+    if (Objects.isNull(id)) {
+      return null;
+    }
     final Menu menu = new Menu();
     menu.setId(id);
     return menu;

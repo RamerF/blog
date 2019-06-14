@@ -2,6 +2,7 @@ package org.ramer.admin.system.entity.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Table;
@@ -25,22 +26,18 @@ public class Role extends AbstractEntity {
   @Column(length = 100, columnDefinition = "VARCHAR(100)")
   private String remark;
 
-  @Where(clause = "state = " + State.STATE_ON)
   @ManyToMany
-  @JoinTable(
-      name = "roles_menu",
-      joinColumns = {@JoinColumn(name = "roles_id")},
-      inverseJoinColumns = {@JoinColumn(name = "menu_id")})
-  @OrderBy(value = "id")
+  @JoinTable
+  @OrderBy(value = "sort DESC")
   @JsonBackReference
+  @Where(clause = "state = " + State.STATE_ON)
   private List<Menu> menus;
 
   @Column
   @ManyToMany
-  @JoinTable(
-      name = "roles_privileges",
-      joinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
+  @JoinTable
+  @JsonBackReference
+  @Where(clause = "state = " + State.STATE_ON)
   private List<Privilege> privileges;
 
   private Role(long id) {
@@ -51,7 +48,7 @@ public class Role extends AbstractEntity {
     this.name = name;
   }
 
-  public static Role of(long id) {
-    return new Role(id);
+  public static Role of(Long id) {
+    return Objects.isNull(id) ? null : new Role(id);
   }
 }

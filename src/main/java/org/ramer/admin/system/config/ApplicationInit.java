@@ -1,6 +1,6 @@
 package org.ramer.admin.system.config;
 
-import java.time.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -81,49 +81,58 @@ public class ApplicationInit implements ApplicationRunner {
 
         // init menu
         Menu systemMenu =
-            menuService.create(new Menu(null, false, "系统", "system", null, 2, "fa-cog", "系统"));
+            menuService.create(
+                Menu.builder().isLeaf(false).name("系统").sortWeight(100).alia("system").build());
         Menu configMenu =
             menuService.create(
-                new Menu(
-                    systemMenu,
-                    true,
-                    "参数配置",
-                    "config",
-                    "/manage/config/index",
-                    1,
-                    "fa-cog",
-                    "参数配置"));
+                Menu.builder()
+                    .parentId(systemMenu.getId())
+                    .isLeaf(true)
+                    .name("参数配置")
+                    .url("/manage/config/index")
+                    .alia("config")
+                    .sortWeight(1)
+                    .build());
         Menu dataDictMenu =
             menuService.create(
-                new Menu(
-                    systemMenu,
-                    true,
-                    "数据字典",
-                    "dataDict",
-                    "/manage/dataDict/index",
-                    2,
-                    "fa-cog",
-                    "数据字典"));
+                Menu.builder()
+                    .parentId(systemMenu.getId())
+                    .isLeaf(true)
+                    .name("数据字典")
+                    .url("/manage/dataDict/index")
+                    .alia("dataDict")
+                    .sortWeight(2)
+                    .build());
         Menu managerMenu =
             menuService.create(
-                new Menu(
-                    systemMenu,
-                    true,
-                    "管理员管理",
-                    "manager",
-                    "/manage/manager/index",
-                    3,
-                    "fa-cog",
-                    "管理员管理"));
+                Menu.builder()
+                    .parentId(systemMenu.getId())
+                    .isLeaf(true)
+                    .name("管理员管理")
+                    .url("/manage/manager/index")
+                    .alia("manager")
+                    .sortWeight(3)
+                    .build());
         Menu rolesMenu =
             menuService.create(
-                new Menu(
-                    systemMenu, true, "角色管理", "role", "/manage/role/index", 4, "fa-cog", "角色管理"));
+                Menu.builder()
+                    .parentId(systemMenu.getId())
+                    .isLeaf(true)
+                    .name("角色管理")
+                    .url("/manage/role/index")
+                    .alia("role")
+                    .sortWeight(4)
+                    .build());
         Menu menuMenu =
             menuService.create(
-                new Menu(
-                    systemMenu, true, "菜单管理", "menu", "/manage/menu/index", 5, "fa-cog", "菜单管理"));
-
+                Menu.builder()
+                    .parentId(systemMenu.getId())
+                    .isLeaf(true)
+                    .name("菜单管理")
+                    .url("/manage/menu/index")
+                    .alia("menu")
+                    .sortWeight(5)
+                    .build());
         // init role menu
         ArrayList<Menu> menus = new ArrayList<>();
         menus.add(systemMenu);

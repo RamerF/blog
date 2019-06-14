@@ -1,6 +1,5 @@
 package org.ramer.admin.system.interceptor;
 
-import com.alibaba.fastjson.JSON;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +34,7 @@ public class OperateLogInterceptor implements HandlerInterceptor {
       HttpServletRequest request,
       HttpServletResponse response,
       Object handler,
-      ModelAndView modelAndView)
-      throws Exception {
+      ModelAndView modelAndView) {
     Stream<String> interceptMethods =
         Stream.of(RequestMethod.POST.name(), RequestMethod.PUT.name(), RequestMethod.DELETE.name());
     if (interceptMethods.anyMatch(method -> request.getMethod().equals(method))) {
@@ -64,7 +62,7 @@ public class OperateLogInterceptor implements HandlerInterceptor {
           " OperateLogInterceptor.postHandle : [{}]:{},{}",
           request.getMethod(),
           request.getRequestURL().toString(),
-          JSON.toJSONString(manageLog));
+          manageLog);
     }
   }
 }

@@ -1,30 +1,30 @@
- package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common;
 
- import io.swagger.annotations.*;
- import java.util.Map;
- import javax.annotation.Resource;
- import javax.validation.Valid;
- import lombok.extern.slf4j.Slf4j;
- import org.ramer.admin.system.entity.domain.common.ManageLog;
- import org.ramer.admin.system.entity.pojo.common.ManageLogPoJo;
- import org.ramer.admin.system.entity.request.common.ManageLogRequest;
- import org.ramer.admin.system.entity.response.CommonResponse;
- import org.ramer.admin.system.entity.response.common.ManageLogResponse;
- import org.ramer.admin.system.service.common.CommonService;
- import org.ramer.admin.system.service.common.ManageLogService;
- import org.ramer.admin.system.util.TextUtil;
- import org.ramer.admin.system.validator.common.ManageLogValidator;
- import org.springframework.http.ResponseEntity;
- import org.springframework.security.access.prepost.PreAuthorize;
- import org.springframework.stereotype.Controller;
- import org.springframework.validation.BindingResult;
- import org.springframework.web.bind.WebDataBinder;
- import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.*;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.domain.common.ManageLog;
+import org.ramer.admin.system.entity.pojo.common.ManageLogPoJo;
+import org.ramer.admin.system.entity.request.common.ManageLogRequest;
+import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.common.ManageLogResponse;
+import org.ramer.admin.system.service.common.CommonService;
+import org.ramer.admin.system.service.common.ManageLogService;
+import org.ramer.admin.system.util.TextUtil;
+import org.ramer.admin.system.validator.common.ManageLogValidator;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller("manageLogmc")
 @PreAuthorize("hasAnyAuthority('global:read','manageLog:read')")
-@RequestMapping( "/common/manageLog")
+@RequestMapping("/common/manageLog")
 @Api(tags = "管理端: 日志接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ManageLogController {
@@ -65,21 +65,17 @@ public class ManageLogController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','manageLog:create')")
   @ApiOperation("添加管理端日志")
-  public ResponseEntity create(@Valid ManageLogRequest manageLogRequest, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(
+      @Valid ManageLogRequest manageLogRequest, BindingResult bindingResult) throws Exception {
     log.info(" ManageLogController.create : [{}]", manageLogRequest);
-    return commonService.create(
-        service, ManageLog.class, manageLogRequest, bindingResult);
+    return commonService.create(service, ManageLog.class, manageLogRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新管理端日志页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
     return commonService.update(
-        service,
-        ManageLogPoJo.class,
-        idStr,
-        "manageLog/update",
-        map, "manageLog");
+        service, ManageLogPoJo.class, idStr, "manageLog/update", map, "manageLog", null);
   }
 
   @PutMapping("/{id}")
@@ -87,7 +83,9 @@ public class ManageLogController {
   @PreAuthorize("hasAnyAuthority('global:write','manageLog:write')")
   @ApiOperation("更新管理端日志")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid ManageLogRequest manageLogRequest, BindingResult bindingResult)
+      @PathVariable("id") String idStr,
+      @Valid ManageLogRequest manageLogRequest,
+      BindingResult bindingResult)
       throws Exception {
     log.info(" ManageLogController.update : [{}]", manageLogRequest);
     final long id = TextUtil.validLong(idStr, -1);
@@ -95,8 +93,7 @@ public class ManageLogController {
       return CommonResponse.wrongFormat("id");
     }
     manageLogRequest.setId(id);
-    return commonService.update(
-        service, ManageLog.class, manageLogRequest, idStr, bindingResult);
+    return commonService.update(service, ManageLog.class, manageLogRequest, idStr, bindingResult);
   }
 
   @DeleteMapping("/{id}")

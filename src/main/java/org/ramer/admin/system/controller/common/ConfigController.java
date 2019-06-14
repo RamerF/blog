@@ -75,7 +75,8 @@ public class ConfigController {
   @GetMapping("/{id}")
   @ApiOperation("更新系统配置页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
-    return commonService.update(service, ConfigPoJo.class, idStr, "config/update", map, "config");
+    return commonService.update(
+        service, ConfigPoJo.class, idStr, "config/update", map, "config", null);
   }
 
   @PutMapping("/{id}")

@@ -92,7 +92,8 @@ public class OrganizeController {
         idStr,
         "manage/system/common/organize/update",
         map,
-        "organize");
+        "organize",
+        null);
   }
 
   @PutMapping("/{id}")

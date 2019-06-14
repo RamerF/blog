@@ -1,4 +1,4 @@
- package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common;
 
 import io.swagger.annotations.*;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller("mediaCategorymc")
 @PreAuthorize("hasAnyAuthority('global:read','mediaCategory:read')")
-@RequestMapping( "/common/mediaCategory")
+@RequestMapping("/common/mediaCategory")
 @Api(tags = "管理端: 通用多媒体类别接口")
 @SuppressWarnings("UnusedDeclaration")
 public class CommonMediaCategoryController {
@@ -65,7 +65,9 @@ public class CommonMediaCategoryController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','mediaCategory:create')")
   @ApiOperation("添加通用多媒体类别")
-  public ResponseEntity create(@Valid CommonMediaCategoryRequest mediaCategoryRequest, BindingResult bindingResult) throws Exception {
+  public ResponseEntity create(
+      @Valid CommonMediaCategoryRequest mediaCategoryRequest, BindingResult bindingResult)
+      throws Exception {
     log.info(" CommonMediaCategoryController.create : [{}]", mediaCategoryRequest);
     return commonService.create(
         service, CommonMediaCategory.class, mediaCategoryRequest, bindingResult);
@@ -79,7 +81,9 @@ public class CommonMediaCategoryController {
         CommonMediaCategoryPoJo.class,
         idStr,
         "mediaCategory/update",
-        map, "mediaCategory");
+        map,
+        "mediaCategory",
+        null);
   }
 
   @PutMapping("/{id}")
@@ -87,7 +91,9 @@ public class CommonMediaCategoryController {
   @PreAuthorize("hasAnyAuthority('global:write','mediaCategory:write')")
   @ApiOperation("更新通用多媒体类别")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid CommonMediaCategoryRequest mediaCategoryRequest, BindingResult bindingResult)
+      @PathVariable("id") String idStr,
+      @Valid CommonMediaCategoryRequest mediaCategoryRequest,
+      BindingResult bindingResult)
       throws Exception {
     log.info(" CommonMediaCategoryController.update : [{}]", mediaCategoryRequest);
     final long id = TextUtil.validLong(idStr, -1);

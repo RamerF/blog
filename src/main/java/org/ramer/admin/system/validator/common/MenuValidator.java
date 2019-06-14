@@ -1,5 +1,6 @@
 package org.ramer.admin.system.validator.common;
 
+import javax.annotation.Nonnull;
 import org.ramer.admin.system.entity.domain.common.Menu;
 import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
 import org.ramer.admin.system.entity.request.common.MenuRequest;
@@ -12,14 +13,14 @@ import org.springframework.validation.Validator;
 @Component
 public class MenuValidator implements Validator {
   @Override
-  public boolean supports(final Class<?> clazz) {
+  public boolean supports(@Nonnull final Class<?> clazz) {
     return clazz.isAssignableFrom(Menu.class)
         || clazz.isAssignableFrom(MenuRequest.class)
         || clazz.isAssignableFrom(MenuPoJo.class);
   }
 
   @Override
-  public void validate(final Object target, final Errors errors) {
+  public void validate(final Object target, @Nonnull final Errors errors) {
     Menu menu = (Menu) target;
     if (menu == null) {
       errors.rejectValue(null, "menu.null", "参数不能为空");
@@ -33,7 +34,7 @@ public class MenuValidator implements Validator {
       if (!StringUtils.isEmpty(menu.getIcon()) && menu.getIcon().length() > 25) {
         errors.rejectValue("icon", "menu.icon.length", "图标 应小于25个字符");
       }
-      if (StringUtils.isEmpty(menu.getLeaf())) {
+      if (StringUtils.isEmpty(menu.getIsLeaf())) {
         errors.rejectValue("leaf", "menu.leaf.empty", "是否叶子节点 不能为空");
       }
       String remark = menu.getRemark();

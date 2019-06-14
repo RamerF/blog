@@ -87,7 +87,7 @@ public class ConfigController {
       @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
     return commonService.update(
-        service, ConfigPoJo.class, idStr, "manage/config/edit", map, "config");
+        service, ConfigPoJo.class, idStr, "manage/config/edit", map, "config", null);
   }
 
   @PutMapping("/{id}")

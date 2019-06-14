@@ -73,8 +73,8 @@ public class MenuServiceImpl implements MenuService {
         .map(
             menu -> {
               textFilter(m, menu);
-              menu.setLeaf(m.getLeaf());
-              menu.setSort(m.getSort());
+              menu.setIsLeaf(m.getIsLeaf());
+              menu.setSortWeight(m.getSortWeight());
               menu.setParent(m.getParent());
               return repository.saveAndFlush(menu);
             })
@@ -102,11 +102,11 @@ public class MenuServiceImpl implements MenuService {
     return StringUtils.isEmpty(criteria)
         ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
         : (root, query, builder) ->
-        builder.and(
-            builder.equal(root.get("state"), State.STATE_ON),
             builder.and(
-                builder.like(root.get("name"), "%" + criteria + "%"),
-                builder.like(root.get("remark"), "%" + criteria + "%")));
+                builder.equal(root.get("state"), State.STATE_ON),
+                builder.and(
+                    builder.like(root.get("name"), "%" + criteria + "%"),
+                    builder.like(root.get("remark"), "%" + criteria + "%")));
   }
 
   @SuppressWarnings({"unchecked"})

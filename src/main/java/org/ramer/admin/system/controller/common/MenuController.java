@@ -74,7 +74,7 @@ public class MenuController {
   @GetMapping("/{id}")
   @ApiOperation("更新菜单页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
-    return commonService.update(service, MenuPoJo.class, idStr, "menu/update", map, "menu");
+    return commonService.update(service, MenuPoJo.class, idStr, "menu/update", map, "menu", null);
   }
 
   @PutMapping("/{id}")

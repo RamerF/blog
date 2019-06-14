@@ -1,7 +1,6 @@
 package org.ramer.admin.system.entity.pojo.common;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
@@ -19,7 +18,7 @@ import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 @EqualsAndHashCode(callSuper = true)
 public class MenuPoJo extends AbstractEntityPoJo {
 
-  private Boolean leaf;
+  private Boolean isLeaf;
 
   private String name;
 
@@ -27,7 +26,7 @@ public class MenuPoJo extends AbstractEntityPoJo {
 
   private String url;
 
-  private Integer sort;
+  private Integer sortWeight;
 
   private String icon;
 
@@ -40,20 +39,20 @@ public class MenuPoJo extends AbstractEntityPoJo {
       final Integer state,
       final String name,
       final String url,
-      final Boolean leaf,
+      final Boolean isLeaf,
       final String icon,
       final Long pId,
-      final int sort,
+      final int sortWeight,
       final LocalDateTime createTime,
       final LocalDateTime updateTime) {
     setId(id);
     setState(state);
     setName(name);
     setUrl(url);
-    setLeaf(leaf);
+    setIsLeaf(isLeaf);
     setIcon(icon);
     setParentId(pId);
-    setSort(sort);
+    setSortWeight(sortWeight);
     setCreateTime(createTime);
     setUpdateTime(updateTime);
   }

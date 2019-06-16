@@ -6,7 +6,7 @@
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) [%cyan(%logger{36})] : %msg %n</Pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>TRACE</level>
+            <level>INFO</level>
         </filter>
     </appender>
 
@@ -68,7 +68,7 @@
         </encoder>
     </appender>
 
-    <appender name="org.hibernate.SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="sql" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>./logs/jdbc.sql.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <FileNamePattern>./logs/jdbc.sql.%i.log</FileNamePattern>
@@ -82,8 +82,8 @@
             <pattern>%date %level [%thread] %logger{80} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="org.hibernate.SQL">
-        <appender-ref ref="org.hibernate.SQL"/>
+    <logger name="jdbc.sqltiming" level="INFO">
+        <appender-ref ref="sql"/>
     </logger>
     <!--<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>-->
     <logger name="org.ramer.admin.system.interceptor.OperateLogInterceptor">

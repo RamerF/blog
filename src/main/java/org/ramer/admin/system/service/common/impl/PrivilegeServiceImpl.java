@@ -1,5 +1,6 @@
 package org.ramer.admin.system.service.common.impl;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -7,7 +8,7 @@ import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.PrivilegeEnum;
 import org.ramer.admin.system.entity.Constant.State;
-import org.ramer.admin.system.entity.domain.common.Privilege;
+import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.PrivilegeRepository;
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {
+  @Resource private JPAQueryFactory jpaQueryFactory;
   @Resource private PrivilegeRepository repository;
 
   @Transactional
@@ -44,16 +46,33 @@ public class PrivilegeServiceImpl implements PrivilegeService {
   }
 
   @Override
-  public List<Privilege> listByManagerId(long menuId) {
-    return repository.findByManager(menuId, State.STATE_ON);
+  public List<Privilege> listByManagerId(final long managerId) {
+    final QPrivilege privilege = QPrivilege.privilege;
+    final QRole role = QRole.role;
+    final QManager manager = QManager.manager;
+    return jpaQueryFactory
+        .selectFrom(privilege)
+        .leftJoin(role)
+        .on(role.privileges.contains(privilege))
+        .leftJoin(manager)
+        .on(manager.roles.contains(role).and(manager.id.eq(managerId)))
+        .where(privilege.state.eq(State.STATE_ON).and(role.state.eq(State.STATE_ON)))
+        .fetch();
   }
 
   @Override
   public List<Privilege> listByRoles(Long rolesId) {
-    return repository.findByRoles(rolesId, State.STATE_ON);
+    final QPrivilege privilege = QPrivilege.privilege;
+    final QRole role = QRole.role;
+    return jpaQueryFactory
+        .selectFrom(privilege)
+        .leftJoin(role)
+        .on(role.privileges.contains(privilege).and(role.id.eq(rolesId)))
+        .where(privilege.state.eq(State.STATE_ON))
+        .fetch();
   }
 
-  @org.springframework.transaction.annotation.Transactional
+  @Transactional
   @Override
   public synchronized Privilege update(Privilege privilege) {
     log.error(" PrivilegeServiceImpl.update : not yet implements");

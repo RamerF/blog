@@ -13,13 +13,13 @@ import org.ramer.admin.system.entity.Constant.*;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
-import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
 import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.entity.response.common.MenuResponse;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.BaseService;
 import org.ramer.admin.system.service.common.*;
+import org.ramer.admin.system.util.CollectionUtils;
 import org.ramer.admin.system.util.TextUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -42,32 +42,31 @@ public class CommonServiceImpl implements CommonService {
   public void writeMenuAndSiteInfo(@ApiIgnore HttpSession session, Map<String, Object> map) {
     final Manager manager = (Manager) session.getAttribute(SessionKey.LOGIN_MANAGER);
     final Long managerId = manager.getId();
-    final List<MenuPoJo> menuPoJos = menuService.listNameByManager(managerId);
     // 所有可用菜单
-    final List<MenuResponse> menusAll = new ArrayList<>();
+    final List<MenuResponse> menuList =
+        CollectionUtils.list(menuService.listByManager(managerId), MenuResponse::of, null, null);
     // 可用菜单的树形结构
-    menuPoJos.forEach(menuPoJo -> menusAll.add(MenuResponse.of(menuPoJo)));
-    final List<MenuResponse> menus =
-        menuPoJos.stream()
-            .filter(menuPoJo -> Objects.isNull(menuPoJo.getParentId()))
-            .map(MenuResponse::of)
+    final List<MenuResponse> menus = Objects.requireNonNull(menuList, "菜单为空");
+    final List<MenuResponse> responses =
+        menus.stream()
+            .filter(response -> Objects.isNull(response.getParentId()))
             .collect(Collectors.toList());
-    menusAll.removeAll(menus);
+    menus.removeAll(responses);
     Stack<MenuResponse> retain = new Stack<>();
-    menus.forEach(retain::push);
-    while (retain.size() > 0 && menusAll.size() > 0) {
+    responses.forEach(retain::push);
+    while (retain.size() > 0 && menus.size() > 0) {
       MenuResponse menu = retain.pop();
       // 当前节点的子节点
-      List<MenuResponse> child =
-          menusAll.stream()
+      List<MenuResponse> children =
+          menus.stream()
               .filter(menuResponse -> menuResponse.getParentId().equals(menu.getId()))
               .collect(Collectors.toList());
       // 子节点具有叶子节点,入栈
-      child.stream().filter(menuResponse -> !menuResponse.getLeaf()).forEach(retain::push);
-      menu.setChildren(child);
-      menusAll.removeAll(child);
+      children.stream().filter(menuResponse -> !menuResponse.getIsLeaf()).forEach(retain::push);
+      menu.setChildren(children);
+      menus.removeAll(children);
     }
-    map.put("menus", menus);
+    map.put("menus", responses);
     JSONObject siteJson = new JSONObject();
     siteJson.put("title", configService.getSiteInfo(ConfigCode.SITE_TITLE));
     siteJson.put("name", configService.getSiteInfo(ConfigCode.SITE_NAME));
@@ -106,15 +105,42 @@ public class CommonServiceImpl implements CommonService {
           final String idStr,
           final String page,
           Map<String, Object> map,
+          String propName) {
+    return update(invoke, clazz, idStr, page, map, propName, null, true);
+  }
+
+  @Override
+  public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
+      String update(
+          S invoke,
+          Class<E> clazz,
+          final String idStr,
+          final String page,
+          Map<String, Object> map,
           String propName,
           Runnable runnable) {
+    return update(invoke, clazz, idStr, page, map, propName, runnable, true);
+  }
+
+  @Override
+  public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
+      String update(
+          S invoke,
+          Class<E> clazz,
+          final String idStr,
+          final String page,
+          Map<String, Object> map,
+          String propName,
+          Runnable runnable,
+          boolean mapPoJo) {
     final long id = TextUtil.validLong(idStr, 0);
     if (id < 1) {
       throw new CommonException("id 格式不正确");
     }
     if (Objects.nonNull(runnable)) {
       runnable.run();
-    } else {
+    }
+    if (mapPoJo) {
       map.put(propName, invoke.getPoJoById(id, clazz));
     }
     return page;

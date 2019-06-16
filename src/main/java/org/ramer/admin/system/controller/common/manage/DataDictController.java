@@ -110,7 +110,7 @@ public class DataDictController {
       throw new CommonException(String.format("参数%s不能为空", "typeCode"));
     }
     return commonService.update(
-        service, DataDictPoJo.class, idStr, "manage/data_dict/update", map, "dataDict", null);
+        service, DataDictPoJo.class, idStr, "manage/data_dict/update", map, "dataDict", null, true);
   }
 
   @PutMapping("/{id}")

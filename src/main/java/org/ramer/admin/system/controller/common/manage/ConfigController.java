@@ -74,7 +74,8 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','config:create')")
   @ApiOperation("添加系统配置")
-  public ResponseEntity create(@Valid ConfigRequest configRequest, BindingResult bindingResult) {
+  public ResponseEntity create(
+      @Valid ConfigRequest configRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" ConfigController.create : [{}]", configRequest);
     return commonService.create(service, Config.class, configRequest, bindingResult);
   }
@@ -85,9 +86,14 @@ public class ConfigController {
       @PathVariable("id") String idStr,
       @ApiIgnore HttpSession session,
       @ApiIgnore Map<String, Object> map) {
-    commonService.writeMenuAndSiteInfo(session, map);
     return commonService.update(
-        service, ConfigPoJo.class, idStr, "manage/config/edit", map, "config", null);
+        service,
+        ConfigPoJo.class,
+        idStr,
+        "manage/config/edit",
+        map,
+        "config",
+        () -> commonService.writeMenuAndSiteInfo(session, map));
   }
 
   @PutMapping("/{id}")
@@ -97,7 +103,7 @@ public class ConfigController {
   public ResponseEntity update(
       @PathVariable("id") String idStr,
       @Valid ConfigRequest configRequest,
-      BindingResult bindingResult) {
+      @ApiIgnore BindingResult bindingResult) {
     log.info(" ConfigController.update : [{}]", configRequest);
     return commonService.update(service, Config.class, configRequest, idStr, bindingResult);
   }

@@ -75,7 +75,7 @@ public class PrivilegeController {
   @ApiOperation("更新权限页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
     return commonService.update(
-        service, PrivilegePoJo.class, idStr, "privilege/update", map, "privilege", null);
+        service, PrivilegePoJo.class, idStr, "privilege/update", map, "privilege", null, true);
   }
 
   @PutMapping("/{id}")

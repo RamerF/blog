@@ -23,7 +23,7 @@ public class OrganizeMemberResponse extends AbstractEntityResponse {
 
   private String empNo;
 
-  private String phone;
+  private Long phone;
 
   private List<String> organizes;
 

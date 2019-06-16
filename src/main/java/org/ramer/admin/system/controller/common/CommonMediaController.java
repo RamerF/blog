@@ -75,7 +75,14 @@ public class CommonMediaController {
   @ApiOperation("更新通用多媒体页面")
   public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
     return commonService.update(
-        service, CommonMediaPoJo.class, idStr, "commonMedia/update", map, "commonMedia", null);
+        service,
+        CommonMediaPoJo.class,
+        idStr,
+        "commonMedia/update",
+        map,
+        "commonMedia",
+        null,
+        true);
   }
 
   @PutMapping("/{id}")

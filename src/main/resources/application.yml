@@ -2,10 +2,10 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      format-sql: true
       ddl-auto: update
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.MySQL55Dialect
   thymeleaf:
     encoding: UTF-8
@@ -45,7 +45,7 @@ logging:
     jdbc.resultset: off
     jdbc.audit: off
     jdbc.sqlonly: off
-    jdbc.sqltiming: off
+    jdbc.sqltiming: info
     org.springframework.boot.actuate.jdbc.DataSourceHealthIndicator: error
 server:
   port: 8080

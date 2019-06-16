@@ -8,6 +8,4 @@ import org.ramer.admin.system.service.BaseService;
 /** @author ramer */
 public interface MenuService extends BaseService<Menu, MenuPoJo> {
   List<Menu> listByManager(Long managerId);
-
-  List<MenuPoJo> listNameByManager(Long managerId);
 }

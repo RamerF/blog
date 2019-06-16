@@ -45,6 +45,26 @@ public interface CommonService {
    * @param page 页面路径.
    * @param map 用于写入数据到request.
    * @param propName 写入的属性名
+   * @return 返回更新页面
+   */
+  <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
+      String update(
+          S invoke,
+          Class<E> clazz,
+          String idStr,
+          String page,
+          Map<String, Object> map,
+          String propName);
+
+  /**
+   * 跳转到更新页面.校验更新url正确性,写入POJO对象用于回显.
+   *
+   * @param invoke 服务层实现类.
+   * @param clazz 当前写入对象的Class.
+   * @param idStr 页面传递的id.
+   * @param page 页面路径.
+   * @param map 用于写入数据到request.
+   * @param propName 写入的属性名
    * @param runnable 自定义操作,如果该值不为空,将不会写入POJO对象,通常用于写入额外的信息或写入domain对象
    * @return 返回更新页面
    */
@@ -57,6 +77,29 @@ public interface CommonService {
           Map<String, Object> map,
           String propName,
           Runnable runnable);
+  /**
+   * 跳转到更新页面.校验更新url正确性,写入POJO对象用于回显.
+   *
+   * @param invoke 服务层实现类.
+   * @param clazz 当前写入对象的Class.
+   * @param idStr 页面传递的id.
+   * @param page 页面路径.
+   * @param map 用于写入数据到request.
+   * @param propName 写入的属性名
+   * @param runnable 自定义操作,如果该值不为空,将不会写入POJO对象,通常用于写入额外的信息或写入domain对象
+   * @param mapPoJo 是否写入pojo对象到map中
+   * @return 返回更新页面
+   */
+  <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
+      String update(
+          S invoke,
+          Class<E> clazz,
+          String idStr,
+          String page,
+          Map<String, Object> map,
+          String propName,
+          Runnable runnable,
+          boolean mapPoJo);
 
   /**
    * 更新.

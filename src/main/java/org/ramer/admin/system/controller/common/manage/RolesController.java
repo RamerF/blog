@@ -115,7 +115,7 @@ public class RolesController {
     map.put("menus", menuService.list(null));
     map.put("privileges", privilegeService.list(null));
     return commonService.update(
-        service, RolePoJo.class, idStr, "manage/roles/update", map, "roles", null);
+        service, RolePoJo.class, idStr, "manage/roles/update", map, "roles", null, true);
   }
 
   @PutMapping("/{id}")

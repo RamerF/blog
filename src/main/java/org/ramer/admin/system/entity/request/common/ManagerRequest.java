@@ -2,7 +2,6 @@ package org.ramer.admin.system.entity.request.common;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
 import lombok.*;
 import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 
@@ -18,27 +17,24 @@ import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 @ApiModel("管理员")
 public class ManagerRequest extends AbstractEntityRequest {
 
-  @ApiModelProperty(value = "String")
+  @ApiModelProperty(value = "工号")
   private String empNo;
 
-  @ApiModelProperty(value = "String")
+  @ApiModelProperty(value = "密码")
   private String password;
 
-  @ApiModelProperty(value = "String")
+  @ApiModelProperty(value = "姓名")
   private String name;
 
-  @ApiModelProperty(value = "Integer")
+  @ApiModelProperty(value = "性别")
   private Integer gender;
 
-  @ApiModelProperty(value = "String")
+  @ApiModelProperty(value = "手机号码")
   private String phone;
 
-  @ApiModelProperty(value = "String")
+  @ApiModelProperty(value = "头像")
   private String avatar;
 
-  @ApiModelProperty(value = "Boolean")
-  private Boolean isActive;
-
-  @ApiModelProperty(value = "roles")
-  private List<Long> rolesIds;
+  @ApiModelProperty(value = "是否可用")
+  private Boolean isActive = false;
 }

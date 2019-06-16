@@ -208,5 +208,10 @@ body {
     margin: 72px auto 0;
 }
 
+/* fix dialog */
+.mdc-dialog__content {
+    white-space: pre-line;
+}
+
 /* custom */
 

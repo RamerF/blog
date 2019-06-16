@@ -2,11 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      layout:decorate="~{manage/layout}">
+      layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>系统配置配置</title>
-    <link rel="stylesheet" th:href="@{/style/manage/config/index.css}"/>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -141,19 +139,6 @@
           });
         });
       });
-
-      function bindClickRow() {
-        console.log('row...');
-        $('#table').find('tr').each(function(a, b) {
-          $(b).find('input[type=\'checkbox\']').click();
-        });
-        return false;
-      }
-
-      function search(obj) {
-        $('#table').bootstrapTable('refresh', {query: {'criteria': $(obj).prev().val()}});
-      }
-
     </script>
 </th:block>
 </body>

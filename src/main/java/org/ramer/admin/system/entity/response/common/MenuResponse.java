@@ -19,7 +19,7 @@ import org.springframework.beans.BeanUtils;
 public class MenuResponse extends AbstractEntityResponse {
   private Long id;
 
-  private Boolean leaf;
+  private Boolean isLeaf;
 
   private String name;
 
@@ -27,7 +27,7 @@ public class MenuResponse extends AbstractEntityResponse {
 
   private String url;
 
-  private Integer sort;
+  private Integer sortWeight;
 
   private String icon;
 

@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
-      layout:decorate="~{manage/layout}">
+      layout:decorate="~{manage/layout}" lang="zh">
 <head>
-    <title>添加系统配置</title>
+    <title></title>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -23,28 +23,28 @@
                    th:name="${_csrf.parameterName}"
                    id="_csrf"
                    th:value="${_csrf.token}"/>
-            <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">
-                [[${config ne null?'修改':'添加'}]]参数配置
+            <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center" th:inline="text">
+                [[${manager ne null?'修改':'添加'}]]管理员
             </h2>
             <div class="mdc-layout-grid__inner mdc-panel__margin-16 mdc-form-field">
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6" tabindex="0">
-                    <!--CODE-->
-                    <div class="text-field-container mdc-panel__margin-16">
+                    <!--工号-->
+                    <div class="mdc-panel__margin-16">
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
-                            <input type="text" id="codeInput" name="code"
+                            <input type="tel" id="empNoInput" name="empNo"
                                    class="mdc-text-field__input"
                                    maxlength="20"
                                    required
-                                   data-validtip="CODE不能为空,且小于20个字符"
+                                   data-validtip="工号不能为空,且小于20个数字"
                                    autocomplete="off"
-                                   placeholder="请输入CODE"
-                                   th:value="${config ne null?config.code:''}">
+                                   placeholder="请输入工号"
+                                   th:value="${manager ne null?manager.empNo:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
-                                    <label for="codeInput" class="mdc-floating-label">CODE</label>
+                                    <label for="empNoInput" class="mdc-floating-label">工号</label>
                                 </div>
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>
@@ -60,12 +60,12 @@
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
                             <input type="text" id="nameInput" name="name" class="mdc-text-field__input"
-                                   maxlength="20"
+                                   maxlength="10"
                                    required
-                                   data-validtip="名称不能为空,且小于20个字符"
+                                   data-validtip="姓名不能为空,且小于10个字符"
                                    autocomplete="off"
                                    placeholder="请输入名称"
-                                   th:value="${config ne null?config.name:''}">
+                                   th:value="${manager ne null?manager.name:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
@@ -77,22 +77,25 @@
                         <div class="mdc-text-field-helper-line">
                             <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
                                 *必填</p>
-                            <div class="mdc-text-field-character-counter">0 / 20</div>
+                            <div class="mdc-text-field-character-counter">0 / 10</div>
                         </div>
                     </div>
-                    <!--值-->
+                    <!--电话号码-->
                     <div class="mdc-panel__margin-16">
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
-                            <input type="text" id="valInput" name="value" class="mdc-text-field__input"
-                                   maxlength="100"
+                            <input type="text" id="phoneInput" name="phone" class="mdc-text-field__input"
+                                   maxlength="11"
+                                   required
                                    autocomplete="off"
-                                   placeholder="请输入值"
-                                   th:value="${config ne null?config.value:''}">
+                                   data-validtip="请输入正确的手机号码"
+                                   data-pattern="^1\d{10}$"
+                                   placeholder="请输入电话号码"
+                                   th:value="${manager ne null?manager.phone:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
-                                    <label for="valInput" class="mdc-floating-label">值</label>
+                                    <label for="phoneInput" class="mdc-floating-label">电话号码</label>
                                 </div>
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>
@@ -100,31 +103,92 @@
                         <div class="mdc-text-field-helper-line">
                             <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
                                 *必填</p>
-                            <div class="mdc-text-field-character-counter">0 / 100</div>
+                            <div class="mdc-text-field-character-counter">0 / 11</div>
                         </div>
                     </div>
-                    <!--备注-->
+                    <!--登录密码-->
                     <div class="mdc-panel__margin-16">
-                        <div class="mdc-text-field mdc-text-field--textarea mdc-text-field-row"
+                        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
-                            <div class="mdc-text-field-character-counter">0 / 250</div>
-                            <textarea id="remarkInput" name="remark"
-                                      class="mdc-text-field__input"
-                                      rows="4" cols="40"
-                                      maxlength="250" placeholder="请输入备注"
-                                      th:value="${config ne null?config.remark:''}"></textarea>
+                            <input type="text" id="passwordInput" name="password" class="mdc-text-field__input"
+                                   maxlength="18"
+                                   autocomplete="off"
+                                   data-validtip="请输入6-18位登录密码,只能包含字母,数字或下划线"
+                                   data-pattern="\w{6,18}$"
+                                   placeholder="请输入登录密码">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
-                                    <label for="remarkInput" class="mdc-floating-label">备注</label>
+                                    <label for="passwordInput" class="mdc-floating-label">登录密码</label>
                                 </div>
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>
                         </div>
+                        <div class="mdc-text-field-helper-line">
+                            <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+                                *必填</p>
+                            <div class="mdc-text-field-character-counter">0 / 18</div>
+                        </div>
+                    </div>
+                    <!--性别-->
+                    <div class="mdc-panel__margin-16">
+                        <span>性别</span>
+                        <div class="mdc-form-field">
+                            <div class="mdc-radio">
+                                <input class="mdc-radio__native-control" type="radio" id="radio-male"
+                                       name="gender" value="0"
+                                       th:checked="${manager ne null and manager.gender eq 0 ? 'checked': 'false' }">
+                                <div class="mdc-radio__background">
+                                    <div class="mdc-radio__outer-circle"></div>
+                                    <div class="mdc-radio__inner-circle"></div>
+                                </div>
+                            </div>
+                            <label for="radio-male">男</label>
+                        </div>
+                        <div class="mdc-form-field">
+                            <div class="mdc-radio">
+                                <input class="mdc-radio__native-control" type="radio" id="radio-female"
+                                       name="gender" value="1"
+                                       th:checked="${manager ne null and manager.gender eq 1 ? 'checked': 'false' }">
+                                <div class="mdc-radio__background">
+                                    <div class="mdc-radio__outer-circle"></div>
+                                    <div class="mdc-radio__inner-circle"></div>
+                                </div>
+                            </div>
+                            <label for="radio-female">女</label>
+                        </div>
+                    </div>
+                    <!--可用状态-->
+                    <div class="mdc-panel__margin-16">
+                        <span>可用状态</span>
+                        <div class="mdc-form-field">
+                            <div class="mdc-radio">
+                                <input class="mdc-radio__native-control" type="radio" id="radio-active"
+                                       name="isActive" value="1"
+                                       th:checked="${manager ne null and manager.isActive ? 'checked': 'false' }">
+                                <div class="mdc-radio__background">
+                                    <div class="mdc-radio__outer-circle"></div>
+                                    <div class="mdc-radio__inner-circle"></div>
+                                </div>
+                            </div>
+                            <label for="radio-active">可用</label>
+                        </div>
+                        <div class="mdc-form-field">
+                            <div class="mdc-radio">
+                                <input class="mdc-radio__native-control" type="radio" id="radio-inactive"
+                                       name="isActive" value="0"
+                                       th:checked="${manager ne null and not manager.isActive ? 'checked': 'false' }">
+                                <div class="mdc-radio__background">
+                                    <div class="mdc-radio__outer-circle"></div>
+                                    <div class="mdc-radio__inner-circle"></div>
+                                </div>
+                            </div>
+                            <label for="radio-inactive">不可用</label>
+                        </div>
                     </div>
                     <!--操作-->
                     <div class="mdc-layout-grid__inner mdc-card__action-buttons">
-                        <a href="/manage/config/index"
+                        <a href="/manage/manager/index"
                            class="mdc-button mdc-layout-grid__cell mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop  mdc-card__action mdc-button--raised mdc-ripple-upgraded">
                             返回
                         </a>
@@ -132,7 +196,7 @@
                         <button id="editBtn"
                                 class="mdc-button mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded"
                                 th:inline="text">
-                            [[${config eq null ? '添加':'更新'}]]
+                            [[${manager eq null ? '添加':'更新'}]]
                         </button>
                     </div>
                 </div>
@@ -143,7 +207,7 @@
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
       $(function() {
-        let id = /*[[${config ne null ? config.id:''}]]*/;
+        let id = /*[[${manager ne null ? manager.id:''}]]*/;
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
         $('#editBtn').click(function() {
           let $form = $('#form');
@@ -168,13 +232,13 @@
           }
           console.log(JSON.stringify(data));
           id > 0 ?
-              $.put('/manage/config/' + id, data, function(res) {
+              $.put('/manage/manager/' + id, data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/config/index';
+                  window.location.href = '/manage/manager/index';
                 }) : $.alert(res.msg);
-              }) : $.post('/manage/config', data, function(res) {
+              }) : $.post('/manage/manager', data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/config/index';
+                  window.location.href = '/manage/manager/index';
                 }) : $.alert(res.msg);
               });
           return false;

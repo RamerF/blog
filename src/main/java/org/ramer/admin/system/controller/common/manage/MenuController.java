@@ -100,8 +100,7 @@ public class MenuController {
       @PathVariable("id") String idStr,
       @RequestParam("parentId") String parentIdStr,
       @Valid Menu menu,
-      BindingResult bindingResult)
-      throws Exception {
+      BindingResult bindingResult) {
     log.info(" MenuController.update : [{},{}]", menu, parentIdStr);
     final long parentId = TextUtil.validLong(parentIdStr, 0);
     if (parentId < 0) {

@@ -151,7 +151,10 @@ public class Constant {
       return ordinals;
     }
 
-    public static String desc(int index) {
+    public static String desc(Integer index) {
+      if (Objects.isNull(index)) {
+        return null;
+      }
       for (Gender gender : values()) {
         if (gender.ordinal() == index) {
           return gender.desc;

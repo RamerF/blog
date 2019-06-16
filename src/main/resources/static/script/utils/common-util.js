@@ -404,19 +404,19 @@
           _columns.forEach(function(_col, index) {
             let td;
             let editable = _col.editable;
+            // 如果值为空则值为-
+            let val = _obj[_col.data];
+            val = typeof val === 'undefined' || val === null
+                ? '-'
+                : val;
             if (typeof (_col.render) != 'undefined') {
-              if (typeof (editable) != 'undefined' && editable === true) {
-                td = $(`<td><input type="text" value="${_col.render(
-                    _obj[_col.data])}"/></td>`);
-              } else {
-                td = $(`<td>${_col.render(_obj[_col.data])}</td>`);
-              }
+              td = $(`<td>${_col.render(val)}</td>`);
             } else {
               if (typeof (editable) != 'undefined' && editable === true) {
                 td = $(
-                    `<td><input type="text" value="${_obj[_col.data]}"/></td>`);
+                    `<td><input type="text" value="${val}"/></td>`);
               } else {
-                td = $(`<td>${_obj[_col.data]}</td>`);
+                td = $(`<td>${val}</td>`);
               }
             }
             if (_thead[index].style) {
@@ -484,6 +484,7 @@
     let _type = paras.type;
     let _cancelCallback = paras.cancelCallback;
     let _confirmCallback = paras.confirmCallback;
+    console.log(_content);
     let $container = $(`<div class="mdc-dialog"
       role="alertdialog"
       aria-modal="true"
@@ -493,9 +494,7 @@
       <div class="mdc-dialog__surface">
         <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
         <h2 class="mdc-dialog__title" id="my-dialog-title">${_title}</h2>
-        <div class="mdc-dialog__content" id="my-dialog-content" tabindex="0">
-          ${_content}
-        </div>
+        <div class="mdc-dialog__content" id="my-dialog-content" tabindex="0">${_content}</div>
         <footer class="mdc-dialog__actions">
           ${_type !== 1 ? `<button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
             <span class="mdc-button__label">取消</span>
@@ -587,18 +586,18 @@
    * @param allowMinLength 允许最小长度
    * @param allowMaxLength 允许最大长度
    * @param inValidMsg 校验失败提示信息
-   * @param regex 如果该参数不为空,前面的限制参数无效
+   * @param pattern 如果该参数不为空,前面的限制参数无效
    */
   $.valid = function(
-      str, allowEmpty, allowMinLength, allowMaxLength, inValidMsg, regex) {
-    if (!allowEmpty && (typeof str === 'undefined' || str.trim().length < 1)) {
+      str, allowEmpty, allowMinLength, allowMaxLength, inValidMsg, pattern) {
+    if (!allowEmpty && (typeof str === 'undefined' || str.length < 1)) {
       $.alert(inValidMsg);
       return false;
     }
-    if (typeof str === 'undefined' || str.trim().length < 1) {
+    if (typeof str === 'undefined' || str.length < 1) {
       str = '';
     }
-    if (regex && !new RegExp(regex).test(str)) {
+    if (pattern && !new RegExp(pattern, 'g').test(str) && str.length > 0) {
       $.alert(inValidMsg);
       return false;
     }
@@ -611,5 +610,37 @@
       return false;
     }
     return true;
+  };
+
+  /**
+   * 时间格式化.
+   * @param date Date 或者 Milliseconds
+   * @param pattern eg: 'yyyy/MM/dd hh:mm:ss'
+   */
+  $.dateFormat = function(date, pattern) {
+    if (typeof date === 'number') {
+      date = new Date(date);
+    }
+    let obj = {
+      'M+': date.getMonth() + 1,
+      'd+': date.getDate(),
+      'h+': date.getHours(),
+      'm+': date.getMinutes(),
+      's+': date.getSeconds(),
+      'q+': Math.floor((date.getMonth() + 3) / 3),
+      'S': date.getMilliseconds()
+    };
+    if (/(y+)/.test(pattern)) {
+      pattern = pattern.replace(RegExp.$1,
+          (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+    }
+    for (let k in obj) {
+      if (new RegExp('(' + k + ')').test(pattern)) {
+        pattern = pattern.replace(RegExp.$1,
+            RegExp.$1.length === 1 ? obj[k] : ('00' + obj[k]).substr(
+                ('' + obj[k]).length));
+      }
+    }
+    return pattern;
   };
 }));

@@ -1,12 +1,12 @@
 package org.ramer.admin.system.service.common.impl;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.*;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.State;
-import org.ramer.admin.system.entity.domain.common.Menu;
-import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
+import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.MenuRepository;
@@ -22,17 +22,24 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Service
 public class MenuServiceImpl implements MenuService {
+  @Resource private JPAQueryFactory jpaQueryFactory;
   @Resource private MenuRepository repository;
   @Resource private PrivilegeService privilegeService;
 
   @Override
   public List<Menu> listByManager(Long managerId) {
-    return repository.findByManager(managerId, State.STATE_ON);
-  }
-
-  @Override
-  public List<MenuPoJo> listNameByManager(Long managerId) {
-    return repository.findNameByManager(managerId, State.STATE_ON);
+    final QMenu menu = QMenu.menu;
+    final QRole role = QRole.role;
+    final QManager manager = QManager.manager;
+    return jpaQueryFactory
+        .selectFrom(menu)
+        .leftJoin(role)
+        .on(role.menus.contains(menu))
+        .leftJoin(manager)
+        .on(manager.roles.contains(role).and(manager.id.eq(managerId)))
+        .where(menu.state.eq(State.STATE_ON).and(role.state.eq(State.STATE_ON)))
+        .orderBy(menu.sortWeight.asc())
+        .fetch();
   }
 
   @Transactional

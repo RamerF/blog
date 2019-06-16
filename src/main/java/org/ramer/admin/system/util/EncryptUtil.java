@@ -3,6 +3,7 @@
  */
 package org.ramer.admin.system.util;
 
+import java.util.Objects;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,7 @@ public class EncryptUtil {
   //    }
 
   public static String execEncrypt(Object string) {
+    Objects.requireNonNull(string, "待加密密码不能为空");
     String encode = passwordEncoder.encode(string.toString());
     log.info("  encrypt: [{}],[{}]", string, encode);
     return encode;

@@ -1,9 +1,11 @@
 package org.ramer.admin.system.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.persistence.EntityManager;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,5 +91,10 @@ public class CommonBean {
               new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/templateEngineException");
           factory.addErrorPages(error400Page, error401Page, error404Page, error500Page);
         };
+  }
+
+  @Bean
+  public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
+    return new JPAQueryFactory(entityManager);
   }
 }

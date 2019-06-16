@@ -40,6 +40,9 @@
             <button class="mdc-button mdc-button--raised" id="delBtn">
                 <span class="mdc-button__label">删除</span>
             </button>
+            <button class="mdc-button mdc-button--raised" id="roleBtn">
+                <span class="mdc-button__label">角色配置</span>
+            </button>
         </div>
     </div>
 </div>
@@ -127,7 +130,28 @@
             $.alert('请至少选择一条记录');
             return false;
           }
-          console.debug(selectItems);
+          $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
+            let ids = [];
+            selectItems.forEach(function(item) {
+              ids.push(item.id);
+            });
+            $.delete('/manage/manager/deleteBatch', {'ids': ids.toString()}, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+              let delCount = selectItems.length;
+              mdcDataTable.refresh({}, delCount);
+            }, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+            });
+          });
+        });
+        $('#roleBtn').click(function() {
+          let selectItems = mdcDataTable.getSelectItems();
+          if (selectItems.length < 1) {
+            $.alert('请至少选择一条记录');
+            return false;
+          }
           $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
             let ids = [];
             selectItems.forEach(function(item) {

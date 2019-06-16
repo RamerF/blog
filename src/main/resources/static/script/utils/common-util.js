@@ -63,6 +63,7 @@
               selectItems.push(ts.data[index]);
             }
           });
+      console.debug(selectItems);
       return selectItems;
     }
 

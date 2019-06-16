@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
-@Controller
+@Controller("MCCM")
 @RequestMapping(AccessPath.MANAGE + "/manager")
 @PreAuthorize("hasAnyAuthority('global:read','manager:read')")
 @Api(tags = "管理端: 管理员接口")

@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 /** @author Ramer @Date 02/13/2018 */
 public class MainGenerator {
   private static String lineSeparator = System.getProperty("line.separator");
+  private static String pathSeparator = File.separator;
 
   public static void main(String[] args) throws Exception {
     System.out.println(
@@ -65,7 +66,9 @@ public class MainGenerator {
         savingPathRepository = properties.getProperty("savingPathRepository");
         savingPathService = properties.getProperty("savingPathService");
         savingPathServiceImpl =
-            Objects.isNull(savingPathService) ? null : savingPathService.concat("\\impl");
+            Objects.isNull(savingPathService)
+                ? null
+                : savingPathService.concat(pathSeparator).concat("impl");
         savingPathController = properties.getProperty("savingPathController");
         savingPathValidator = properties.getProperty("savingPathValidator");
         savingPathPoJo = properties.getProperty("savingPathPoJo");
@@ -99,7 +102,9 @@ public class MainGenerator {
             " 请输入service保存路径: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/service");
         savingPathService = scanner.next();
         savingPathServiceImpl =
-            Objects.isNull(savingPathService) ? null : savingPathService.concat("\\impl");
+            Objects.isNull(savingPathService)
+                ? null
+                : savingPathService.concat(pathSeparator).concat("impl");
         System.out.println(
             " 请输入controller保存路径: 例如: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/controller");
         savingPathController = scanner.next();
@@ -503,7 +508,7 @@ public class MainGenerator {
         return;
       }
       final String filePath =
-          savingPath.concat("\\").concat(domainName).concat(suffix).concat(".java");
+          savingPath.concat(pathSeparator).concat(domainName).concat(suffix).concat(".java");
       Files.copy(file.toPath(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
       System.out.println(" 生成 ".concat(suffix).concat(" 成功 : ").concat(filePath));
     } else {

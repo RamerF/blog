@@ -157,7 +157,9 @@
             $.alert('请至少选择一条记录');
             return false;
           }
-          $('#roles').load('/manage/manager/' + selectItems[0].id + '/roles');
+          $('#roles').load('/manage/manager/' + selectItems[0].id + '/roles', function() {
+            $.modal($(this).prop('outerHTML'));
+          });
           // $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
           //   let ids = [];
           //   selectItems.forEach(function(item) {

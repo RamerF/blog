@@ -45,6 +45,11 @@
             </button>
         </div>
     </div>
+    <div th:fragment="roles" id="roles">
+        <ul th:each="r:${roles}">
+            <li th:text="${r.name+(#lists.contains(withRoles,r.id)?'--拥有':'--未拥有')}"></li>
+        </ul>
+    </div>
 </div>
 <th:block layout:fragment="script">
     <script type="text/javascript">
@@ -152,21 +157,22 @@
             $.alert('请至少选择一条记录');
             return false;
           }
-          $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
-            let ids = [];
-            selectItems.forEach(function(item) {
-              ids.push(item.id);
-            });
-            $.delete('/manage/manager/deleteBatch', {'ids': ids.toString()}, function(res) {
-              console.log(JSON.stringify(res));
-              $.alert(res.msg);
-              let delCount = selectItems.length;
-              mdcDataTable.refresh({}, delCount);
-            }, function(res) {
-              console.log(JSON.stringify(res));
-              $.alert(res.msg);
-            });
-          });
+          $('#roles').load('/manage/manager/' + selectItems[0].id + '/roles');
+          // $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
+          //   let ids = [];
+          //   selectItems.forEach(function(item) {
+          //     ids.push(item.id);
+          //   });
+          //   $.delete('/manage/manager/deleteBatch', {'ids': ids.toString()}, function(res) {
+          //     console.log(JSON.stringify(res));
+          //     $.alert(res.msg);
+          //     let delCount = selectItems.length;
+          //     mdcDataTable.refresh({}, delCount);
+          //   }, function(res) {
+          //     console.log(JSON.stringify(res));
+          //     $.alert(res.msg);
+          //   });
+          // });
         });
       });
     </script>

@@ -7,14 +7,16 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.entity.request.common.ManagerRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.entity.response.common.ManagerResponse;
+import org.ramer.admin.system.entity.response.common.RoleResponse;
+import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.common.*;
-import org.ramer.admin.system.util.EncryptUtil;
-import org.ramer.admin.system.util.TextUtil;
+import org.ramer.admin.system.util.*;
 import org.ramer.admin.system.validator.common.ManagerValidator;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
@@ -134,5 +136,21 @@ public class ManagerController {
   public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ManagerController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
+  }
+
+  @GetMapping("/{id}/roles")
+  public String getRole(@PathVariable("id") String idStr, Map<String, Object> map) {
+    final long id = TextUtil.validLong(idStr, -1);
+    if (TextUtil.nonValidId(id)) {
+      throw new CommonException("id 无效");
+    }
+    final Manager manager = service.getById(id);
+    if (Objects.isNull(manager)) {
+      throw new CommonException("id 无效");
+    }
+    map.put("roles", CollectionUtils.list(rolesService.list(null), RoleResponse::of, null, null));
+    map.put(
+        "withRoles", CollectionUtils.list(manager.getRoles(), AbstractEntity::getId, null, null));
+    return "manage/manager/index::roles";
   }
 }

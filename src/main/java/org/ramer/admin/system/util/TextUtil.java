@@ -98,13 +98,24 @@ public class TextUtil {
    * @param pattern 时间格式化pattern
    * @return 返回date,如果字符串格式不匹配返回defaultValue.
    */
-  public static LocalDateTime validDate(String dateStr, String pattern, LocalDateTime defaultValue) {
+  public static LocalDateTime validDate(
+      String dateStr, String pattern, LocalDateTime defaultValue) {
     try {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
       return LocalDateTime.from(formatter.parse(dateStr));
     } catch (Exception e) {
       return defaultValue;
     }
+  }
+
+  /** * 校验给定参数是否有效的id,有效返回true. */
+  public static boolean isValidId(final Long id) {
+    return id > 0;
+  }
+
+  /** * 校验给定参数是否有效的id,无效返回true. */
+  public static boolean nonValidId(final Long id) {
+    return id < 1;
   }
 
   /**

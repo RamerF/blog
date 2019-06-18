@@ -1,6 +1,7 @@
 package org.ramer.admin.system.entity.pojo.common;
 
-import java.time.LocalDateTime;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
@@ -16,46 +17,32 @@ import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "菜单")
 public class MenuPoJo extends AbstractEntityPoJo {
 
-  private Boolean isLeaf;
-
+  @ApiModelProperty(value = "名称")
   private String name;
 
+  @ApiModelProperty(value = "权限别名")
   private String alia;
 
+  @ApiModelProperty(value = "链接地址")
   private String url;
 
+  @ApiModelProperty(value = "排序")
   private Integer sortWeight;
 
+  @ApiModelProperty(value = "图标")
   private String icon;
 
+  @ApiModelProperty(value = "备注")
   private String remark;
 
+  @ApiModelProperty(value = "上级id")
   private Long parentId;
 
-  public MenuPoJo(
-      final Long id,
-      final Integer state,
-      final String name,
-      final String url,
-      final Boolean isLeaf,
-      final String icon,
-      final Long pId,
-      final int sortWeight,
-      final LocalDateTime createTime,
-      final LocalDateTime updateTime) {
-    setId(id);
-    setState(state);
-    setName(name);
-    setUrl(url);
-    setIsLeaf(isLeaf);
-    setIcon(icon);
-    setParentId(pId);
-    setSortWeight(sortWeight);
-    setCreateTime(createTime);
-    setUpdateTime(updateTime);
-  }
+  @ApiModelProperty(value = "是否有子菜单")
+  private Boolean hasChild = false;
 
   @Override
   @SuppressWarnings({"unchecked"})

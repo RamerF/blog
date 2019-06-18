@@ -1,28 +1,27 @@
- package ${basePath}${moduleName}.controller${subDir};
+ package $
 
-import ${basePath}.system.entity.Constant.AccessPath;
-import ${basePath}${moduleName}.entity.domain${subDir}.${name};
-import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
-import ${basePath}${moduleName}.entity.request${subDir}.${name}Request;
-import ${basePath}${moduleName}.entity.response${subDir}.${name}Response;
-import ${basePath}.system.entity.response.CommonResponse;
-import ${basePath}.system.service.common.CommonService;
-import ${basePath}${moduleName}.service${subDir}.${name}Service;
-import ${basePath}.system.util.TextUtil;
-import ${basePath}${moduleName}.validator${subDir}.${name}Validator;
-import io.swagger.annotations.*;
-import java.util.Map;
-import javax.annotation.Resource;
-import javax.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+ import io.swagger.annotations.*;
+ import javax.annotation.Resource;
+ import javax.validation.Valid;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.security.access.prepost.PreAuthorize;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.web.bind.annotation.*;
+ import springfox.documentation.annotations.ApiIgnore;
 
-@Slf4j
+{basePath}${moduleName}.controller${subDir};
+    {basePath}.system.entity.Constant.AccessPath;
+    {basePath}${moduleName}.entity.domain${subDir}.${name};
+    {basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
+    {basePath}${moduleName}.entity.request${subDir}.${name}Request;
+    {basePath}${moduleName}.entity.response${subDir}.${name}Response;
+    {basePath}.system.entity.response.CommonResponse;
+    {basePath}.system.service.common.CommonService;
+    {basePath}${moduleName}.service${subDir}.${name}Service;
+    {basePath}.system.util.TextUtil;
+    {basePath}${moduleName}.validator${subDir}.${name}Validator;
+
+ @Slf4j
 @Controller("${alia}c")
 @PreAuthorize("hasAnyAuthority('global:read','${alia}:read')")
 @RequestMapping( "${subDirRequest}/${alia}")
@@ -68,7 +67,8 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','${alia}:create')")
   @ApiOperation("添加${description}")
-  public ResponseEntity create(@Valid ${name}Request ${alia}Request, BindingResult bindingResult) {
+  public ResponseEntity create(
+      @Valid ${name}Request ${alia}Request, @ApiIgnore BindingResult bindingResult) {
     log.info(" ${name}Controller.create : [{}]", ${alia}Request);
     return commonService.create(
         service, ${name}.class, ${alia}Request, bindingResult);
@@ -76,7 +76,7 @@ public class ${name}Controller {
 
   @GetMapping("/{id}")
   @ApiOperation("更新${description}页面")
-  public String update(@PathVariable("id") String idStr, Map<String, Object> map) {
+  public String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
     return commonService.update(
         service,
         ${name}PoJo.class,
@@ -90,7 +90,9 @@ public class ${name}Controller {
   @PreAuthorize("hasAnyAuthority('global:write','${alia}:write')")
   @ApiOperation("更新${description}")
   public ResponseEntity update(
-      @PathVariable("id") String idStr, @Valid ${name}Request ${alia}Request, BindingResult bindingResult) {
+      @PathVariable("id") String idStr,
+      @Valid ${name}Request ${alia}Request,
+      @ApiIgnore BindingResult bindingResult) {
     log.info(" ${name}Controller.update : [{}]", ${alia}Request);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
@@ -112,8 +114,8 @@ public class ${name}Controller {
 
   @DeleteMapping("/deleteBatch")
   @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
-  @ApiOperation("删除角色批量")
+  @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
+  @ApiOperation("删除${description}批量")
   public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ${name}Controller.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);

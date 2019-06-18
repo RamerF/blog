@@ -82,12 +82,12 @@ public class ApplicationInit implements ApplicationRunner {
         // init menu
         Menu systemMenu =
             menuService.create(
-                Menu.builder().isLeaf(false).name("系统").sortWeight(100).alia("system").build());
+                Menu.builder().hasChild(false).name("系统").sortWeight(100).alia("system").build());
         Menu configMenu =
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .isLeaf(true)
+                    .hasChild(true)
                     .name("参数配置")
                     .url("/manage/config/index")
                     .alia("config")
@@ -97,7 +97,7 @@ public class ApplicationInit implements ApplicationRunner {
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .isLeaf(true)
+                    .hasChild(true)
                     .name("数据字典")
                     .url("/manage/dataDict/index")
                     .alia("dataDict")
@@ -107,7 +107,7 @@ public class ApplicationInit implements ApplicationRunner {
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .isLeaf(true)
+                    .hasChild(true)
                     .name("管理员管理")
                     .url("/manage/manager/index")
                     .alia("manager")
@@ -117,7 +117,7 @@ public class ApplicationInit implements ApplicationRunner {
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .isLeaf(true)
+                    .hasChild(true)
                     .name("角色管理")
                     .url("/manage/role/index")
                     .alia("role")
@@ -127,7 +127,7 @@ public class ApplicationInit implements ApplicationRunner {
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .isLeaf(true)
+                    .hasChild(true)
                     .name("菜单管理")
                     .url("/manage/menu/index")
                     .alia("menu")

@@ -19,10 +19,6 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 public class Menu extends AbstractEntity {
   public static final String TABLE_NAME = "menu";
 
-  /** 是否最终节点 */
-  @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '是否最终节点'")
-  @Builder.Default
-  private Boolean isLeaf = false;
   /** 名称 */
   @Column(columnDefinition = "VARCHAR(25) COMMENT '名称'")
   private String name;
@@ -46,6 +42,11 @@ public class Menu extends AbstractEntity {
 
   @Column(name = "parent_id")
   private Long parentId;
+
+  /** 是否最终节点 */
+  @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '是否有子节点'")
+  @Builder.Default
+  private Boolean hasChild = false;
 
   @ManyToOne
   @JoinColumn(name = "parent_id", insertable = false, updatable = false)

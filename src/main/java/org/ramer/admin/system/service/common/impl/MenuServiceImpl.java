@@ -80,7 +80,7 @@ public class MenuServiceImpl implements MenuService {
         .map(
             menu -> {
               textFilter(m, menu);
-              menu.setIsLeaf(m.getIsLeaf());
+              menu.setHasChild(m.getHasChild());
               menu.setSortWeight(m.getSortWeight());
               menu.setParent(m.getParent());
               return repository.saveAndFlush(menu);

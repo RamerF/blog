@@ -62,7 +62,7 @@ public class CommonServiceImpl implements CommonService {
               .filter(menuResponse -> menuResponse.getParentId().equals(menu.getId()))
               .collect(Collectors.toList());
       // 子节点具有叶子节点,入栈
-      children.stream().filter(menuResponse -> !menuResponse.getIsLeaf()).forEach(retain::push);
+      children.stream().filter(menuResponse -> !menuResponse.getHasChild()).forEach(retain::push);
       menu.setChildren(children);
       menus.removeAll(children);
     }

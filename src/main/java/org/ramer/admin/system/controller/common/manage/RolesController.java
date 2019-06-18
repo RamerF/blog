@@ -25,7 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @Controller
 @PreAuthorize("hasAnyAuthority('global:read','roles:read')")
-@RequestMapping("/manage/roles")
+@RequestMapping("/manage/rolessss")
 @Api(tags = "管理端: 系统角色接口")
 @SuppressWarnings("UnusedDeclaration")
 public class RolesController {

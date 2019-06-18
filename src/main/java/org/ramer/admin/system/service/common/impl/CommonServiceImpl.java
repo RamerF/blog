@@ -279,7 +279,7 @@ public class CommonServiceImpl implements CommonService {
         .forEach(
             error ->
                 errorMsg
-                    .append("\n")
+                    .append("<br/>")
                     .append(
                         Objects.requireNonNull(error.getDefaultMessage())
                                 .contains("Failed to convert property")

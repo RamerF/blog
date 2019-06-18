@@ -9,6 +9,8 @@ import org.ramer.admin.system.service.BaseService;
 public interface RoleService extends BaseService<Role, RolePoJo> {
   Role create(Role role, List<Long> menuIds, List<Long> privilegeIds);
 
+  Role getByName(final String name);
+
   List<Role> listByManager(long managerId);
 
   List<String> listNameByManager(long managerId);

@@ -2,13 +2,16 @@ package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
+import org.ramer.admin.system.entity.Constant.Txt;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
+import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.entity.request.common.ManagerRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
@@ -139,7 +142,8 @@ public class ManagerController {
   }
 
   @GetMapping("/{id}/roles")
-  public String getRole(@PathVariable("id") String idStr, Map<String, Object> map) {
+  @ApiOperation("获取管理员角色")
+  public String getRoles(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
     final long id = TextUtil.validLong(idStr, -1);
     if (TextUtil.nonValidId(id)) {
       throw new CommonException("id 无效");
@@ -152,5 +156,27 @@ public class ManagerController {
     map.put(
         "withRoles", CollectionUtils.list(manager.getRoles(), AbstractEntity::getId, null, null));
     return "manage/manager/index::roles";
+  }
+
+  @PutMapping("/{id}/roles")
+  @ApiOperation("更新管理员角色")
+  public ResponseEntity<CommonResponse<Object>> updateRoles(
+      @PathVariable("id") String idStr,
+      @RequestParam("roleIds") List<Long> roleIds,
+      @ApiIgnore Map<String, Object> map) {
+    log.info(" ManagerController.getRole : [{},{}]", idStr, roleIds);
+    final long id = TextUtil.validLong(idStr, -1);
+    if (TextUtil.nonValidId(id)) {
+      throw new CommonException("id 无效");
+    }
+    final Manager manager = service.getById(id);
+    if (Objects.isNull(manager)) {
+      throw new CommonException("id 无效");
+    }
+    manager.setRoles(roleIds.stream().map(Role::of).collect(Collectors.toList()));
+    service.update(manager);
+    return manager.getId() > 0
+        ? CommonResponse.ok(manager.getId(), Txt.SUCCESS_EXEC_UPDATE)
+        : CommonResponse.fail(Txt.FAIL_EXEC_UPDATE);
   }
 }

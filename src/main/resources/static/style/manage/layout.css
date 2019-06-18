@@ -209,8 +209,16 @@ body {
 }
 
 /* fix dialog */
-.mdc-dialog__content {
-    white-space: pre-line;
+/*.mdc-dialog__content {*/
+/*    white-space: pre-line;*/
+/*}*/
+
+.mdc-non-visibility {
+    visibility: hidden;
+}
+
+.mdc-non-display {
+    display: none;
 }
 
 /* custom */

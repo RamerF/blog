@@ -478,6 +478,14 @@
       title: '提示',
       content: '提示内容',
       type: 1,
+      cancelBtn: {
+        show: true,
+        content: '取消'
+      },
+      confirmBtn: {
+        show: true,
+        content: '确定'
+      },
       cancelCallback: function() {
       },
       confirmCallback: function() {
@@ -488,7 +496,6 @@
     let _type = paras.type;
     let _cancelCallback = paras.cancelCallback;
     let _confirmCallback = paras.confirmCallback;
-    console.log(_content);
     let $container = $(`<div class="mdc-dialog"
       role="alertdialog"
       aria-modal="true"
@@ -552,7 +559,7 @@
 
   $.modal = function(msg, callback) {
     $.dialog($.extend({}, {
-      type: 3,
+      type: 2,
       content: msg,
       confirmCallback: callback
     }));
@@ -591,6 +598,15 @@
    */
   $.isEmpty = function(str) {
     return !$.nonEmpty(str);
+  };
+  /***
+   * 校验checkbox是否选中.
+   * @param selector input checkbox 选择器
+   * @returns {boolean}
+   */
+  $.checked = function(selector) {
+    return $(selector).prop('checked') ||
+           $(selector).prop('checked') === 'checked';
   };
   /***
    * 校验字符串是否为指定长度.
@@ -656,4 +672,5 @@
     }
     return pattern;
   };
+
 }));

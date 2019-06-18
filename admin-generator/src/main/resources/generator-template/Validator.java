@@ -1,5 +1,6 @@
 package ${basePath}${moduleName}.validator${subDir};
 
+import javax.annotation.Nonnull;
 import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
 import ${basePath}${moduleName}.entity.request${subDir}.${name}Request;
@@ -20,7 +21,7 @@ public class ${name}Validator implements Validator {
   }
 
   @Override
-  public void validate(final Object target, final Errors errors) {
+  public void validate(final Object target,@Nonnull final Errors errors) {
     ${name}Request ${alia} = (${name}Request) target;
     if (${alia} == null) {
       errors.rejectValue(null, "${alia}.null", "${description} 不能为空");

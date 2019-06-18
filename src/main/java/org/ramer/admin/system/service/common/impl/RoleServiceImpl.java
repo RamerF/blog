@@ -41,6 +41,11 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
+  public Role getByName(final String name) {
+    return repository.findByNameAndState(name, State.STATE_ON);
+  }
+
+  @Override
   public List<Role> listByManager(long managerId) {
     return repository.findByManager(managerId, State.STATE_ON);
   }

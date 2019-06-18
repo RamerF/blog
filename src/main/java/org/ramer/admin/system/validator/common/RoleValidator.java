@@ -1,8 +1,14 @@
 package org.ramer.admin.system.validator.common;
 
+import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Resource;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.entity.pojo.common.RolePoJo;
 import org.ramer.admin.system.entity.request.common.RoleRequest;
+import org.ramer.admin.system.service.common.RoleService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -11,6 +17,8 @@ import org.springframework.validation.Validator;
 /** @author ramer */
 @Component
 public class RoleValidator implements Validator {
+  @Resource private RoleService service;
+
   @Override
   public boolean supports(final Class<?> clazz) {
     return clazz.isAssignableFrom(Role.class)
@@ -19,15 +27,22 @@ public class RoleValidator implements Validator {
   }
 
   @Override
-  public void validate(final Object target, final Errors errors) {
-    final Role roles = (Role) target;
-    if (roles == null) {
-      errors.rejectValue("roles", "roles.null", "参数不能为空");
+  public void validate(final Object target, @Nonnull final Errors errors) {
+    RoleRequest role = (RoleRequest) target;
+    if (role == null) {
+      errors.rejectValue(null, "role.null", "角色 不能为空");
     } else {
-      if (StringUtils.isEmpty(roles.getName()) || roles.getName().length() > 20) {
-        errors.rejectValue("name", "roles.name.null", "名称 不能为空且小于20个字符");
+      if (StringUtils.isEmpty(role.getName()) || role.getName().length() > 20) {
+        errors.rejectValue("name", "roles.name.length", "名称 不能为空且小于20个字符");
+      } else if (Objects.nonNull(role.getId())
+          && Objects.equals(
+              role.getName(),
+              Optional.ofNullable(service.getByName(role.getName()))
+                  .map(AbstractEntity::getId)
+                  .orElse(null))) {
+        errors.rejectValue("name", "menu.remark.exist", "名称 已存在");
       }
-      String remark = roles.getRemark();
+      String remark = role.getRemark();
       if (!StringUtils.isEmpty(remark) && remark.length() > 100) {
         errors.rejectValue("remark", "menu.remark.length", "备注 不能超过100个字符");
       }

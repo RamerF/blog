@@ -109,4 +109,13 @@ public class ${name}Controller {
     log.info(" ${name}Controller.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
+
+  @DeleteMapping("/deleteBatch")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
+  @ApiOperation("删除角色批量")
+  public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
+    log.info(" ${name}Controller.deleteBatch : [{}]", ids);
+    return commonService.deleteBatch(service, ids);
+  }
 }

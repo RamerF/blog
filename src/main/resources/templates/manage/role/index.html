@@ -4,7 +4,7 @@
       xmlns:layout="http://www.thymeleaf.org"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
-    <title>管理员管理</title>
+    <title>角色管理</title>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -31,7 +31,7 @@
             <button class="mdc-button mdc-button--raised" id="refreshBtn">
                 <span class="mdc-button__label">刷新</span>
             </button>
-            <a class="mdc-button mdc-button--raised" th:href="@{/manage/manager}">
+            <a class="mdc-button mdc-button--raised" th:href="@{/manage/role}">
                 <span class="mdc-button__label">添加</span>
             </a>
             <button class="mdc-button mdc-button--raised" id="editBtn">
@@ -39,9 +39,6 @@
             </button>
             <button class="mdc-button mdc-button--raised" id="delBtn">
                 <span class="mdc-button__label">删除</span>
-            </button>
-            <button class="mdc-button mdc-button--raised" id="roleBtn">
-                <span class="mdc-button__label">角色配置</span>
             </button>
         </div>
     </div>
@@ -68,57 +65,27 @@
 <th:block layout:fragment="script">
     <script type="text/javascript">
       $(function() {
-        // 自动注册 data-mdc-auto-init 元素
-        mdc.autoInit();
         let mdcDataTable = $('#mdc-data-table').mdcDataTable({
-          url: '/manage/manager/page',
+          url: '/manage/role/page',
           queryParams: {},
           container: '#mdc-data-table',
           columns: [
             {
-              data: 'empNo'
-            },
-            {
               data: 'name'
             },
             {
-              data: 'genderDesc'
-            },
-            {
-              data: 'phone'
-            },
-            {
-              data: 'isActiveDesc'
-            },
-            {
-              data: 'rolesDesc'
+              data: 'remark'
             }
           ],
           thead: [
-            {
-              data: '工号',
-              style: 'mdc-data-table__cell--non-numeric'
-            },
             {
               data: '姓名',
               style: 'mdc-data-table__cell--non-numeric'
             },
             {
-              data: '性别',
+              data: '备注',
               style: 'mdc-data-table__cell--non-numeric'
             },
-            {
-              data: '电话',
-              style: 'mdc-data-table__cell--non-numeric'
-            },
-            {
-              data: '是否可用',
-              style: 'mdc-data-table__cell--non-numeric'
-            },
-            {
-              data: '角色',
-              style: 'mdc-data-table__cell--non-numeric'
-            }
           ],
           // 是否分页
           pagination: true,
@@ -141,7 +108,7 @@
             $.alert('请选择一条记录');
             return false;
           }
-          window.location.href = '/manage/manager/' + selectItems[0].id;
+          window.location.href = '/manage/role/' + selectItems[0].id;
         });
         $('#delBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
@@ -154,7 +121,7 @@
             selectItems.forEach(function(item) {
               ids.push(item.id);
             });
-            $.delete('/manage/manager/deleteBatch', {'ids': ids.toString()}, function(res) {
+            $.delete('/manage/role/deleteBatch', {'ids': ids.toString()}, function(res) {
               console.log(JSON.stringify(res));
               $.alert(res.msg);
               let delCount = selectItems.length;
@@ -162,33 +129,6 @@
             }, function(res) {
               console.log(JSON.stringify(res));
               $.alert(res.msg);
-            });
-          });
-        });
-        $('#roleBtn').click(function() {
-          let selectItems = mdcDataTable.getSelectItems();
-          if (selectItems.length < 1) {
-            $.alert('请至少选择一条记录');
-            return false;
-          }
-          let id = selectItems[0].id;
-          $('#roles').load('/manage/manager/' + id + '/roles', function() {
-            let html = $(this).html();
-            $(this).empty();
-            $(this).hide();
-            $.modal(html, function(dom) {
-              let roleIds = [];
-              $.each($(dom.target).find('.mdc-form-field'), function(index, item) {
-                let checkbox = $(item).find('input[id^=checkbox-]');
-                if ($.checked(checkbox)) {
-                  roleIds.push(checkbox.val());
-                }
-              });
-              $.put('/manage/manager/' + id + '/roles', {'roleIds': roleIds.toString()}, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  mdcDataTable.refresh();
-                }) : $.alert(res.msg);
-              });
             });
           });
         });

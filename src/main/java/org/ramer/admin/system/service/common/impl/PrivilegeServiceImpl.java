@@ -26,14 +26,14 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
   @Transactional
   @Override
-  public List<Privilege> create(final String expPrefix, final String remark) {
+  public List<Privilege> create(final String expPrefix, final String expName) {
     List<Privilege> privileges = new ArrayList<>();
     PrivilegeEnum.map()
         .forEach(
-            (name, remark2) -> {
+            (name, remark) -> {
               final Privilege p = new Privilege();
               p.setExp(expPrefix + ":" + name);
-              p.setRemark(remark + ":" + remark2);
+              p.setName(expName + ":" + remark);
               privileges.add(create(p));
             });
     return privileges;

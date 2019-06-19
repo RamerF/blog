@@ -1,20 +1,23 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
-import org.ramer.admin.system.entity.domain.common.Role;
+import org.ramer.admin.system.entity.Constant.Txt;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.entity.pojo.common.RolePoJo;
 import org.ramer.admin.system.entity.request.common.RoleRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
-import org.ramer.admin.system.entity.response.common.RoleResponse;
-import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.system.service.common.RoleService;
+import org.ramer.admin.system.entity.response.common.*;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.service.common.*;
+import org.ramer.admin.system.util.CollectionUtils;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.RoleValidator;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +37,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @SuppressWarnings("UnusedDeclaration")
 public class RoleController {
   @Resource private RoleService service;
+  @Resource private MenuService menuService;
   @Resource private CommonService commonService;
+  @Resource private PrivilegeService privilegeService;
   @Resource private RoleValidator validator;
 
   @InitBinder
@@ -120,7 +125,88 @@ public class RoleController {
   @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
   @ApiOperation("删除角色批量")
   public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
-    log.info(" ManagerController.deleteBatch : [{}]", ids);
+    log.info(" RoleController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
+  }
+
+  @GetMapping("/{id}/menus")
+  @ApiOperation("获取角色菜单")
+  public String getMenus(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
+    final long id = TextUtil.validLong(idStr, -1);
+    if (TextUtil.nonValidId(id)) {
+      throw new CommonException("id 无效");
+    }
+    final Role role = service.getById(id);
+    if (Objects.isNull(role)) {
+      throw new CommonException("id 无效");
+    }
+    map.put("menus", CollectionUtils.list(menuService.list(null), MenuResponse::of, null, null));
+    map.put("withMenus", CollectionUtils.list(role.getMenus(), AbstractEntity::getId, null, null));
+    return "manage/role/index::menus";
+  }
+
+  @GetMapping("/{id}/privileges")
+  @ApiOperation("获取角色权限")
+  public String getPrivileges(
+      @PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
+    final long id = TextUtil.validLong(idStr, -1);
+    if (TextUtil.nonValidId(id)) {
+      throw new CommonException("id 无效");
+    }
+    final Role role = service.getById(id);
+    if (Objects.isNull(role)) {
+      throw new CommonException("id 无效");
+    }
+    map.put(
+        "privileges",
+        CollectionUtils.list(privilegeService.list(null), PrivilegeResponse::of, null, null));
+    map.put(
+        "withPrivileges",
+        CollectionUtils.list(role.getPrivileges(), AbstractEntity::getId, null, null));
+    return "manage/role/index::privileges";
+  }
+
+  @PutMapping("/{id}/menus")
+  @ApiOperation("更新角色菜单")
+  public ResponseEntity<CommonResponse<Object>> updateMenus(
+      @PathVariable("id") String idStr,
+      @RequestParam("menuIds") List<Long> menuIds,
+      @ApiIgnore Map<String, Object> map) {
+    log.info(" RoleController.updateMenus : [{},{}]", idStr, menuIds);
+    final long id = TextUtil.validLong(idStr, -1);
+    if (TextUtil.nonValidId(id)) {
+      throw new CommonException("id 无效");
+    }
+    final Role role = service.getById(id);
+    if (Objects.isNull(role)) {
+      throw new CommonException("id 无效");
+    }
+    role.setMenus(menuIds.stream().map(Menu::of).collect(Collectors.toList()));
+    service.update(role);
+    return role.getId() > 0
+        ? CommonResponse.ok(role.getId(), Txt.SUCCESS_EXEC_UPDATE)
+        : CommonResponse.fail(Txt.FAIL_EXEC_UPDATE);
+  }
+
+  @PutMapping("/{id}/privileges")
+  @ApiOperation("更新角色权限")
+  public ResponseEntity<CommonResponse<Object>> updatePrivileges(
+      @PathVariable("id") String idStr,
+      @RequestParam("privilegeIds") List<Long> privilegeIds,
+      @ApiIgnore Map<String, Object> map) {
+    log.info(" RoleController.updatePrivileges : [{},{}]", idStr, privilegeIds);
+    final long id = TextUtil.validLong(idStr, -1);
+    if (TextUtil.nonValidId(id)) {
+      throw new CommonException("id 无效");
+    }
+    final Role role = service.getById(id);
+    if (Objects.isNull(role)) {
+      throw new CommonException("id 无效");
+    }
+    role.setPrivileges(privilegeIds.stream().map(Privilege::of).collect(Collectors.toList()));
+    service.update(role);
+    return role.getId() > 0
+        ? CommonResponse.ok(role.getId(), Txt.SUCCESS_EXEC_UPDATE)
+        : CommonResponse.fail(Txt.FAIL_EXEC_UPDATE);
   }
 }

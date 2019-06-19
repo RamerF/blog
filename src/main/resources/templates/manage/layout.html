@@ -44,8 +44,8 @@
 </div>
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
-            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
@@ -63,7 +63,7 @@
         new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
             (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
         // 链接跳转
-        $('h3[data-href]').click(function() {
+        $('aside li[data-href]').click(function() {
           window.location.href = this.dataset.href;
         });
         // TODO-WARN: 自动选择菜单

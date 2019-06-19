@@ -28,7 +28,7 @@ public class Role extends AbstractEntity {
 
   @ManyToMany
   @JoinTable
-  @OrderBy(value = "sort DESC")
+  @OrderBy(value = "sort_weight DESC")
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
   private List<Menu> menus;

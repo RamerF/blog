@@ -19,7 +19,7 @@ public class Privilege extends AbstractEntity {
   private String exp;
 
   @Column(length = 50, columnDefinition = "VARCHAR(50)")
-  private String remark;
+  private String name;
 
   public static Privilege of(long id) {
     final Privilege privilege = new Privilege();

@@ -1,7 +1,8 @@
 package org.ramer.admin.system.service.common.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,6 @@ import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.MenuRepository;
 import org.ramer.admin.system.service.common.MenuService;
 import org.ramer.admin.system.service.common.PrivilegeService;
-import org.ramer.admin.system.util.TextUtil;
-import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -39,38 +38,15 @@ public class MenuServiceImpl implements MenuService {
         .on(manager.roles.contains(role).and(manager.id.eq(managerId)))
         .where(menu.state.eq(State.STATE_ON).and(role.state.eq(State.STATE_ON)))
         .orderBy(menu.sortWeight.asc())
+        .distinct()
         .fetch();
   }
 
   @Transactional
   @Override
   public Menu create(Menu menu) {
-    textFilter(menu, menu);
-    privilegeService.create(menu.getAlia(), menu.getRemark());
+    privilegeService.create(menu.getAlia(), menu.getName());
     return repository.saveAndFlush(menu);
-  }
-
-  @Override
-  public long count() {
-    return repository.count();
-  }
-
-  @Override
-  public Menu getById(final long id) {
-    return repository.findById(id).orElse(null);
-  }
-
-  @Override
-  public List<Menu> list(final String criteria) {
-    return page(criteria, -1, -1).getContent();
-  }
-
-  @Override
-  public Page<Menu> page(final String criteria, final int page, final int size) {
-    final PageRequest pageable = pageRequest(page, size);
-    return pageable == null
-        ? new PageImpl<>(Collections.emptyList())
-        : repository.findAll(getSpec(criteria), pageable);
   }
 
   @Transactional
@@ -86,22 +62,6 @@ public class MenuServiceImpl implements MenuService {
               return repository.saveAndFlush(menu);
             })
         .orElse(null);
-  }
-
-  @Transactional
-  @Override
-  public synchronized void delete(long id) {
-    repository.deleteById(id);
-  }
-
-  @Override
-  public void textFilter(Menu trans, Menu filtered) {
-    filtered.setName(TextUtil.filter(trans.getName()));
-    filtered.setRemark(TextUtil.filter(trans.getRemark()));
-    if (!StringUtils.isEmpty(trans.getIcon())) {
-      filtered.setIcon(TextUtil.filter(trans.getIcon()));
-    }
-    filtered.setUrl(TextUtil.filter(trans.getUrl()));
   }
 
   @Override

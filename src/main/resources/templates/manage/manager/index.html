@@ -9,8 +9,8 @@
 <body>
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
-            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
@@ -52,8 +52,9 @@
                        class="mdc-checkbox__native-control"
                        th:id="${'checkbox-'+r.id}"
                        th:value="${r.id}"
-                       th:checked="${#lists.contains(withRoles,r.id)?'checked':'false'}"/>
+                       th:checked="${not #lists.isEmpty(withRoles) and #lists.contains(withRoles,r.id)?'checked':'false'}"/>
                 <div class="mdc-checkbox__background">
+                    <!--suppress ALL-->
                     <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
                         <path class="mdc-checkbox__checkmark-path" fill="none"
                               d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
@@ -70,6 +71,7 @@
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
+        // 表格初始化
         let mdcDataTable = $('#mdc-data-table').mdcDataTable({
           url: '/manage/manager/page',
           queryParams: {},
@@ -132,9 +134,11 @@
           callback: function() {
           }
         });
+        // 刷新
         $('#refreshBtn').click(function() {
           mdcDataTable.refresh();
         });
+        // 编辑
         $('#editBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length !== 1) {
@@ -143,6 +147,7 @@
           }
           window.location.href = '/manage/manager/' + selectItems[0].id;
         });
+        // 删除
         $('#delBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {
@@ -165,6 +170,7 @@
             });
           });
         });
+        // 角色配置
         $('#roleBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {

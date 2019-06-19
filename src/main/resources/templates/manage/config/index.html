@@ -9,8 +9,8 @@
 <body>
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
-            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
@@ -52,6 +52,7 @@
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
+        // 表格初始化
         let mdcDataTable = $('#mdc-data-table').mdcDataTable({
           url: '/manage/config/page',
           queryParams: {},
@@ -104,9 +105,11 @@
           callback: function() {
           }
         });
+        // 刷新
         $('#refreshBtn').click(function() {
           mdcDataTable.refresh();
         });
+        // 编辑
         $('#editBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length !== 1) {
@@ -115,6 +118,7 @@
           }
           window.location.href = '/manage/config/' + selectItems[0].id;
         });
+        // 删除
         $('#delBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {

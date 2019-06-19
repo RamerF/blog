@@ -19,7 +19,7 @@ public class PrivilegePoJo extends AbstractEntityPoJo {
 
   private String exp;
 
-  private String remark;
+  private String name;
 
   @Override
   @SuppressWarnings({"unchecked"})

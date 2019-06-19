@@ -164,7 +164,7 @@ public class ManagerController {
       @PathVariable("id") String idStr,
       @RequestParam("roleIds") List<Long> roleIds,
       @ApiIgnore Map<String, Object> map) {
-    log.info(" ManagerController.getRole : [{},{}]", idStr, roleIds);
+    log.info(" ManagerController.updateRoles : [{},{}]", idStr, roleIds);
     final long id = TextUtil.validLong(idStr, -1);
     if (TextUtil.nonValidId(id)) {
       throw new CommonException("id 无效");

@@ -9,8 +9,8 @@
 <body>
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':'mdc-list-item-fix'}">
-            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':'mdc-list-item-fix'}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
@@ -45,11 +45,4 @@
     </div>
 </div>
 </body>
-<th:block layout:fragment="script">
-    <script th:inline="javascript">
-      // <![CDATA[
-      var menus = /*[[${menus}]]*/;
-      // ]]>
-    </script>
-</th:block>
 </html>

@@ -36,7 +36,7 @@ public class ApplicationInit implements ApplicationRunner {
       // the access privileges for manage
       Privilege managePrivilege = new Privilege();
       managePrivilege.setExp(PrivilegeEnum.MANAGE.name.concat(":").concat(PrivilegeEnum.READ.name));
-      managePrivilege.setRemark(
+      managePrivilege.setName(
           PrivilegeEnum.MANAGE.remark.concat(":").concat(PrivilegeEnum.MANAGE.remark));
       privilegeService.create(managePrivilege);
       // the access privileges for super admin default
@@ -45,7 +45,7 @@ public class ApplicationInit implements ApplicationRunner {
       role.setRemark("超级管理员");
       Privilege globalPrivilege = new Privilege();
       globalPrivilege.setExp(PrivilegeEnum.GLOBAL.name.concat(":").concat(PrivilegeEnum.ALL.name));
-      globalPrivilege.setRemark(
+      globalPrivilege.setName(
           PrivilegeEnum.GLOBAL.remark.concat(":").concat(PrivilegeEnum.ALL.remark));
       List<Privilege> privileges = new ArrayList<>();
       privileges.add(globalPrivilege);
@@ -153,7 +153,7 @@ public class ApplicationInit implements ApplicationRunner {
       Privilege userPrivilege = new Privilege();
       // the access privileges for user default
       userPrivilege.setExp(PrivilegeEnum.USER.name.concat(":").concat(PrivilegeEnum.ALL.name));
-      userPrivilege.setRemark(
+      userPrivilege.setName(
           PrivilegeEnum.USER.remark.concat(":").concat(PrivilegeEnum.ALL.remark));
       privileges.add(userPrivilege);
       role.setPrivileges(privileges);

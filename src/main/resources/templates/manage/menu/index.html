@@ -9,8 +9,8 @@
 <body>
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
-            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
@@ -43,25 +43,12 @@
         </div>
     </div>
 </div>
-<!--@ApiModelProperty(value = "权限别名")-->
-<!--private String alia;-->
-<!--@ApiModelProperty(value = "链接地址")-->
-<!--private String url;-->
-<!--@ApiModelProperty(value = "排序")-->
-<!--private Integer sortWeight;-->
-<!--@ApiModelProperty(value = "图标")-->
-<!--private String icon;-->
-<!--@ApiModelProperty(value = "备注")-->
-<!--private String remark;-->
-<!--@ApiModelProperty(value = "上级id")-->
-<!--private Long parentId;-->
-<!--@ApiModelProperty(value = "是否有子菜单")-->
-<!--private Boolean hasChild = false;-->
 <th:block layout:fragment="script">
     <script type="text/javascript">
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
+        // 表格初始化
         let mdcDataTable = $('#mdc-data-table').mdcDataTable({
           url: '/manage/menu/page',
           queryParams: {},
@@ -117,9 +104,11 @@
           callback: function() {
           }
         });
+        // 刷新
         $('#refreshBtn').click(function() {
           mdcDataTable.refresh();
         });
+        // 编辑
         $('#editBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length !== 1) {
@@ -128,6 +117,7 @@
           }
           window.location.href = '/manage/menu/' + selectItems[0].id;
         });
+        // 删除
         $('#delBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {

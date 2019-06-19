@@ -1,13 +1,8 @@
 package org.ramer.admin.system.entity.response.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.Privilege;
-import org.ramer.admin.system.entity.pojo.common.PrivilegePoJo;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.common.Privilege;
 import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
@@ -24,7 +19,7 @@ public class PrivilegeResponse extends AbstractEntityResponse {
 
   private String exp;
 
-  private String remark;
+  private String name;
 
   public static PrivilegeResponse of(final Privilege privilege) {
     if (Objects.isNull(privilege)) {

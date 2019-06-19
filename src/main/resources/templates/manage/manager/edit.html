@@ -9,8 +9,8 @@
 <body>
 <th:block th:fragment="retrieveChild(children)">
     <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}">
-            <h3 class="mdc-list-group__subheader" th:attr="data-href=${c.url}">[[${c.name}]]</h3>
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
             <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
                 th:include="this::retrieveChild(${c.children})"></ul>
         </li>
@@ -207,8 +207,10 @@
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
       $(function() {
-        let id = /*[[${manager ne null ? manager.id:''}]]*/;
+        let id = [[${manager ne null ? manager.id:''}]];
+        // 初始化input计数器
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+        // 提交表单
         $('#editBtn').click(function() {
           let $form = $('#form');
           let data = {};

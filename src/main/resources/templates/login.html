@@ -62,7 +62,7 @@
           success: function(result) {
             if (result.result === true) {
               var url = [[${session.SPRING_SECURITY_SAVED_REQUEST == null ? null:session.SPRING_SECURITY_SAVED_REQUEST.redirectUrl}]];
-              window.location.href = url ? url : '/manage/index';
+              window.location.href = url && String(url) !== '/manage' ? url : '/manage/index';
             } else {
               layer.msg(result.msg);
             }
@@ -70,7 +70,7 @@
           },
           error: function(result) {
             layer.msg(result.responseJSON.msg);
-            if (result.status == 403) {
+            if (result.status === 403) {
               window.location.reload();
             }
             $($('form>input')[3]).removeAttr('disabled');
@@ -80,11 +80,7 @@
       });
     });
   });
-
-
 </script>
-
-
 <!-- 底部结束 -->
 </body>
 </html>

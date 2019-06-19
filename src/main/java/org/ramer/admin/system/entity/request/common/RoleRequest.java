@@ -1,7 +1,7 @@
 package org.ramer.admin.system.entity.request.common;
 
 import io.swagger.annotations.ApiModel;
-import java.util.List;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 
@@ -16,13 +16,9 @@ import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("角色")
 public class RoleRequest extends AbstractEntityRequest {
-
+  @ApiModelProperty(value = "名称")
   private String name;
 
+  @ApiModelProperty(value = "备注")
   private String remark;
-
-  private List<Long> menusIds;
-
-  private List<Long> privilegesIds;
-
 }

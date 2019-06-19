@@ -1,5 +1,6 @@
 package org.ramer.admin.system.service.common.impl;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleServiceImpl implements RoleService {
   @Resource private RoleRepository repository;
+  @Resource private JPAQueryFactory jpaQueryFactory;
 
   @Transactional
   @Override
@@ -47,12 +49,14 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public List<Role> listByManager(long managerId) {
-    return repository.findByManager(managerId, State.STATE_ON);
-  }
-
-  @Override
-  public List<String> listNameByManager(long managerId) {
-    return repository.findNameByManager(managerId, State.STATE_ON);
+    final QRole role = QRole.role;
+    final QManager manager = QManager.manager;
+    return jpaQueryFactory
+        .selectFrom(role)
+        .leftJoin(manager)
+        .on(manager.roles.contains(role).and(manager.id.eq(managerId)))
+        .where(role.state.eq(State.STATE_ON))
+        .fetch();
   }
 
   @Override

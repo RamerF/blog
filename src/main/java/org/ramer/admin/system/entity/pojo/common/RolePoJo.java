@@ -1,5 +1,6 @@
 package org.ramer.admin.system.entity.pojo.common;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
@@ -16,9 +17,10 @@ import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class RolePoJo extends AbstractEntityPoJo {
-
+  @ApiModelProperty(value = "名称")
   private String name;
 
+  @ApiModelProperty(value = "备注")
   private String remark;
 
   @Override

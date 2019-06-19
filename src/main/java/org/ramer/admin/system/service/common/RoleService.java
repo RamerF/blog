@@ -13,8 +13,6 @@ public interface RoleService extends BaseService<Role, RolePoJo> {
 
   List<Role> listByManager(long managerId);
 
-  List<String> listNameByManager(long managerId);
-
   List<Long> listMenuIds(Role role);
 
   Role update(Role roles, List<Long> menuIds, List<Long> privilegeIds);

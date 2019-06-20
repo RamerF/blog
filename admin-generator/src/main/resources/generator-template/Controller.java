@@ -1,27 +1,30 @@
- package $
+package ${basePath}${moduleName}.controller${subDir};
 
- import io.swagger.annotations.*;
- import javax.annotation.Resource;
- import javax.validation.Valid;
- import lombok.extern.slf4j.Slf4j;
- import org.springframework.security.access.prepost.PreAuthorize;
- import org.springframework.stereotype.Controller;
- import org.springframework.web.bind.annotation.*;
- import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.annotations.*;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import ${basePath}${moduleName}.entity.domain${subDir}.${name};
+import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
+import ${basePath}${moduleName}.entity.request${subDir}.${name}Request;
+import ${basePath}${moduleName}.entity.response${subDir}.${name}Response;
+import ${basePath}.system.entity.response.CommonResponse;
+import ${basePath}.system.service.common.CommonService;
+import ${basePath}${moduleName}.service${subDir}.${name}Service;
+import ${basePath}.system.util.TextUtil;
+import ${basePath}${moduleName}.validator${subDir}.${name}Validator;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
-{basePath}${moduleName}.controller${subDir};
-    {basePath}.system.entity.Constant.AccessPath;
-    {basePath}${moduleName}.entity.domain${subDir}.${name};
-    {basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
-    {basePath}${moduleName}.entity.request${subDir}.${name}Request;
-    {basePath}${moduleName}.entity.response${subDir}.${name}Response;
-    {basePath}.system.entity.response.CommonResponse;
-    {basePath}.system.service.common.CommonService;
-    {basePath}${moduleName}.service${subDir}.${name}Service;
-    {basePath}.system.util.TextUtil;
-    {basePath}${moduleName}.validator${subDir}.${name}Validator;
-
- @Slf4j
+@Slf4j
 @Controller("${alia}c")
 @PreAuthorize("hasAnyAuthority('global:read','${alia}:read')")
 @RequestMapping( "${subDirRequest}/${alia}")

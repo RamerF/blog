@@ -32,9 +32,9 @@ public class MenuServiceImpl implements MenuService {
     final QManager manager = QManager.manager;
     return jpaQueryFactory
         .selectFrom(menu)
-        .leftJoin(role)
+        .innerJoin(role)
         .on(role.menus.contains(menu))
-        .leftJoin(manager)
+        .innerJoin(manager)
         .on(manager.roles.contains(role).and(manager.id.eq(managerId)))
         .where(menu.state.eq(State.STATE_ON).and(role.state.eq(State.STATE_ON)))
         .orderBy(menu.sortWeight.asc())

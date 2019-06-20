@@ -4,6 +4,7 @@ import io.swagger.annotations.*;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
@@ -27,9 +28,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller
-@RequestMapping(AccessPath.MANAGE + "/manage/dataDict")
+@RequestMapping(AccessPath.MANAGE + "/dataDict")
 @PreAuthorize("hasAnyAuthority('global:read','dataDict:read')")
-@Api(tags = "管理端: 系统字典接口")
+@Api(tags = "管理端: 数据字典接口")
 @SuppressWarnings("UnusedDeclaration")
 public class DataDictController {
   @Resource private DataDictTypeService typeService;
@@ -44,7 +45,8 @@ public class DataDictController {
 
   @GetMapping("/index")
   @ApiOperation("数据字典页面")
-  public String index(@ApiIgnore Map<String, Object> map) {
+  public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
     map.put("types", typeService.list(null));
     return "manage/data_dict/index";
   }
@@ -65,12 +67,15 @@ public class DataDictController {
   @GetMapping
   @ApiOperation("添加数据字典页面")
   public String create(
-      @RequestParam(value = "typeCode", required = false) String typeCode,
+      @RequestParam(value = "typeId", required = false) String typeIdStr,
+      @ApiIgnore HttpSession session,
       @ApiIgnore Map<String, Object> map) {
-    if (typeCode == null) {
-      throw new CommonException(String.format("参数%s不能为空", "typeCode"));
+    final long typeId = TextUtil.validLong(typeIdStr, -1);
+    if (TextUtil.nonValidId(typeId)) {
+      throw new CommonException(String.format("参数[%s]不正确", "数据字典类型"));
     }
-    map.put("typeCode", typeCode);
+    commonService.writeMenuAndSiteInfo(session, map);
+    map.put("typeId", typeId);
     return "manage/data_dict/create";
   }
 

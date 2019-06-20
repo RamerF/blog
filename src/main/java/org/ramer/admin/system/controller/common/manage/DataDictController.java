@@ -1,18 +1,22 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
+import org.ramer.admin.system.entity.request.common.DataDictRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.common.DataDictResponse;
 import org.ramer.admin.system.exception.CommonException;
-import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.system.service.common.DataDictService;
+import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.DataDictValidator;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,11 +27,12 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller
-@RequestMapping("/manage/dataDict")
+@RequestMapping(AccessPath.MANAGE + "/manage/dataDict")
 @PreAuthorize("hasAnyAuthority('global:read','dataDict:read')")
 @Api(tags = "管理端: 系统字典接口")
 @SuppressWarnings("UnusedDeclaration")
 public class DataDictController {
+  @Resource private DataDictTypeService typeService;
   @Resource private DataDictService service;
   @Resource private CommonService commonService;
   @Resource private DataDictValidator validator;
@@ -39,34 +44,27 @@ public class DataDictController {
 
   @GetMapping("/index")
   @ApiOperation("数据字典页面")
-  String index(@ApiIgnore Map<String, Object> map) {
-    map.put("types", service.listType());
+  public String index(@ApiIgnore Map<String, Object> map) {
+    map.put("types", typeService.list(null));
     return "manage/data_dict/index";
   }
 
-  @GetMapping("/listType")
-  @ResponseBody
-  @ApiOperation("获取系统数据字典类型列表")
-  ResponseEntity listType() {
-    return CommonResponse.ok(service.listType());
-  }
-
-  @GetMapping("/list")
+  @GetMapping("/page")
   @ResponseBody
   @ApiOperation("根据数据字典类型获取数据字典列表")
-  ResponseEntity list(
+  public ResponseEntity<CommonResponse<PageImpl<DataDictResponse>>> list(
       @RequestParam(value = "typeCode", required = false) String code,
       @RequestParam(value = "page", required = false) String pageStr,
       @RequestParam(value = "size", required = false) String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
-    return CommonResponse.ok(
-        service.pageByTypeCode(code, criteria, pageAndSize[0], pageAndSize[1]));
+    return commonService.page(
+        service.page(code, criteria, pageAndSize[0], pageAndSize[1]), DataDictResponse::of);
   }
 
   @GetMapping
   @ApiOperation("添加数据字典页面")
-  String create(
+  public String create(
       @RequestParam(value = "typeCode", required = false) String typeCode,
       @ApiIgnore Map<String, Object> map) {
     if (typeCode == null) {
@@ -80,35 +78,21 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','dataDict:create')")
   @ApiOperation("添加数据字典")
-  ResponseEntity create(
-      @RequestParam(value = "typeCode", required = false) String typeCode,
-      @Valid DataDict dataDict,
-      BindingResult bindingResult)
-      throws Exception {
-    log.info(" DataDictController.create : [{},{}]", dataDict, typeCode);
-    if (typeCode == null) {
-      return CommonResponse.fail("字典类型code不能为空");
-    }
-    if (bindingResult.hasErrors()) {
-      StringBuilder errorMsg = new StringBuilder("提交信息有误: ");
-      bindingResult
-          .getAllErrors()
-          .forEach(error -> errorMsg.append("\n").append(error.getDefaultMessage()));
-      return CommonResponse.fail(errorMsg.toString());
-    }
-    return CommonResponse.ok(service.create(dataDict, typeCode));
+  public ResponseEntity<CommonResponse<Object>> create(
+      @Valid DataDictRequest dataDictRequest, @ApiIgnore BindingResult bindingResult) {
+    log.info(" DataDictController.create : [{}]", dataDictRequest);
+    return commonService.create(service, DataDict.class, dataDictRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新数据字典页面")
-  String update(
+  public String update(
       @PathVariable(value = "id") String idStr,
-      @RequestParam(value = "typeCode", required = false) String typeCode,
-      @ApiIgnore Map<String, Object> map)
-      throws Exception {
-    if (typeCode == null) {
-      throw new CommonException(String.format("参数%s不能为空", "typeCode"));
-    }
+      @RequestParam(value = "typeId", required = false) String typeIdStr,
+      @ApiIgnore Map<String, Object> map) {
+    //    if (typeCode == null) {
+    //      throw new CommonException(String.format("参数%s不能为空", "typeCode"));
+    //    }
     return commonService.update(
         service, DataDictPoJo.class, idStr, "manage/data_dict/update", map, "dataDict", null, true);
   }
@@ -117,12 +101,11 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','dataDict:write')")
   @ApiOperation("更新数据字典")
-  ResponseEntity update(
+  public ResponseEntity<CommonResponse<Object>> update(
       @PathVariable(value = "id") String idStr,
       @Valid DataDict dataDict,
-      BindingResult bindingResult)
-      throws Exception {
-    log.info(" ConfigController.update : [{}]", dataDict);
+      @ApiIgnore BindingResult bindingResult) {
+    log.info(" DataDictController.update : [{}]", dataDict);
     return commonService.update(service, dataDict, idStr, bindingResult);
   }
 
@@ -130,8 +113,17 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','dataDict:delete')")
   @ApiOperation("删除数据字典")
-  ResponseEntity delete(@PathVariable("id") String idStr) throws Exception {
-    log.info(" ConfigController.delete : [{}]", idStr);
+  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+    log.info(" DataDictController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
+  }
+
+  @DeleteMapping("/deleteBatch")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('global:delete','dataDict:delete')")
+  @ApiOperation("删除数据字典批量")
+  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+    log.info(" DataDictController.deleteBatch : [{}]", ids);
+    return commonService.deleteBatch(service, ids);
   }
 }

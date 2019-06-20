@@ -1,30 +1,34 @@
-package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.entity.pojo.common.DataDictTypePoJo;
 import org.ramer.admin.system.entity.request.common.DataDictTypeRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.entity.response.common.DataDictTypeResponse;
+import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.DataDictTypeService;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.DataDictTypeValidator;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
-@Controller("dataDictTypemc")
+@Controller("dataDictTypec")
 @PreAuthorize("hasAnyAuthority('global:read','dataDictType:read')")
-@RequestMapping("/common/dataDictType")
+@RequestMapping(AccessPath.MANAGE + "/dataDictType")
 @Api(tags = "管理端: 数据字典类型接口")
 @SuppressWarnings("UnusedDeclaration")
 public class DataDictTypeController {
@@ -40,14 +44,16 @@ public class DataDictTypeController {
   @GetMapping("/index")
   @ApiOperation("数据字典类型页面")
   public String index() {
-    return "dataDictType/index";
+    return "manage/data_dict_type/index";
   }
 
-  @GetMapping("/list")
+  @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取数据字典类型列表")
-  public ResponseEntity list(
-      @RequestParam(value = "page", required = false, defaultValue = "1") String pageStr,
+  public ResponseEntity<CommonResponse<PageImpl<DataDictTypeResponse>>> page(
+      @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
+          @RequestParam(value = "page", required = false, defaultValue = "1")
+          String pageStr,
       @RequestParam(value = "size", required = false, defaultValue = "10") String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
@@ -58,36 +64,39 @@ public class DataDictTypeController {
   @GetMapping
   @ApiOperation("添加数据字典类型页面")
   public String create() {
-    return "dataDictType/create";
+    return "manage/data_dict_type/create";
   }
 
   @PostMapping
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','dataDictType:create')")
   @ApiOperation("添加数据字典类型")
-  public ResponseEntity create(
-      @Valid DataDictTypeRequest dataDictTypeRequest, BindingResult bindingResult)
-      throws Exception {
+  public ResponseEntity<CommonResponse<Object>> create(
+      @Valid DataDictTypeRequest dataDictTypeRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" DataDictTypeController.create : [{}]", dataDictTypeRequest);
     return commonService.create(service, DataDictType.class, dataDictTypeRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新数据字典类型页面")
-  public String update(@PathVariable("id") String idStr, Map<String, Object> map) throws Exception {
+  public String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
     return commonService.update(
-        service, DataDictTypePoJo.class, idStr, "dataDictType/update", map, "dataDictType", null);
+        service,
+        DataDictTypePoJo.class,
+        idStr,
+        "manage/data_dict_type/update",
+        map,
+        "dataDictType");
   }
 
   @PutMapping("/{id}")
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','dataDictType:write')")
   @ApiOperation("更新数据字典类型")
-  public ResponseEntity update(
+  public ResponseEntity<CommonResponse<Object>> update(
       @PathVariable("id") String idStr,
       @Valid DataDictTypeRequest dataDictTypeRequest,
-      BindingResult bindingResult)
-      throws Exception {
+      @ApiIgnore BindingResult bindingResult) {
     log.info(" DataDictTypeController.update : [{}]", dataDictTypeRequest);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
@@ -102,8 +111,17 @@ public class DataDictTypeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','dataDictType:delete')")
   @ApiOperation("删除数据字典类型")
-  public ResponseEntity delete(@PathVariable("id") String idStr) throws Exception {
+  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" DataDictTypeController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
+  }
+
+  @DeleteMapping("/deleteBatch")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('global:delete','dataDictType:delete')")
+  @ApiOperation("删除数据字典类型批量")
+  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+    log.info(" DataDictTypeController.deleteBatch : [{}]", ids);
+    return commonService.deleteBatch(service, ids);
   }
 }

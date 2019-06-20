@@ -74,7 +74,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','menu:create')")
   @ApiOperation("添加菜单")
-  public ResponseEntity create(
+  public ResponseEntity<CommonResponse<Object>> create(
       @Valid MenuRequest menuRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" MenuController.create : [{}]", menuRequest);
     return commonService.create(service, Menu.class, menuRequest, bindingResult);
@@ -94,7 +94,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','menu:write')")
   @ApiOperation("更新菜单")
-  public ResponseEntity update(
+  public ResponseEntity<CommonResponse<Object>> update(
       @PathVariable("id") String idStr,
       @Valid MenuRequest menuRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -111,7 +111,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','menu:delete')")
   @ApiOperation("删除菜单")
-  public ResponseEntity delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" MenuController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -120,7 +120,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','menu:delete')")
   @ApiOperation("删除菜单批量")
-  public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" MenuController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

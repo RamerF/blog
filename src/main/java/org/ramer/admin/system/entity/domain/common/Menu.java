@@ -22,31 +22,37 @@ public class Menu extends AbstractEntity {
   /** 名称 */
   @Column(columnDefinition = "VARCHAR(25) COMMENT '名称'")
   private String name;
+
   /** 菜单别名,用于权限表达式 */
   @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '菜单别名,用于权限表达式'")
   private String alia;
+
   /** 地址 */
   @Column(columnDefinition = "VARCHAR(100) COMMENT '地址'")
   private String url;
+
   /** 排序权重 */
   @Column(columnDefinition = "TINYINT(4) COMMENT '排序权重'")
   @Builder.Default
   private Integer sortWeight = 0;
+
   /** ICON FONT 图标 */
   @Column(columnDefinition = "VARCHAR(25) DEFAULT 'people' COMMENT 'ICON FONT图标'")
   @Builder.Default
   private String icon = "people";
 
+  /** 备注 */
   @Column(columnDefinition = "VARCHAR(100) COMMENT '备注'")
   private String remark;
 
-  @Column(name = "parent_id")
-  private Long parentId;
-
-  /** 是否最终节点 */
+  /** 是否有子节点 */
   @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '是否有子节点'")
   @Builder.Default
   private Boolean hasChild = false;
+
+  /** 父级 */
+  @Column(name = "parent_id")
+  private Long parentId;
 
   @ManyToOne
   @JoinColumn(name = "parent_id", insertable = false, updatable = false)

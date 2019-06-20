@@ -1,13 +1,9 @@
 package org.ramer.admin.system.entity.request.common;
 
-import org.ramer.admin.system.entity.domain.common.DataDict;
-import org.ramer.admin.system.entity.request.AbstractEntityRequest;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.Date;
-import java.util.List;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 
 /**
  * 数据字典.
@@ -18,14 +14,17 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel("数据字典")
 public class DataDictRequest extends AbstractEntityRequest {
-
-  private String name;
-
+  @ApiModelProperty(value = "CODE")
   private String code;
 
+  @ApiModelProperty(value = "名称")
+  private String name;
+
+  @ApiModelProperty(value = "备注")
   private String remark;
 
+  @ApiModelProperty(value = "类型Id")
   private Long dataDictTypeId;
-
 }

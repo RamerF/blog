@@ -34,7 +34,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity create(S invoke, T entity, BindingResult bindingResult);
+      ResponseEntity<CommonResponse<Object>> create(S invoke, T entity, BindingResult bindingResult);
 
   /**
    * 跳转到更新页面.校验更新url正确性,写入POJO对象用于回显.
@@ -113,7 +113,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity update(S invoke, T entity, String idStr, BindingResult bindingResult);
+      ResponseEntity<CommonResponse<Object>> update(S invoke, T entity, String idStr, BindingResult bindingResult);
 
   /**
    * 创建.
@@ -130,7 +130,7 @@ public interface CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity create(
+      ResponseEntity<CommonResponse<Object>> create(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -153,7 +153,7 @@ public interface CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity update(
+      ResponseEntity<CommonResponse<Object>> update(
           final S invoke,
           Class<T> clazz,
           final R entity,

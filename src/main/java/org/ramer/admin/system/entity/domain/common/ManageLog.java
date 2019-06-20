@@ -14,14 +14,17 @@ import org.hibernate.annotations.Table;
 public class ManageLog extends AbstractEntity {
   public static final String TABLE_NAME = "manage_log";
 
-  @Column(length = 200, columnDefinition = "VARCHAR(200)")
+  /** 请求地址 */
+  @Column(length = 200, columnDefinition = "VARCHAR(200) COMMENT '请求地址'")
   private String url;
 
-  @OneToOne @JsonBackReference private Manager manager;
-
-  @Column(length = 20, columnDefinition = "VARCHAR(20)")
+  /** 请求IP */
+  @Column(length = 20, columnDefinition = "VARCHAR(20) COMMENT '请求IP'")
   private String ip;
 
-  @Column(columnDefinition = "TEXT")
+  /** 请求结果 */
+  @Column(columnDefinition = "TEXT COMMENT '请求结果'")
   private String result;
+
+  @OneToOne @JsonBackReference private Manager manager;
 }

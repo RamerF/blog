@@ -70,7 +70,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','${alia}:create')")
   @ApiOperation("添加${description}")
-  public ResponseEntity create(
+  public ResponseEntity<CommonResponse<Object>> create(
       @Valid ${name}Request ${alia}Request, @ApiIgnore BindingResult bindingResult) {
     log.info(" ${name}Controller.create : [{}]", ${alia}Request);
     return commonService.create(
@@ -92,7 +92,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','${alia}:write')")
   @ApiOperation("更新${description}")
-  public ResponseEntity update(
+  public ResponseEntity<CommonResponse<Object>> update(
       @PathVariable("id") String idStr,
       @Valid ${name}Request ${alia}Request,
       @ApiIgnore BindingResult bindingResult) {
@@ -110,7 +110,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
   @ApiOperation("删除${description}")
-  public ResponseEntity delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ${name}Controller.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -119,7 +119,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
   @ApiOperation("删除${description}批量")
-  public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ${name}Controller.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

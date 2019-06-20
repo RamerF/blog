@@ -1,6 +1,7 @@
 package ${basePath}${moduleName}.entity.request${subDir};
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}.system.entity.request.AbstractEntityRequest;
 import ${basePath}.system.entity.domain.AbstractEntity;

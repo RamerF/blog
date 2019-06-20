@@ -1,5 +1,7 @@
 package org.ramer.admin.system.entity.response.common;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
@@ -15,12 +17,16 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "数据字典类型")
 public class DataDictTypeResponse extends AbstractEntityResponse {
 
+  @ApiModelProperty(value = "CODE")
   private String code;
 
+  @ApiModelProperty(value = "名称")
   private String name;
 
+  @ApiModelProperty(value = "备注")
   private String remark;
 
   public static DataDictTypeResponse of(final DataDictType dataDictType) {

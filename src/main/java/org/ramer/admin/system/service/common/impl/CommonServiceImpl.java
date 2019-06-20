@@ -148,7 +148,8 @@ public class CommonServiceImpl implements CommonService {
 
   @Override
   public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity update(S invoke, T entity, String idStr, BindingResult bindingResult) {
+      ResponseEntity<CommonResponse<Object>> update(
+          S invoke, T entity, String idStr, BindingResult bindingResult) {
     final long id = TextUtil.validLong(idStr, 0);
     if (id < 1) {
       return CommonResponse.wrongFormat("id");
@@ -180,7 +181,7 @@ public class CommonServiceImpl implements CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity create(
+      ResponseEntity<CommonResponse<Object>> create(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -195,7 +196,7 @@ public class CommonServiceImpl implements CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity update(
+      ResponseEntity<CommonResponse<Object>> update(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -303,7 +304,7 @@ public class CommonServiceImpl implements CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity createOrUpdate(
+      ResponseEntity<CommonResponse<Object>> createOrUpdate(
           final S invoke,
           Class<T> clazz,
           final R entity,

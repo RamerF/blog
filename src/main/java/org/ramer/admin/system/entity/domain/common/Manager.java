@@ -19,29 +19,36 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 @EqualsAndHashCode(callSuper = true)
 public class Manager extends AbstractEntity {
   public static final String TABLE_NAME = "manager";
+
   /** 工号 */
   @Column(columnDefinition = "VARCHAR(25) NOT NULL COMMENT '工号'")
   private String empNo;
+
   /** 密码 */
   @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '密码'")
   private String password;
+
   /** 姓名 */
   @Column(columnDefinition = "VARCHAR(10) NOT NULL COMMENT '姓名'")
   private String name;
+
   /** 性别{@link Constant.Gender} */
   @Column(columnDefinition = "TINYINT(4) DEFAULT NULL COMMENT '性别'")
   private Integer gender;
+
   /** 联系电话 */
   @Column(columnDefinition = "VARCHAR(11) NOT NULL COMMENT '联系电话'")
   private String phone;
+
   /** 头图 */
   @Column(length = 50, columnDefinition = "VARCHAR(50) COMMENT '头像'")
   private String avatar;
+
   /** 审核状态 */
   @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '审核状态'")
   private Boolean isActive = false;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany
   @JoinTable
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)

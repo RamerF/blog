@@ -74,7 +74,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','config:create')")
   @ApiOperation("添加系统配置")
-  public ResponseEntity create(
+  public ResponseEntity<CommonResponse<Object>> create(
       @Valid ConfigRequest configRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" ConfigController.create : [{}]", configRequest);
     return commonService.create(service, Config.class, configRequest, bindingResult);
@@ -100,7 +100,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','config:write')")
   @ApiOperation("更新系统配置")
-  public ResponseEntity update(
+  public ResponseEntity<CommonResponse<Object>> update(
       @PathVariable("id") String idStr,
       @Valid ConfigRequest configRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -112,7 +112,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
   @ApiOperation("删除系统配置")
-  public ResponseEntity delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ConfigController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -121,7 +121,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
   @ApiOperation("删除系统配置批量")
-  public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ConfigController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

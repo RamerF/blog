@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DataDictTypeRepository extends BaseRepository<DataDictType, Long> {
-  DataDictType findByCode(String code);
+  DataDictType findByCodeAndState(final String code, final int state);
 }

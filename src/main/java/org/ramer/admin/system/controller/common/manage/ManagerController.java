@@ -81,7 +81,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','manager:create')")
   @ApiOperation("添加管理员")
-  public ResponseEntity create(
+  public ResponseEntity<CommonResponse<Object>> create(
       @Valid ManagerRequest managerRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" ManagerController.create : [{}]", managerRequest);
     managerRequest.setPassword(
@@ -111,7 +111,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','manager:write')")
   @ApiOperation("更新管理员")
-  public ResponseEntity update(
+  public ResponseEntity<CommonResponse<Object>> update(
       @PathVariable("id") String idStr,
       @Valid ManagerRequest managerRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -127,7 +127,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','manager:delete')")
   @ApiOperation("删除管理员")
-  public ResponseEntity delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ManagerController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -136,7 +136,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
   @ApiOperation("删除管理员批量")
-  public ResponseEntity deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ManagerController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

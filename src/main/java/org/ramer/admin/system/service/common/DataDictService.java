@@ -14,5 +14,5 @@ public interface DataDictService extends BaseService<DataDict, DataDictPoJo> {
 
   List<DataDict> listByTypeCode(String typeCode, String criteria);
 
-  Page<DataDict> page(String typeCode, String criteria, int page, int size);
+  Page<DataDict> page(final long typeId, final String criteria, int page, int size);
 }

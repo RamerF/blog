@@ -55,13 +55,17 @@ public class DataDictController {
   @ResponseBody
   @ApiOperation("根据数据字典类型获取数据字典列表")
   public ResponseEntity<CommonResponse<PageImpl<DataDictResponse>>> list(
-      @RequestParam(value = "typeCode", required = false) String code,
+      @RequestParam(value = "typeId", required = false) String typeIdStr,
       @RequestParam(value = "page", required = false) String pageStr,
       @RequestParam(value = "size", required = false) String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
+    final long typeId = TextUtil.validLong(typeIdStr, -1);
+    if (TextUtil.nonValidId(typeId)) {
+      return CommonResponse.invalid("数据字典分类");
+    }
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
     return commonService.page(
-        service.page(code, criteria, pageAndSize[0], pageAndSize[1]), DataDictResponse::of);
+        service.page(typeId, criteria, pageAndSize[0], pageAndSize[1]), DataDictResponse::of);
   }
 
   @GetMapping

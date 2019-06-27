@@ -85,7 +85,7 @@
     <logger name="jdbc.sqltiming" level="INFO">
         <appender-ref ref="sql"/>
     </logger>
-    <!--<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>-->
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
     <logger name="org.ramer.admin.system.interceptor.OperateLogInterceptor">
         <appender-ref ref="operate"/>
     </logger>

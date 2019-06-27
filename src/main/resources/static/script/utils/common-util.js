@@ -82,6 +82,7 @@
           ? ((totalElements / size) >>> 0)
           : ((totalElements / size) >>> 0) + 1;
       this.queryParams.page = page > fixTotalPage ? fixTotalPage : page;
+      $.extend(this.queryParams, queryParams);
       this.handler.pullData(this.queryParams, true);
     }
   }
@@ -128,10 +129,24 @@
       // 首页页码
       pageNumber: 1,
       editable: false,
-      success: function() {
+      dataHandler: res => {
+        /*return {
+         // 请求结果: true/false
+         result: res.result,
+         // 数据
+         content: res.data.content,
+         // 总页数
+         totalPages: res.data.totalPages,
+         // 总记录数
+         totalElements: res.data.totalElements,
+         // 当前页号,从1开始
+         page: Number(res.data.number + 1),
+         // 每页记录数
+         size: res.data.size
+         };*/
       },
-      error: function() {
-      }
+      success: () => {},
+      error: () => {}
     }, opts || {});
     let _url = paras.url;
     let _contentType = paras.contentType;
@@ -148,10 +163,11 @@
     // 可供下拉选择的每页大小,暂未实现
     let _pageList = paras.pageList;
     let _pageNumber = paras.pageNumber;
+    let _dataHandler = paras.dataHandler;
     let _successCallback = paras.success;
     let _errorCallback = paras.error;
     if (_url == null) {
-      console.error('请求地址不正确');
+      console.error('请求地址不能为空');
       return false;
     }
     let tableNode = $(
@@ -208,21 +224,22 @@
         type: _type,
         data: queryParams,
         contentType: _contentType,
-        success: function(page) {
-          if (page.result !== true) {
+        success: function(res) {
+          $.extend(res.data, _dataHandler(res) || {});
+          if ((res.data.result ? res.data.result : res.result) !== true) {
             console.error('拉取数据失败 !');
             return false;
           }
           // 总页数
-          pageInfo.totalPages = page.data.totalPages;
+          pageInfo.totalPages = res.data.totalPages;
           // 总记录数
-          pageInfo.totalElements = page.data.totalElements;
+          pageInfo.totalElements = res.data.totalElements;
           // 当前页号,从1开始
-          pageInfo.page = Number(page.data.number + 1);
+          pageInfo.page = Number(res.data.number + 1);
           // 每页记录数
-          pageInfo.size = page.data.size;
+          pageInfo.size = res.data.size;
           // 数据内容
-          dataList = page.data.content;
+          dataList = res.data.content;
           mdcDataTable.data = dataList;
           console.debug(dataList);
           appendData(pageInfo, refreshBtn);

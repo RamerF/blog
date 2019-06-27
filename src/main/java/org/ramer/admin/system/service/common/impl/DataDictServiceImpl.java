@@ -1,11 +1,13 @@
 package org.ramer.admin.system.service.common.impl;
 
-import java.util.Collections;
-import java.util.List;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.*;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.State;
-import org.ramer.admin.system.entity.domain.common.DataDict;
+import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.DataDictRepository;
@@ -19,6 +21,7 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Service
 public class DataDictServiceImpl implements DataDictService {
+  @Resource private JPAQueryFactory jpaQueryFactory;
   @Resource private DataDictRepository repository;
 
   @Override
@@ -37,15 +40,32 @@ public class DataDictServiceImpl implements DataDictService {
   }
 
   @Override
-  public Page<DataDict> page(String typeCode, String criteria, int page, int size) {
-    if (page < 1 || size < 0) {
-      return new PageImpl<>(Collections.emptyList());
+  public Page<DataDict> page(final long typeId, String criteria, int page, int size) {
+    final PageRequest pageable = pageRequest(page, size);
+    if (Objects.isNull(pageable)) {
+      new PageImpl<>(Collections.emptyList());
     }
-    return StringUtils.isEmpty(criteria)
-        ? repository.findByTypeCodeAndState(
-            typeCode, State.STATE_ON, PageRequest.of(page - 1, size))
-        : repository.findByTypeCodeAndState(
-            typeCode, "%" + criteria + "%", State.STATE_ON, PageRequest.of(page - 1, size));
+    final QDataDict dataDict = QDataDict.dataDict;
+    final QDataDictType dataDictType = QDataDictType.dataDictType;
+    BooleanExpression expression = dataDict.state.eq(State.STATE_ON);
+    final JPAQuery<DataDict> query =
+        jpaQueryFactory
+            .selectFrom(dataDict)
+            .innerJoin(dataDictType)
+            .on(
+                dataDictType
+                    .id
+                    .eq(dataDict.dataDictTypeId)
+                    .and(dataDictType.id.eq(typeId))
+                    .and(dataDictType.state.eq(State.STATE_ON)))
+            .offset(page - 1)
+            .limit(page * size);
+    if (!StringUtils.isEmpty(criteria)) {
+      expression =
+          expression.or(dataDict.code.contains(criteria)).or(dataDict.name.contains(criteria));
+    }
+    query.where(expression);
+    return new PageImpl<>(query.fetch(), pageable, query.fetchCount());
   }
 
   @Override

@@ -5,6 +5,11 @@
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>系统配置配置</title>
+    <style>
+        .select-type {
+            width: 400px;
+        }
+    </style>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -30,26 +35,23 @@
             <!--            <i class="material-icons mdc-button__icon" aria-hidden="true">search</i>-->
             <!--            <span class="mdc-button__label">搜索</span>-->
             <!--        </button>-->
-            <!--字典类型-->
-            <div class="mdc-select demo-width-class">
+            <!--字典分类-->
+            <div class="mdc-select select-type">
                 <input type="hidden" name="enhanced-select">
                 <i class="mdc-select__dropdown-icon"></i>
-                <div class="mdc-select__selected-text">Vegetables</div>
-                <div class="mdc-select__menu demo-width-class mdc-menu mdc-menu-surface">
+                <!-- 预选第一个 -->
+                <div class="mdc-select__selected-text"
+                     th:text="${not #lists.isEmpty(types)?types.get(0).name:''}"
+                     th:data-value="${not #lists.isEmpty(types)?types.get(0).id:''}"></div>
+                <div class="mdc-select__menu mdc-menu mdc-menu-surface select-type">
                     <ul class="mdc-list">
-                        <li class="mdc-list-item" data-value=""></li>
-                        <li class="mdc-list-item" data-value="grains">
-                            Bread, Cereal, Rice, and Pasta
-                        </li>
-                        <li class="mdc-list-item mdc-list-item--selected" data-value="vegetables" aria-selected="true">
-                            Vegetables
-                        </li>
-                        <li class="mdc-list-item" data-value="fruit">
-                            Fruit
-                        </li>
+                        <li th:each="type,stat:${types}"
+                            th:class="|mdc-list-item${stat.index eq 0 ? ' mdc-list-item--selected':''}|"
+                            th:data-value="${type.id}"
+                            th:text="${type.name}"></li>
                     </ul>
                 </div>
-                <span class="mdc-floating-label mdc-floating-label--float-above">Pick a Food Group</span>
+                <span class="mdc-floating-label mdc-floating-label--float-above">请选择分类</span>
                 <div class="mdc-line-ripple"></div>
             </div>
         </div>
@@ -74,6 +76,13 @@
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
+        const select = new mdc.select.MDCSelect(document.querySelector('.mdc-select'));
+        // 下拉选中更新表格
+        select.listen('MDCSelect:change', () => {
+          mdcDataTable.refresh({
+            typeId: select.value
+          });
+        });
         // 表格初始化
         let mdcDataTable = $('#mdc-data-table').mdcDataTable({
           url: '/manage/dataDict/page',
@@ -124,6 +133,23 @@
           // 首页页码
           pageNumber: 1,
           editable: false,
+          dataHandler: function(res) {
+            console.table(res);
+            return {
+              // 请求结果: true/false
+              result: res.result,
+              // 数据
+              content: res.data.content,
+              // 总页数
+              totalPages: res.data.totalPages,
+              // 总记录数
+              totalElements: res.data.totalElements,
+              // 当前页号,从1开始
+              page: Number(res.data.number + 1),
+              // 每页记录数
+              size: res.data.size
+            };
+          },
           callback: function() {
           }
         });

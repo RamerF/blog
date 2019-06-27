@@ -120,9 +120,27 @@
       dataType: 'json',
       contentType: 'application/x-www-form-urlencoded',
       // container: '#mdc-data-table',
-      columns: [],
+      columns: [
+        /*{
+         // 字段名
+         data: 'name',
+         // 重新渲染值: val: 当前值,data: 所有数据
+         render: (val,data)=>{},
+         // 是否可编辑
+         editable: true/false
+         }*/
+      ],
       check: true,
-      thead: [{}],
+      thead: [
+        /*{
+         // 表头名称
+         data: '表头',
+         // 自定义样式: 默认数字样式,右贴靠,添加mdc-data-table__cell--non-numeric表示非数字
+         style: 'mdc-data-table__cell--non-numeric'
+         // 列宽
+         width: '60px'
+         },*/
+      ],
       pageSize: 2,
       // 设置页面可以显示的数据条数
       pageList: [5, 10, 15, 20],
@@ -428,7 +446,7 @@
                 ? '-'
                 : val;
             if (typeof (_col.render) != 'undefined') {
-              td = $(`<td>${_col.render(val)}</td>`);
+              td = $(`<td>${_col.render(val, data)}</td>`);
             } else {
               if (typeof (editable) != 'undefined' && editable === true) {
                 td = $(

@@ -4,7 +4,7 @@
       xmlns:layout="http://www.thymeleaf.org"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
-    <title>添加系统配置</title>
+    <title>添加数据字典</title>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -24,11 +24,30 @@
                    id="_csrf"
                    th:value="${_csrf.token}"/>
             <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">
-                [[${config ne null?'修改':'添加'}]]参数配置
+                [[${dataDict ne null?'修改':'添加'}]]数据字典
             </h2>
             <div class="mdc-layout-grid__inner mdc-panel__margin-16 mdc-form-field">
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6" tabindex="0">
+                    <!--字典分类-->
+                    <div class="mdc-select select-type">
+                        <input type="hidden" name="enhanced-select">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <!-- 预选第一个 -->
+                        <div class="mdc-select__selected-text"
+                             th:text="${not #lists.isEmpty(types)?types.get(0).name:''}"
+                             th:data-value="${not #lists.isEmpty(types)?types.get(0).id:''}"></div>
+                        <div class="mdc-select__menu mdc-menu mdc-menu-surface select-type">
+                            <ul class="mdc-list">
+                                <li th:each="type,stat:${types}"
+                                    th:class="|mdc-list-item${stat.index eq 0 ? ' mdc-list-item--selected':''}|"
+                                    th:data-value="${type.id}"
+                                    th:text="${type.name}"></li>
+                            </ul>
+                        </div>
+                        <span class="mdc-floating-label mdc-floating-label--float-above">请选择分类</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
                     <!--CODE-->
                     <div class="text-field-container mdc-panel__margin-16">
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
@@ -40,7 +59,7 @@
                                    data-validtip="CODE不能为空,且小于20个字符"
                                    autocomplete="off"
                                    placeholder="请输入CODE"
-                                   th:value="${config ne null?config.code:''}">
+                                   th:value="${dataDict ne null?dataDict.code:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
@@ -65,7 +84,7 @@
                                    data-validtip="名称不能为空,且小于20个字符"
                                    autocomplete="off"
                                    placeholder="请输入名称"
-                                   th:value="${config ne null?config.name:''}">
+                                   th:value="${dataDict ne null?dataDict.name:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
@@ -80,29 +99,6 @@
                             <div class="mdc-text-field-character-counter">0 / 20</div>
                         </div>
                     </div>
-                    <!--值-->
-                    <div class="mdc-panel__margin-16">
-                        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                             data-mdc-auto-init="MDCTextField">
-                            <input type="text" id="valInput" name="value" class="mdc-text-field__input"
-                                   maxlength="100"
-                                   autocomplete="off"
-                                   placeholder="请输入值"
-                                   th:value="${config ne null?config.value:''}">
-                            <div class="mdc-notched-outline">
-                                <div class="mdc-notched-outline__leading"></div>
-                                <div class="mdc-notched-outline__notch">
-                                    <label for="valInput" class="mdc-floating-label">值</label>
-                                </div>
-                                <div class="mdc-notched-outline__trailing"></div>
-                            </div>
-                        </div>
-                        <div class="mdc-text-field-helper-line">
-                            <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                                *必填</p>
-                            <div class="mdc-text-field-character-counter">0 / 100</div>
-                        </div>
-                    </div>
                     <!--备注-->
                     <div class="mdc-panel__margin-16">
                         <div class="mdc-text-field mdc-text-field--textarea mdc-text-field-row"
@@ -112,8 +108,8 @@
                                       class="mdc-text-field__input"
                                       rows="4" cols="40"
                                       maxlength="250" placeholder="请输入备注"
-                                      th:text="${config ne null?config.remark:''}"
-                                      th:value="${config ne null?config.remark:''}"></textarea>
+                                      th:text="${dataDict ne null?dataDict.remark:''}"
+                                      th:value="${dataDict ne null?dataDict.remark:''}"></textarea>
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
@@ -125,7 +121,7 @@
                     </div>
                     <!--操作-->
                     <div class="mdc-layout-grid__inner mdc-card__action-buttons">
-                        <a href="/manage/config/index"
+                        <a href="/manage/dataDict/index"
                            class="mdc-button mdc-layout-grid__cell mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop  mdc-card__action mdc-button--raised mdc-ripple-upgraded">
                             返回
                         </a>
@@ -133,7 +129,7 @@
                         <button id="editBtn"
                                 class="mdc-button mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded"
                                 th:inline="text">
-                            [[${config eq null ? '添加':'更新'}]]
+                            [[${dataDict eq null ? '添加':'更新'}]]
                         </button>
                     </div>
                 </div>
@@ -144,7 +140,8 @@
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
       $(function() {
-        let id = [[${config ne null ? config.id:''}]];
+        let id = [[${dataDict ne null ? dataDict.id:''}]];
+        new mdc.select.MDCSelect(document.querySelector('.mdc-select'));
         // 初始化input计数器
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
         // 提交表单
@@ -171,13 +168,13 @@
           }
           console.log(JSON.stringify(data));
           id > 0 ?
-              $.put('/manage/config/' + id, data, function(res) {
+              $.put('/manage/dataDict/' + id, data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/config/index';
+                  window.location.href = '/manage/dataDict/index';
                 }) : $.alert(res.msg);
-              }) : $.post('/manage/config', data, function(res) {
+              }) : $.post('/manage/dataDict', data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/config/index';
+                  window.location.href = '/manage/dataDict/index';
                 }) : $.alert(res.msg);
               });
           return false;

@@ -56,10 +56,12 @@ public class DataDictServiceImpl implements DataDictService {
                 dataDictType
                     .id
                     .eq(dataDict.dataDictTypeId)
-                    .and(dataDictType.id.eq(typeId))
                     .and(dataDictType.state.eq(State.STATE_ON)))
             .offset(page - 1)
             .limit(page * size);
+    if (typeId != -1) {
+      expression = expression.and(dataDictType.id.eq(typeId));
+    }
     if (!StringUtils.isEmpty(criteria)) {
       expression =
           expression.or(dataDict.code.contains(criteria)).or(dataDict.name.contains(criteria));

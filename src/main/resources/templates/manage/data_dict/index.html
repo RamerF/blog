@@ -40,13 +40,12 @@
                 <input type="hidden" name="enhanced-select">
                 <i class="mdc-select__dropdown-icon"></i>
                 <!-- 预选第一个 -->
-                <div class="mdc-select__selected-text"
-                     th:text="${not #lists.isEmpty(types)?types.get(0).name:''}"
-                     th:data-value="${not #lists.isEmpty(types)?types.get(0).id:''}"></div>
+                <div class="mdc-select__selected-text" data-value="-1">全部</div>
                 <div class="mdc-select__menu mdc-menu mdc-menu-surface select-type">
                     <ul class="mdc-list">
-                        <li th:each="type,stat:${types}"
-                            th:class="|mdc-list-item${stat.index eq 0 ? ' mdc-list-item--selected':''}|"
+                        <li class="mdc-list-item mdc-list-item--selected" data-value="-1">全部</li>
+                        <li class="mdc-list-item"
+                            th:each="type,stat:${types}"
                             th:data-value="${type.id}"
                             th:text="${type.name}"></li>
                     </ul>
@@ -96,7 +95,7 @@
               data: 'name'
             },
             {
-              data: 'value'
+              data: 'dataDictTypeName'
             },
             {
               data: 'remark'
@@ -114,7 +113,7 @@
               // width: '60px'
             },
             {
-              data: '参数值',
+              data: '分类',
               style: 'mdc-data-table__cell--non-numeric'
               // width: '60px'
             },
@@ -133,23 +132,6 @@
           // 首页页码
           pageNumber: 1,
           editable: false,
-          dataHandler: function(res) {
-            console.table(res);
-            return {
-              // 请求结果: true/false
-              result: res.result,
-              // 数据
-              content: res.data.content,
-              // 总页数
-              totalPages: res.data.totalPages,
-              // 总记录数
-              totalElements: res.data.totalElements,
-              // 当前页号,从1开始
-              page: Number(res.data.number + 1),
-              // 每页记录数
-              size: res.data.size
-            };
-          },
           callback: function() {
           }
         });

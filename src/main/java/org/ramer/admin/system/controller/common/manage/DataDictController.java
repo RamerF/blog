@@ -13,7 +13,6 @@ import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
 import org.ramer.admin.system.entity.request.common.DataDictRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.entity.response.common.DataDictResponse;
-import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.DataDictValidator;
@@ -60,9 +59,6 @@ public class DataDictController {
       @RequestParam(value = "size", required = false) String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
     final long typeId = TextUtil.validLong(typeIdStr, -1);
-    if (TextUtil.nonValidId(typeId)) {
-      return CommonResponse.invalid("数据字典分类");
-    }
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
     return commonService.page(
         service.page(typeId, criteria, pageAndSize[0], pageAndSize[1]), DataDictResponse::of);
@@ -70,17 +66,10 @@ public class DataDictController {
 
   @GetMapping
   @ApiOperation("添加数据字典页面")
-  public String create(
-      @RequestParam(value = "typeId", required = false) String typeIdStr,
-      @ApiIgnore HttpSession session,
-      @ApiIgnore Map<String, Object> map) {
-    final long typeId = TextUtil.validLong(typeIdStr, -1);
-    if (TextUtil.nonValidId(typeId)) {
-      throw new CommonException(String.format("参数[%s]不正确", "数据字典类型"));
-    }
+  public String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
-    map.put("typeId", typeId);
-    return "manage/data_dict/create";
+    map.put("types", typeService.list(null));
+    return "manage/data_dict/edit";
   }
 
   @PostMapping

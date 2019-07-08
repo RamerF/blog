@@ -1,5 +1,7 @@
 package org.ramer.admin.system.entity.response.common;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.Privilege;
@@ -15,10 +17,13 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "权限")
 public class PrivilegeResponse extends AbstractEntityResponse {
 
+  @ApiModelProperty(value = "权限表达式,class前缀:(read|create|write|delete)", example = "manager:read")
   private String exp;
 
+  @ApiModelProperty(value = "名称")
   private String name;
 
   public static PrivilegeResponse of(final Privilege privilege) {
@@ -26,7 +31,6 @@ public class PrivilegeResponse extends AbstractEntityResponse {
       return null;
     }
     PrivilegeResponse poJo = new PrivilegeResponse();
-    // TODO-WARN:  将 Domain 对象转换成 Response 对象
     BeanUtils.copyProperties(privilege, poJo);
     return poJo;
   }

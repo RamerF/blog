@@ -23,10 +23,6 @@ public class Menu extends AbstractEntity {
   @Column(columnDefinition = "VARCHAR(25) COMMENT '名称'")
   private String name;
 
-  /** 菜单别名,用于权限表达式 */
-  @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '菜单别名,用于权限表达式'")
-  private String alia;
-
   /** 地址 */
   @Column(columnDefinition = "VARCHAR(100) COMMENT '地址'")
   private String url;

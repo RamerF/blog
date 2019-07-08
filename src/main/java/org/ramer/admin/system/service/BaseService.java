@@ -15,6 +15,7 @@ import org.ramer.admin.system.repository.BaseRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,6 +29,15 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
   default T create(T t) throws RuntimeException {
     textFilter(t, t);
     return getRepository().saveAndFlush(t);
+  }
+
+  @Transactional
+  default List<T> createBatch(List<T> ts) throws RuntimeException {
+    if (CollectionUtils.isEmpty(ts)) {
+      return Collections.emptyList();
+    }
+    ts.forEach(t -> textFilter(t, t));
+    return getRepository().saveAll(ts);
   }
 
   /**

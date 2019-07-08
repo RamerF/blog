@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org"
+      layout:decorate="~{manage/layout}" lang="zh">
+<head>
+    <title>管理员管理</title>
+</head>
+<body>
+<th:block th:fragment="retrieveChild(children)">
+    <th:block th:each="c:${children}">
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
+            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
+                th:include="this::retrieveChild(${c.children})"></ul>
+        </li>
+    </th:block>
+</th:block>
+<div layout:fragment="main-container" class="main-container">
+    <div id="mdc-data-table" class="mdc-data-table__container">
+        <div class="search-container">
+            <div class="mdc-text-field mdc-text-field--fullwidth mdc-text-field--with-trailing-icon"
+                 data-mdc-auto-init="MDCTextField">
+                <input type="text" id="name" class="mdc-text-field__input" placeholder="请输入参数Code或名称"
+                       autocomplete="off">
+                <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">search</i>
+                <div class="mdc-line-ripple"></div>
+            </div>
+        </div>
+        <div class="operator-container">
+            <button class="mdc-button mdc-button--raised" id="refreshBtn">
+                <span class="mdc-button__label">刷新</span>
+            </button>
+            <a class="mdc-button mdc-button--raised" th:href="@{/manage/privilege}">
+                <span class="mdc-button__label">添加</span>
+            </a>
+            <button class="mdc-button mdc-button--raised" id="editBtn">
+                <span class="mdc-button__label">编辑</span>
+            </button>
+            <button class="mdc-button mdc-button--raised" id="delBtn">
+                <span class="mdc-button__label">删除</span>
+            </button>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+      $(function() {
+        // 自动注册 data-mdc-auto-init 元素
+        mdc.autoInit();
+        // 表格初始化
+        let mdcDataTable = $('#mdc-data-table').mdcDataTable({
+          url: '/manage/privilege/page',
+          queryParams: {},
+          container: '#mdc-data-table',
+          columns: [
+            {
+              data: 'name'
+            },
+            {
+              data: 'exp'
+            },
+          ],
+          thead: [
+            {
+              data: '名称',
+              style: 'mdc-data-table__cell--non-numeric'
+            },
+            {
+              data: '表达式',
+              style: 'mdc-data-table__cell--non-numeric'
+            }
+          ],
+          // 是否分页
+          pagination: true,
+          // 页面数据条数
+          pageSize: 5,
+          // 设置页面可以显示的数据条数
+          pageList: [5, 10, 15, 20],
+          // 首页页码
+          pageNumber: 1,
+          editable: false,
+          callback: function() {
+          }
+        });
+        // 刷新
+        $('#refreshBtn').click(function() {
+          mdcDataTable.refresh();
+        });
+        // 编辑
+        $('#editBtn').click(function() {
+          let selectItems = mdcDataTable.getSelectItems();
+          if (selectItems.length !== 1) {
+            $.alert('请选择一条记录');
+            return false;
+          }
+          window.location.href = '/manage/privilege/' + selectItems[0].id;
+        });
+        // 删除
+        $('#delBtn').click(function() {
+          let selectItems = mdcDataTable.getSelectItems();
+          if (selectItems.length < 1) {
+            $.alert('请至少选择一条记录');
+            return false;
+          }
+          $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
+            let ids = [];
+            selectItems.forEach(function(item) {
+              ids.push(item.id);
+            });
+            $.delete('/manage/privilege/deleteBatch', {'ids': ids.toString()}, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+              let delCount = selectItems.length;
+              mdcDataTable.refresh({}, delCount);
+            }, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+            });
+          });
+        });
+      });
+    </script>
+</th:block>
+</body>
+</html>

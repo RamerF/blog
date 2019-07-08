@@ -81,57 +81,60 @@ public class ApplicationInit implements ApplicationRunner {
 
         // init menu
         Menu systemMenu =
-            menuService.create(
-                Menu.builder().hasChild(false).name("系统").sortWeight(100).alia("system").build());
+            menuService.create(Menu.builder().hasChild(true).name("系统").sortWeight(100).build());
         Menu configMenu =
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .hasChild(true)
+                    .hasChild(false)
                     .name("参数配置")
                     .url("/manage/config/index")
-                    .alia("config")
-                    .sortWeight(1)
+                    .sortWeight(5)
                     .build());
         Menu dataDictMenu =
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .hasChild(true)
+                    .hasChild(false)
                     .name("数据字典")
                     .url("/manage/dataDict/index")
-                    .alia("dataDict")
-                    .sortWeight(2)
+                    .sortWeight(10)
                     .build());
         Menu managerMenu =
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .hasChild(true)
+                    .hasChild(false)
                     .name("管理员管理")
                     .url("/manage/manager/index")
-                    .alia("manager")
-                    .sortWeight(3)
+                    .sortWeight(15)
                     .build());
-        Menu rolesMenu =
+        Menu roleMenu =
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .hasChild(true)
+                    .hasChild(false)
                     .name("角色管理")
                     .url("/manage/role/index")
-                    .alia("role")
-                    .sortWeight(4)
+                    .sortWeight(20)
+                    .build());
+        Menu privilegeMenu =
+            menuService.create(
+                Menu.builder()
+                    .parentId(systemMenu.getId())
+                    .hasChild(false)
+                    .name("权限管理")
+                    .url("/manage/privilege/index")
+                    .sortWeight(25)
                     .build());
         Menu menuMenu =
             menuService.create(
                 Menu.builder()
                     .parentId(systemMenu.getId())
-                    .hasChild(true)
+                    .hasChild(false)
                     .name("菜单管理")
                     .url("/manage/menu/index")
-                    .alia("menu")
-                    .sortWeight(5)
+                    .sortWeight(30)
                     .build());
         // init role menu
         ArrayList<Menu> menus = new ArrayList<>();
@@ -139,7 +142,8 @@ public class ApplicationInit implements ApplicationRunner {
         menus.add(configMenu);
         menus.add(dataDictMenu);
         menus.add(managerMenu);
-        menus.add(rolesMenu);
+        menus.add(roleMenu);
+        menus.add(privilegeMenu);
         menus.add(menuMenu);
         Role superAdmin = rolesService.getById(1);
         superAdmin.setMenus(menus);
@@ -153,8 +157,7 @@ public class ApplicationInit implements ApplicationRunner {
       Privilege userPrivilege = new Privilege();
       // the access privileges for user default
       userPrivilege.setExp(PrivilegeEnum.USER.name.concat(":").concat(PrivilegeEnum.ALL.name));
-      userPrivilege.setName(
-          PrivilegeEnum.USER.remark.concat(":").concat(PrivilegeEnum.ALL.remark));
+      userPrivilege.setName(PrivilegeEnum.USER.remark.concat(":").concat(PrivilegeEnum.ALL.remark));
       privileges.add(userPrivilege);
       role.setPrivileges(privileges);
       privilegeService.createBatch(privileges);

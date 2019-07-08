@@ -63,7 +63,7 @@ public class ${name}Controller {
   @GetMapping
   @ApiOperation("添加${description}页面")
   public String create() {
-    return "${alia}/create";
+    return "${alia}/edit";
   }
 
   @PostMapping
@@ -84,7 +84,7 @@ public class ${name}Controller {
         service,
         ${name}PoJo.class,
         idStr,
-        "${alia}/update",
+        "${alia}/edit",
         map, "${alia}");
   }
 

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org"
+      layout:decorate="~{manage/layout}" lang="zh">
+<head>
+    <title>添加菜单</title>
+</head>
+<body>
+<th:block th:fragment="retrieveChild(children)">
+    <th:block th:each="c:${children}">
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
+            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
+                th:include="this::retrieveChild(${c.children})"></ul>
+        </li>
+    </th:block>
+</th:block>
+<div layout:fragment="main-container" class="main-container">
+    <div class="form-container mdc-layout-grid">
+        <form id="form" class="mdc-card mdc-panel__padding-16" onsubmit="void(0);">
+            <input th:if="${_csrf!=null}" type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   id="_csrf"
+                   th:value="${_csrf.token}"/>
+            <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">
+                [[${privilege ne null?'修改':'添加'}]]菜单
+            </h2>
+            <div class="mdc-layout-grid__inner mdc-panel__margin-16 mdc-form-field">
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6" tabindex="0">
+                    <!--名称-->
+                    <div class="mdc-panel__margin-16">
+                        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
+                             data-mdc-auto-init="MDCTextField">
+                            <input type="text" id="nameInput" name="name" class="mdc-text-field__input"
+                                   maxlength="25"
+                                   required
+                                   data-validtip="名称不能为空,且小于25个字符"
+                                   autocomplete="off"
+                                   placeholder="请输入名称"
+                                   th:value="${privilege ne null?privilege.name:''}">
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                    <label for="nameInput" class="mdc-floating-label">名称</label>
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-text-field-helper-line">
+                            <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+                                *必填</p>
+                            <div class="mdc-text-field-character-counter">0 / 25</div>
+                        </div>
+                    </div>
+                    <!--表达式-->
+                    <div class="mdc-panel__margin-16">
+                        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
+                             data-mdc-auto-init="MDCTextField">
+                            <input type="text" id="expInput" name="exp" class="mdc-text-field__input"
+                                   maxlength="25"
+                                   autocomplete="off"
+                                   placeholder="请输入别名"
+                                   th:value="${privilege ne null?privilege.exp:''}">
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                    <label for="expInput" class="mdc-floating-label">表达式</label>
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-text-field-helper-line">
+                            <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+                                *必填</p>
+                            <div class="mdc-text-field-character-counter">0 / 25</div>
+                        </div>
+                    </div>
+                    <!--操作-->
+                    <div class="mdc-layout-grid__inner mdc-card__action-buttons">
+                        <a href="/manage/privilege/index"
+                           class="mdc-button mdc-layout-grid__cell mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop  mdc-card__action mdc-button--raised mdc-ripple-upgraded">
+                            返回
+                        </a>
+                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4"></div>
+                        <button id="editBtn"
+                                class="mdc-button mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded"
+                                th:inline="text">
+                            [[${privilege eq null ? '添加':'更新'}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script type="text/javascript" th:inline="javascript">
+      $(function() {
+        let id = [[${privilege ne null ? privilege.id:''}]];
+        // 初始化input计数器
+        new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+        // 提交表单
+        $('#editBtn').click(function() {
+          let $form = $('#form');
+          let data = {};
+          $form.serializeArray().forEach(function(item) {
+            data[item.name] = item.value;
+          });
+          let textFields = document.querySelectorAll('.mdc-text-field');
+          for (let i = 0; i < textFields.length; i++) {
+            console.log(i, textFields[i]);
+            let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
+            let value = $input.val();
+            let required = Boolean($input.prop('required'));
+            let minLength = $input.attr('minlength');
+            let maxLength = $input.attr('maxlength');
+            let validTip = $input.attr('data-validtip');
+            let pattern = $input.attr('data-pattern');
+            if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
+              $input.focus();
+              return false;
+            }
+          }
+          console.log(JSON.stringify(data));
+          id > 0 ?
+              $.put('/manage/privilege/' + id, data, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  window.location.href = '/manage/privilege/index';
+                }) : $.alert(res.msg);
+              }) : $.post('/manage/privilege', data, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  window.location.href = '/manage/privilege/index';
+                }) : $.alert(res.msg);
+              });
+          return false;
+        });
+      });
+    </script>
+</div>
+</body>
+</html>

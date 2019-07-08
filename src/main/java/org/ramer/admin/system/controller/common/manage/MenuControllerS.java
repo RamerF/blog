@@ -1,6 +1,5 @@
 package org.ramer.admin.system.controller.common.manage;
 
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.*;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -16,7 +15,6 @@ import org.ramer.admin.system.validator.common.MenuValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -69,15 +67,10 @@ public class MenuControllerS {
   ResponseEntity create(
       @ApiParam("父级菜单Id") @RequestParam("parentId") String parentIdStr,
       @Valid Menu menu,
-      BindingResult bindingResult)
-      throws Exception {
+      @ApiIgnore BindingResult bindingResult) {
     log.info(" MenuController.create : [{},{}]", menu, parentIdStr);
     final long parentId = TextUtil.validLong(parentIdStr, 0);
-    if (StringUtils.isEmpty(menu.getAlia())) {
-      JSONObject jsonObject = new JSONObject();
-      return CommonResponse.fail("提交信息有误: \n权限别名 不能为空且小于25个字符");
-    }
-    if (parentId > 0) {
+    if (TextUtil.isValidId(parentId)) {
       menu.setParent(Menu.of(parentId));
     }
     return commonService.create(service, menu, bindingResult);

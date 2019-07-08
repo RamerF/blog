@@ -44,13 +44,6 @@ public class MenuServiceImpl implements MenuService {
 
   @Transactional
   @Override
-  public Menu create(Menu menu) {
-    privilegeService.create(menu.getAlia(), menu.getName());
-    return repository.saveAndFlush(menu);
-  }
-
-  @Transactional
-  @Override
   public synchronized Menu update(Menu m) {
     return Optional.ofNullable(getById(m.getId()))
         .map(

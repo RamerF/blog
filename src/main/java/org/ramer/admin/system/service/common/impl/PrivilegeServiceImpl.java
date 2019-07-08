@@ -26,7 +26,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
   @Transactional
   @Override
-  public List<Privilege> create(final String expPrefix, final String expName) {
+  public synchronized List<Privilege> create(final String expPrefix, final String expName) {
     List<Privilege> privileges = new ArrayList<>();
     PrivilegeEnum.map()
         .forEach(
@@ -36,13 +36,12 @@ public class PrivilegeServiceImpl implements PrivilegeService {
               p.setName(expName + ":" + remark);
               privileges.add(create(p));
             });
-    return privileges;
+    return repository.saveAll(privileges);
   }
 
-  @Transactional
   @Override
-  public synchronized void createBatch(List<Privilege> privileges) {
-    repository.saveAll(privileges);
+  public Privilege getByExp(final String exp) {
+    return repository.findTopByExpAndState(exp, State.STATE_ON);
   }
 
   @Override
@@ -70,13 +69,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         .on(role.privileges.contains(privilege).and(role.id.eq(rolesId)))
         .where(privilege.state.eq(State.STATE_ON))
         .fetch();
-  }
-
-  @Transactional
-  @Override
-  public synchronized Privilege update(Privilege privilege) {
-    log.error(" PrivilegeServiceImpl.update : not yet implements");
-    throw new CommonException("PrivilegeServiceImpl.update : not yet implements");
   }
 
   @Override

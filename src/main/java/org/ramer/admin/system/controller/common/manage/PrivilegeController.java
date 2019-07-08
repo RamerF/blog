@@ -1,16 +1,18 @@
-package org.ramer.admin.system.controller.common;
+package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Privilege;
 import org.ramer.admin.system.entity.pojo.common.PrivilegePoJo;
 import org.ramer.admin.system.entity.request.common.PrivilegeRequest;
-import org.ramer.admin.system.entity.response.common.PrivilegeResponse;
 import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.common.PrivilegeResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.PrivilegeService;
 import org.ramer.admin.system.util.TextUtil;
@@ -25,10 +27,10 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
-@Controller("privilegec")
+@Controller("privilegecm")
 @PreAuthorize("hasAnyAuthority('global:read','privilege:read')")
-@RequestMapping( "/common/privilege")
-@Api(tags = "权限接口")
+@RequestMapping(AccessPath.MANAGE + "/privilege")
+@Api(tags = "管理端: 权限接口")
 @SuppressWarnings("UnusedDeclaration")
 public class PrivilegeController {
   @Resource private PrivilegeService service;
@@ -42,8 +44,9 @@ public class PrivilegeController {
 
   @GetMapping("/index")
   @ApiOperation("权限页面")
-  public String index() {
-    return "privilege/index";
+  public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
+    return "manage/privilege/index";
   }
 
   @GetMapping("/page")
@@ -62,8 +65,9 @@ public class PrivilegeController {
 
   @GetMapping
   @ApiOperation("添加权限页面")
-  public String create() {
-    return "privilege/create";
+  public String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
+    return "manage/privilege/edit";
   }
 
   @PostMapping
@@ -73,19 +77,18 @@ public class PrivilegeController {
   public ResponseEntity<CommonResponse<Object>> create(
       @Valid PrivilegeRequest privilegeRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" PrivilegeController.create : [{}]", privilegeRequest);
-    return commonService.create(
-        service, Privilege.class, privilegeRequest, bindingResult);
+    return commonService.create(service, Privilege.class, privilegeRequest, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新权限页面")
-  public String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
+  public String update(
+      @PathVariable("id") String idStr,
+      @ApiIgnore HttpSession session,
+      @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
     return commonService.update(
-        service,
-        PrivilegePoJo.class,
-        idStr,
-        "privilege/update",
-        map, "privilege");
+        service, PrivilegePoJo.class, idStr, "manage/privilege/edit", map, "privilege");
   }
 
   @PutMapping("/{id}")
@@ -102,8 +105,7 @@ public class PrivilegeController {
       return CommonResponse.wrongFormat("id");
     }
     privilegeRequest.setId(id);
-    return commonService.update(
-        service, Privilege.class, privilegeRequest, idStr, bindingResult);
+    return commonService.update(service, Privilege.class, privilegeRequest, idStr, bindingResult);
   }
 
   @DeleteMapping("/{id}")

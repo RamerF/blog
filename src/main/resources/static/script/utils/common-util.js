@@ -304,7 +304,7 @@
       // 页号点击事件
       $('button[id*="pageBtn"]').unbind().on('click', function(e) {
         let numberClick = Number($(this).text());
-        if (!$(this).hasClass('mdc-button--raised') || isNaN(numberClick)) {
+        if ($(this).hasClass('mdc-button--raised') || isNaN(numberClick)) {
           return false;
         }
         _queryParams.page = _pageInfo.page = numberClick;
@@ -317,13 +317,13 @@
     function initNumberBtn() {
       $(pageBtnContainer).empty();
       let prevBtn = $(
-          '<li><button class="mdc-button mdc-button--raised prev-btn" id="prevBtn">上一页</button></li>');
+          '<li><button class="mdc-icon-button material-icons mdc-ripple-upgraded prev-btn" id="prevBtn">keyboard_arrow_left</button></li>');
       $(pageBtnContainer).append(prevBtn);
       if (pageInfo.totalPages >= 7) {
         for (let i = 1; i < 8; i++) {
           let li = $('<li></li>');
           let btn = $(
-              `<button class="mdc-button mdc-ripple-upgraded" id="pageBtn${i}">${i}</button>`);
+              `<button class="mdc-button mdc-ripple-upgraded" id="pageBtn${i}"><span class="mdc-fab__label">${i}</span></button>`);
           $(li).append(btn);
           $(pageBtnContainer).append(li);
         }
@@ -331,13 +331,13 @@
         for (let i = 1; i < pageInfo.totalPages + 1; i++) {
           let li = $('<li></li>');
           let btn = $(
-              `<button class="mdc-button mdc-ripple-upgraded" id="pageBtn${i}">${i}</button>`);
+              `<button data-mdc-auto-init="MDCButton" class="mdc-button mdc-ripple-upgraded" id="pageBtn${i}"><span class="mdc-fab__label">${i}</span></button>`);
           $(li).append(btn);
           $(pageBtnContainer).append(li);
         }
       }
       let nextBtn = $(
-          '<li><button class="mdc-button mdc-button--raised mdc-ripple-upgraded next-btn" id="nextBtn">下一页</button></li>');
+          '<li><button class="mdc-icon-button material-icons mdc-ripple-upgraded next-btn" id="nextBtn">keyboard_arrow_right</button></li>');
       $(pageBtnContainer).append(nextBtn);
     }
 
@@ -417,8 +417,8 @@
       $(selector).
       parents('ul').
       find('button[class*="mdc-button"]').
-      addClass('mdc-button--raised');
-      $(selector).removeClass('mdc-button--raised');
+      removeClass('mdc-button--raised');
+      $(selector).addClass('mdc-button--raised mdc-button--circle');
     }
 
     /**

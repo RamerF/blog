@@ -143,7 +143,9 @@ body {
 .pagination-container ul li {
     list-style: none;
     float: left;
-    margin-left: 1px;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .pagination-container ul li:first-of-type button {
@@ -157,9 +159,11 @@ body {
 }
 
 .pagination-container ul li:not(:first-of-type):not(:last-of-type) button {
-    border-radius: 0;
+    /*border-radius: 0;*/
+    padding: 1px 0 0;
+    min-width: 36px;
+    border-radius: 100%;
 }
-
 
 /* material component web table */
 
@@ -212,6 +216,12 @@ body {
 /*.mdc-dialog__content {*/
 /*    white-space: pre-line;*/
 /*}*/
+
+.mdc-button--circle {
+    padding: 0;
+    min-width: 36px;
+    border-radius: 100%;
+}
 
 .mdc-non-visibility {
     visibility: hidden;

@@ -17,6 +17,8 @@ src/main/resources/config
 admin-generator/src/main/resources/config
 admin-template.iml
 admin-generator.iml
+admin-template-generator.iml
+classes/
 target
 .idea
 node_modules

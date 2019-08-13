@@ -1,0 +1,38 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>admin-template-generator</name>
+  <version>1.0</version>
+  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">ramer</vendor>
+
+  <description><![CDATA[
+      生成基于admin-template代码.<br>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+<!--    <applicationService serviceInterface="Main" serviceImplementation="impl.MainImpl"/>-->
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="admin-template-generator" class="MainGenerator" text="代码生成" description="生成代码">
+      <add-to-group group-id="WindowMenu" anchor="first"/>
+    </action>
+  </actions>
+
+</idea-plugin>

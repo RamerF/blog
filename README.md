@@ -10,7 +10,7 @@
 
 # 概览
 ![参数配置](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/config.png)
-![参数配置单选]('http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/config-single-select.png')
+![单选](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/config_single_select.png)
 ![管理员管理](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/manager.png)
 ![角色管理](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/role.png)
 ![权限管理](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/privilege.png)

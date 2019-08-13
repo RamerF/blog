@@ -5,7 +5,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
-    <title>系统配置配置</title>
+    <title>数据字典</title>
     <style>
         .select-type {
             width: 400px;
@@ -63,11 +63,11 @@
                sec:authorize="hasAnyAuthority('global:create','dataDict:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn"
+            <button class="mdc-button mdc-button--raised" id="editBtn" disabled
                     sec:authorize="hasAnyAuthority('global:write','dataDict:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn"
+            <button class="mdc-button mdc-button--raised" id="delBtn" disabled
                     sec:authorize="hasAnyAuthority('global:delete','dataDict:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>

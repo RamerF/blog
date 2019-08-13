@@ -5,7 +5,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Resource;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
-import org.ramer.admin.system.entity.request.common.ConfigRequest;
 import org.ramer.admin.system.entity.request.common.DataDictRequest;
 import org.ramer.admin.system.service.common.DataDictService;
 import org.ramer.admin.system.service.common.DataDictTypeService;
@@ -29,30 +28,30 @@ public class DataDictValidator implements Validator {
 
   @Override
   public void validate(final Object target, @Nonnull final Errors errors) {
-    ConfigRequest config = (ConfigRequest) target;
-    if (config == null) {
-      errors.rejectValue(null, "config.null", "系统配置 不能为空");
+    DataDictRequest dataDict = (DataDictRequest) target;
+    if (dataDict == null) {
+      errors.rejectValue(null, "dataDict.null", "数据字典 不能为空");
     } else {
-      final String code = config.getCode();
+      final String code = dataDict.getCode();
       if (StringUtils.isEmpty(code) || code.length() > 50) {
-        errors.rejectValue("code", "config.code.length", "CODE 不能为空且小于50个字符");
+        errors.rejectValue("code", "dataDict.code.length", "CODE 不能为空且小于50个字符");
       } else {
         final DataDict exist = service.getByCode(code);
-        if (Objects.nonNull(exist) && !Objects.equals(config.getId(), exist.getId())) {
-          errors.rejectValue("code", "config.code.exist", "CODE 已存在");
+        if (Objects.nonNull(exist) && !Objects.equals(dataDict.getId(), exist.getId())) {
+          errors.rejectValue("code", "dataDict.code.exist", "CODE 已存在");
         }
       }
-      final String name = config.getName();
+      final String name = dataDict.getName();
       if (StringUtils.isEmpty(name) || name.length() > 50) {
-        errors.rejectValue("name", "config.name.length", "名称 不能为空且小于50个字符");
+        errors.rejectValue("name", "dataDict.name.length", "名称 不能为空且小于50个字符");
       }
-      final String value = config.getValue();
-      if (StringUtils.isEmpty(value) || name.length() > 100) {
-        errors.rejectValue("value", "config.value.length", "值 不能为空且小于100个字符");
+      final Long dataDictTypeId = dataDict.getDataDictTypeId();
+      if (Objects.isNull(dataDictTypeId)) {
+        errors.rejectValue("value", "dataDict.value.length", "分类 不能为空");
       }
-      final String remark = config.getRemark();
+      final String remark = dataDict.getRemark();
       if (!StringUtils.isEmpty(remark) && remark.length() > 65535) {
-        errors.rejectValue("remark", "config.remark.length", "备注 长度不能大于65535个字符");
+        errors.rejectValue("remark", "dataDict.remark.length", "备注 长度不能大于65535个字符");
       }
     }
   }

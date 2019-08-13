@@ -1,8 +1,8 @@
 package org.ramer.admin.system.util;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 public class ImageUtil {
-  private static final SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
   private static final Random r = new Random();
 
   /*
@@ -20,9 +19,9 @@ public class ImageUtil {
    */
   public static String getRandomFileName() {
     // 获取随机五位数
-    int random = r.nextInt(89999) + 10000;
-    String nowTimeStr = sDateFormat.format(LocalDateTime.now());
-    return nowTimeStr + random;
+    return DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())
+        + r.nextInt(89999)
+        + 10000;
   }
 
   /*

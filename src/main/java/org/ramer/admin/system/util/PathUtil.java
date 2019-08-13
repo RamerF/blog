@@ -1,7 +1,7 @@
 package org.ramer.admin.system.util;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.ResourcePath;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,11 +37,11 @@ public class PathUtil {
         break;
     }
     LocalDateTime date = LocalDateTime.now();
-    return path.concat(new SimpleDateFormat("yyyy").format(date))
+    return path.concat(DateTimeFormatter.ofPattern("yyyy").format(date))
         .concat(FILE_SEPARATOR)
-        .concat(new SimpleDateFormat("MM").format(date))
+        .concat(DateTimeFormatter.ofPattern("MM").format(date))
         .concat(FILE_SEPARATOR)
-        .concat(new SimpleDateFormat("dd").format(date))
+        .concat(DateTimeFormatter.ofPattern("dd").format(date))
         .concat(FILE_SEPARATOR)
         .replace("/", FILE_SEPARATOR);
   }

@@ -18,7 +18,7 @@
 # 安装
 1. 修改application.yml中数据库地址以及用户名密码
 2. 启动项目
-3. 访问: [http://localhost:8080/manage/index](http://localhost:8080/manage/index) 账号:` admin/admin`
+3. 访问: [http://localhost:8080/manage/index](http://localhost:8080/manage/index) 账号: `admin/admin`
 
 # 生成增删改查功能代码
 运行 `MainGenerator.java`,现在支持配置文件,参考config.ini

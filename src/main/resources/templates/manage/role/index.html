@@ -36,19 +36,19 @@
                sec:authorize="hasAnyAuthority('global:create','role:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn"
+            <button class="mdc-button mdc-button--raised" id="editBtn" disabled
                     sec:authorize="hasAnyAuthority('global:write','role:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn"
+            <button class="mdc-button mdc-button--raised" id="delBtn" disabled
                     sec:authorize="hasAnyAuthority('global:delete','role:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="menuBtn"
+            <button class="mdc-button mdc-button--raised" id="menuBtn" disabled
                     sec:authorize="hasAnyAuthority('global:write','role:write')">
                 <span class="mdc-button__label">菜单配置</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="privilegeBtn"
+            <button class="mdc-button mdc-button--raised" id="privilegeBtn" disabled
                     sec:authorize="hasAnyAuthority('global:write','role:write')">
                 <span class="mdc-button__label">权限配置</span>
             </button>
@@ -131,6 +131,27 @@
           pageNumber: 1,
           editable: false,
           callback: function() {
+          },
+          noneSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', true);
+            $('#roleBtn').prop('disabled', true);
+            $('#menuBtn').prop('disabled', true);
+            $('#privilegeBtn').prop('disabled', true);
+          },
+          singleSelect: function() {
+            $('#editBtn').prop('disabled', false);
+            $('#delBtn').prop('disabled', false);
+            $('#roleBtn').prop('disabled', false);
+            $('#menuBtn').prop('disabled', false);
+            $('#privilegeBtn').prop('disabled', false);
+          },
+          multipleSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', false);
+            $('#roleBtn').prop('disabled', true);
+            $('#menuBtn').prop('disabled', true);
+            $('#privilegeBtn').prop('disabled', true);
           }
         });
         // 刷新

@@ -36,15 +36,15 @@
                sec:authorize="hasAnyAuthority('global:create','manger:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn"
+            <button class="mdc-button mdc-button--raised" id="editBtn" disabled
                     sec:authorize="hasAnyAuthority('global:write','manger:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn"
+            <button class="mdc-button mdc-button--raised" id="delBtn" disabled
                     sec:authorize="hasAnyAuthority('global:delete','manger:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="roleBtn"
+            <button class="mdc-button mdc-button--raised" id="roleBtn" disabled
                     sec:authorize="hasAnyAuthority('global:write','manger:write')">
                 <span class="mdc-button__label">角色配置</span>
             </button>
@@ -137,6 +137,21 @@
           pageNumber: 1,
           editable: false,
           callback: function() {
+          },
+          noneSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', true);
+            $('#roleBtn').prop('disabled', true);
+          },
+          singleSelect: function() {
+            $('#editBtn').prop('disabled', false);
+            $('#delBtn').prop('disabled', false);
+            $('#roleBtn').prop('disabled', false);
+          },
+          multipleSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', false);
+            $('#roleBtn').prop('disabled', true);
           }
         });
         // 刷新

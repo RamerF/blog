@@ -36,11 +36,11 @@
                sec:authorize="hasAnyAuthority('global:create','menu:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn"
+            <button class="mdc-button mdc-button--raised" id="editBtn" disabled
                     sec:authorize="hasAnyAuthority('global:write','menu:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn"
+            <button class="mdc-button mdc-button--raised" id="delBtn" disabled
                     sec:authorize="hasAnyAuthority('global:delete','menu:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>
@@ -106,6 +106,18 @@
           pageNumber: 1,
           editable: false,
           callback: function() {
+          },
+          noneSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', true);
+          },
+          singleSelect: function() {
+            $('#editBtn').prop('disabled', false);
+            $('#delBtn').prop('disabled', false);
+          },
+          multipleSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', false);
           }
         });
         // 刷新

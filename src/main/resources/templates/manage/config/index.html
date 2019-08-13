@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>系统配置配置</title>
@@ -35,13 +36,16 @@
             <button class="mdc-button mdc-button--raised" id="refreshBtn">
                 <span class="mdc-button__label">刷新</span>
             </button>
-            <a class="mdc-button mdc-button--raised" th:href="@{/manage/config}">
+            <a class="mdc-button mdc-button--raised" th:href="@{/manage/config}"
+               sec:authorize="hasAnyAuthority('global:create','config:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn">
+            <button class="mdc-button mdc-button--raised" id="editBtn" disabled
+                    sec:authorize="hasAnyAuthority('global:write','config:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn">
+            <button class="mdc-button mdc-button--raised" id="delBtn" disabled
+                    sec:authorize="hasAnyAuthority('global:delete','config:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>
         </div>
@@ -103,6 +107,18 @@
           pageNumber: 1,
           editable: false,
           callback: function() {
+          },
+          noneSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', true);
+          },
+          singleSelect: function() {
+            $('#editBtn').prop('disabled', false);
+            $('#delBtn').prop('disabled', false);
+          },
+          multipleSelect: function() {
+            $('#editBtn').prop('disabled', true);
+            $('#delBtn').prop('disabled', false);
           }
         });
         // 刷新

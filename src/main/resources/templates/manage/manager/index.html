@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>管理员管理</title>
@@ -31,16 +32,20 @@
             <button class="mdc-button mdc-button--raised" id="refreshBtn">
                 <span class="mdc-button__label">刷新</span>
             </button>
-            <a class="mdc-button mdc-button--raised" th:href="@{/manage/manager}">
+            <a class="mdc-button mdc-button--raised" th:href="@{/manage/manager}"
+               sec:authorize="hasAnyAuthority('global:create','manger:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn">
+            <button class="mdc-button mdc-button--raised" id="editBtn"
+                    sec:authorize="hasAnyAuthority('global:write','manger:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn">
+            <button class="mdc-button mdc-button--raised" id="delBtn"
+                    sec:authorize="hasAnyAuthority('global:delete','manger:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="roleBtn">
+            <button class="mdc-button mdc-button--raised" id="roleBtn"
+                    sec:authorize="hasAnyAuthority('global:write','manger:write')">
                 <span class="mdc-button__label">角色配置</span>
             </button>
         </div>

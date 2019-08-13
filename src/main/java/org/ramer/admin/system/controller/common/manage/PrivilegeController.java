@@ -1,13 +1,13 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
+import org.ramer.admin.system.entity.Constant.PrivilegeEnum;
 import org.ramer.admin.system.entity.domain.common.Privilege;
 import org.ramer.admin.system.entity.pojo.common.PrivilegePoJo;
 import org.ramer.admin.system.entity.request.common.PrivilegeRequest;
@@ -74,10 +74,23 @@ public class PrivilegeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','privilege:create')")
   @ApiOperation("添加权限")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<CommonResponse> create(
       @Valid PrivilegeRequest privilegeRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" PrivilegeController.create : [{}]", privilegeRequest);
-    return commonService.create(service, Privilege.class, privilegeRequest, bindingResult);
+    // 新增时,只需传递name属性,根据name自动生成五个对应的记录
+    final String name = privilegeRequest.getName();
+    final String alia = privilegeRequest.getExp();
+    List<Privilege> privileges = new ArrayList<>();
+    PrivilegeEnum.map()
+        .forEach(
+            (pName, pExp) -> {
+              final Privilege p = new Privilege();
+              p.setExp(alia + ":" + pName);
+              p.setName(name + ":" + pExp);
+              privileges.add(p);
+            });
+    service.createBatch(privileges);
+    return CommonResponse.ok();
   }
 
   @GetMapping("/{id}")
@@ -100,11 +113,6 @@ public class PrivilegeController {
       @Valid PrivilegeRequest privilegeRequest,
       @ApiIgnore BindingResult bindingResult) {
     log.info(" PrivilegeController.update : [{}]", privilegeRequest);
-    final long id = TextUtil.validLong(idStr, -1);
-    if (id < 1) {
-      return CommonResponse.wrongFormat("id");
-    }
-    privilegeRequest.setId(id);
     return commonService.update(service, Privilege.class, privilegeRequest, idStr, bindingResult);
   }
 

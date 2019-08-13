@@ -53,7 +53,7 @@ public class RoleServiceImpl implements RoleService {
     final QManager manager = QManager.manager;
     return jpaQueryFactory
         .selectFrom(role)
-        .leftJoin(manager)
+        .innerJoin(manager)
         .on(manager.roles.contains(role).and(manager.id.eq(managerId)))
         .where(role.state.eq(State.STATE_ON))
         .fetch();

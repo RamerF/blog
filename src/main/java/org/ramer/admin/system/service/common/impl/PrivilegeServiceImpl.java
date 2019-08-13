@@ -65,7 +65,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     final QRole role = QRole.role;
     return jpaQueryFactory
         .selectFrom(privilege)
-        .leftJoin(role)
+        .innerJoin(role)
         .on(role.privileges.contains(privilege).and(role.id.eq(rolesId)))
         .where(privilege.state.eq(State.STATE_ON))
         .fetch();

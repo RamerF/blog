@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>角色管理</title>
@@ -31,19 +32,24 @@
             <button class="mdc-button mdc-button--raised" id="refreshBtn">
                 <span class="mdc-button__label">刷新</span>
             </button>
-            <a class="mdc-button mdc-button--raised" th:href="@{/manage/role}">
+            <a class="mdc-button mdc-button--raised" th:href="@{/manage/role}"
+               sec:authorize="hasAnyAuthority('global:create','role:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn">
+            <button class="mdc-button mdc-button--raised" id="editBtn"
+                    sec:authorize="hasAnyAuthority('global:write','role:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn">
+            <button class="mdc-button mdc-button--raised" id="delBtn"
+                    sec:authorize="hasAnyAuthority('global:delete','role:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="menuBtn">
+            <button class="mdc-button mdc-button--raised" id="menuBtn"
+                    sec:authorize="hasAnyAuthority('global:write','role:write')">
                 <span class="mdc-button__label">菜单配置</span>
             </button>
-            <button class="mdc-button mdc-button--raised" id="privilegeBtn">
+            <button class="mdc-button mdc-button--raised" id="privilegeBtn"
+                    sec:authorize="hasAnyAuthority('global:write','role:write')">
                 <span class="mdc-button__label">权限配置</span>
             </button>
         </div>

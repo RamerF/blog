@@ -163,6 +163,9 @@
          size: res.data.size
          };*/
       },
+      noneSelect: undefined,
+      singleSelect: undefined,
+      multipleSelect: undefined,
       success: () => {},
       error: () => {}
     }, opts || {});
@@ -182,6 +185,9 @@
     let _pageList = paras.pageList;
     let _pageNumber = paras.pageNumber;
     let _dataHandler = paras.dataHandler;
+    let _noneSelect = paras.noneSelect;
+    let _singleSelect = paras.singleSelect;
+    let _multipleSelect = paras.multipleSelect;
     let _successCallback = paras.success;
     let _errorCallback = paras.error;
     if (_url == null) {
@@ -481,6 +487,11 @@
                   $(item).parents('tr').addClass('is-selected') :
                   $(item).parents('tr').removeClass('is-selected');
             });
+        // 自动触发点击事件
+        let selectItems = getSelectItems();
+        noneSelection();
+        singleSelection(selectItems);
+        multipleSelection(selectItems);
       });
     }
 
@@ -491,7 +502,50 @@
     function bindCheckEvt(obj) {
       obj.change(function() {
         $(this).parents('tr').toggleClass('is-selected');
+        // 自动触发单选/多选事件
+        let selectItems = getSelectItems();
+        noneSelection();
+        singleSelection(selectItems);
+        multipleSelection(selectItems);
       });
+    }
+
+    /**单选事件*/
+    function noneSelection(selectItems) {
+      selectItems = selectItems || getSelectItems();
+      if (selectItems.length === 0 && _singleSelect) {
+        _noneSelect();
+      }
+    }
+
+    /**单选事件*/
+    function singleSelection(selectItems) {
+      selectItems = selectItems || getSelectItems();
+      if (selectItems.length === 1 && _singleSelect) {
+        _singleSelect();
+      }
+    }
+
+    /**多选事件*/
+    function multipleSelection(selectItems) {
+      selectItems = selectItems || getSelectItems();
+      if (selectItems.length > 1 && _multipleSelect) {
+        _multipleSelect();
+      }
+    }
+
+    /**获取已选择项*/
+    function getSelectItems() {
+      let selectItems = [];
+      $.each($(_container).
+          find('tbody tr td:first-of-type div.mdc-checkbox'),
+          function(index, item) {
+            if (new mdc.checkbox.MDCCheckbox(item).checked) {
+              selectItems.push(dataList[index]);
+            }
+          });
+      console.debug(selectItems);
+      return selectItems;
     }
 
     /**
@@ -499,7 +553,12 @@
      * @constructor
      */
     function Handler() {
+      // 拉取服务器数据
       this.pullData = pullData;
+      // 单选事件
+      this.singleSelect = _singleSelect;
+      // 多选事件
+      this.multipleSelect = _multipleSelect;
     }
 
     return mdcDataTable;

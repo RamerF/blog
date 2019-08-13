@@ -1,16 +1,24 @@
 # admin_springdata
 管理端框架,基于SpringBoot,SpringSecurity,SpringData,LayUi.
 
-[演示1 Demo](http://ramer.tpddns.cn:8000/manage/index)
-[演示2 Demo](http://ramer.tpddns.cn:9000/manage/index)
+[演示1 ,旧版](http://ramer.tpddns.cn:8000/manage/index)
+
+[演示2 ,新功能开发中](http://ramer.tpddns.cn:9000/manage/index)
+
+超级管理员: `admin/admin`
+观察员: `10000/12345678`
 
 # 概览
-![参数配置](http://pls25e6vd.bkt.clouddn.com/config.png)
+![参数配置](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/config.png)
+![参数配置单选]('http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/config-single-select.png')
+![管理员管理](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/manager.png)
+![角色管理](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/role.png)
+![权限管理](http://ramer.tpddns.cn:9000/public/upload/public/2019/08/13/privilege.png)
 
 # 安装
-1. 修改application.yml中数据库地址以及用户名密码,
+1. 修改application.yml中数据库地址以及用户名密码
 2. 启动项目
-3. 访问: [http://localhost:8080/manage](http://localhost:8080/manage) `账号: admin/admin`
+3. 访问: [http://localhost:8080/manage/index](http://localhost:8080/manage/index) 账号:` admin/admin`
 
 # 生成增删改查功能代码
 运行 `MainGenerator.java`,现在支持配置文件,参考config.ini

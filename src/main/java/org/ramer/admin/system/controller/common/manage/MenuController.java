@@ -67,6 +67,7 @@ public class MenuController {
   @ApiOperation("添加菜单页面")
   public String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
+    map.put("ms", service.list(null));
     return "manage/menu/edit";
   }
 
@@ -87,7 +88,18 @@ public class MenuController {
       @ApiIgnore HttpSession session,
       @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
-    return commonService.update(service, MenuPoJo.class, idStr, "manage/menu/edit", map, "menu");
+    return commonService.update(
+        service,
+        MenuPoJo.class,
+        idStr,
+        "manage/menu/edit",
+        map,
+        "menu",
+        id -> {
+          map.put("ms", service.list(null));
+          map.put("menu", service.getById(id));
+        },
+        false);
   }
 
   @PutMapping("/{id}")
@@ -99,12 +111,7 @@ public class MenuController {
       @Valid MenuRequest menuRequest,
       @ApiIgnore BindingResult bindingResult) {
     log.info(" MenuController.update : [{}]", menuRequest);
-    final long id = TextUtil.validLong(idStr, -1);
-    if (id < 1) {
-      return CommonResponse.wrongFormat("id");
-    }
-    menuRequest.setId(id);
-    return commonService.update(service, Menu.class, menuRequest, idStr, bindingResult);
+    return commonService.update(service, Menu.class, menuRequest, idStr, bindingResult, "parentId");
   }
 
   @DeleteMapping("/{id}")

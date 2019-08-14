@@ -1,20 +1,20 @@
 package org.ramer.admin.system.service.common.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.State;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.MenuRepository;
 import org.ramer.admin.system.service.common.MenuService;
-import org.ramer.admin.system.service.common.PrivilegeService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /** @author ramer */
@@ -23,7 +23,6 @@ import org.springframework.util.StringUtils;
 public class MenuServiceImpl implements MenuService {
   @Resource private JPAQueryFactory jpaQueryFactory;
   @Resource private MenuRepository repository;
-  @Resource private PrivilegeService privilegeService;
 
   @Override
   public List<Menu> listByManager(Long managerId) {
@@ -44,17 +43,38 @@ public class MenuServiceImpl implements MenuService {
 
   @Transactional
   @Override
-  public synchronized Menu update(Menu m) {
-    return Optional.ofNullable(getById(m.getId()))
-        .map(
-            menu -> {
-              textFilter(m, menu);
-              menu.setHasChild(m.getHasChild());
-              menu.setSortWeight(m.getSortWeight());
-              menu.setParent(m.getParent());
-              return repository.saveAndFlush(menu);
-            })
-        .orElse(null);
+  public Menu create(final Menu menu) {
+    textFilter(menu, menu);
+    // 更新父菜单属性
+    if (Objects.nonNull(menu.getParentId())) {
+      final Menu parent = getById(menu.getParentId());
+      parent.setHasChild(true);
+    }
+    menu.setHasChild(false);
+    return repository.saveAndFlush(menu);
+  }
+
+  @Transactional
+  @Override
+  public synchronized Menu update(Menu menu) {
+    textFilter(menu, menu);
+    // 更新了父菜单,同步父菜单属性
+    final Long parentId =
+        Optional.ofNullable(menu.getParent()).map(AbstractEntity::getId).orElse(null);
+    if (!Objects.equals(parentId, menu.getParentId())) {
+      // 更新原有父菜单
+      if (Objects.nonNull(parentId)
+          && repository.findByParentIdAndState(parentId, State.STATE_ON).size() < 2) {
+        menu.getParent().setHasChild(false);
+      }
+      // 更新当前父菜单
+      if (Objects.nonNull(menu.getParentId())
+          && CollectionUtils.isEmpty(
+              repository.findByParentIdAndState(menu.getParentId(), State.STATE_ON))) {
+        getById(menu.getParentId()).setHasChild(true);
+      }
+    }
+    return repository.saveAndFlush(menu);
   }
 
   @Override

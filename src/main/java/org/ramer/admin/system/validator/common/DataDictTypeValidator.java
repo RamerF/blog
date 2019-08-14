@@ -28,15 +28,15 @@ public class DataDictTypeValidator implements Validator {
   public void validate(final Object target, @Nonnull final Errors errors) {
     DataDictTypeRequest dataDictType = (DataDictTypeRequest) target;
     if (dataDictType == null) {
-      errors.rejectValue(null, "dataDictType.null", "数据字典类型 不能为空");
+      errors.rejectValue(null, "dataDictType.null", "数据字典分类 不能为空");
     } else {
       final String code = dataDictType.getCode();
       if (StringUtils.isEmpty(code) || code.length() > 50) {
-        errors.rejectValue("code", "dataDictType.code.length", "CODE 不能为空且小于50个字符");
+        errors.rejectValue("code", "dataDictType.code.length", "标识 不能为空且小于50个字符");
       } else {
         final DataDictType exist = service.getByCode(code);
         if (Objects.nonNull(exist) && !Objects.equals(dataDictType.getId(), exist.getId())) {
-          errors.rejectValue("code", "dataDictType.code.exist", "CODE 已存在");
+          errors.rejectValue("code", "dataDictType.code.exist", "标识 已存在");
         }
       }
       final String name = dataDictType.getName();

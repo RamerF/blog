@@ -9,7 +9,7 @@ import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
 /**
- * 数据字典类型.
+ * 数据字典分类.
  *
  * @author ramer
  */
@@ -17,10 +17,10 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "数据字典类型")
+@ApiModel(value = "数据字典分类")
 public class DataDictTypeResponse extends AbstractEntityResponse {
 
-  @ApiModelProperty(value = "CODE")
+  @ApiModelProperty(value = "标识")
   private String code;
 
   @ApiModelProperty(value = "名称")

@@ -23,9 +23,6 @@ public class MenuPoJo extends AbstractEntityPoJo {
   @ApiModelProperty(value = "名称")
   private String name;
 
-  @ApiModelProperty(value = "权限别名")
-  private String alia;
-
   @ApiModelProperty(value = "链接地址")
   private String url;
 

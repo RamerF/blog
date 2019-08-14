@@ -4,14 +4,15 @@ import io.swagger.annotations.*;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.entity.pojo.common.DataDictTypePoJo;
 import org.ramer.admin.system.entity.request.common.DataDictTypeRequest;
-import org.ramer.admin.system.entity.response.common.DataDictTypeResponse;
 import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.common.DataDictTypeResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.DataDictTypeService;
 import org.ramer.admin.system.util.TextUtil;
@@ -43,7 +44,8 @@ public class DataDictTypeController {
 
   @GetMapping("/index")
   @ApiOperation("数据字典类型页面")
-  public String index() {
+  public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
     return "manage/data_dict_type/index";
   }
 
@@ -63,8 +65,9 @@ public class DataDictTypeController {
 
   @GetMapping
   @ApiOperation("添加数据字典类型页面")
-  public String create() {
-    return "manage/data_dict_type/create";
+  public String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    commonService.writeMenuAndSiteInfo(session, map);
+    return "manage/data_dict_type/edit";
   }
 
   @PostMapping
@@ -79,14 +82,18 @@ public class DataDictTypeController {
 
   @GetMapping("/{id}")
   @ApiOperation("更新数据字典类型页面")
-  public String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
+  public String update(
+      @PathVariable("id") String idStr,
+      @ApiIgnore HttpSession session,
+      @ApiIgnore Map<String, Object> map) {
     return commonService.update(
         service,
         DataDictTypePoJo.class,
         idStr,
-        "manage/data_dict_type/update",
+        "manage/data_dict_type/edit",
         map,
-        "dataDictType");
+        "dataDictType",
+        id -> commonService.writeMenuAndSiteInfo(session, map));
   }
 
   @PutMapping("/{id}")

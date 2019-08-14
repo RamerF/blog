@@ -104,7 +104,7 @@ public class ManagerController {
         "manage/manager/edit",
         map,
         "manager",
-        () -> commonService.writeMenuAndSiteInfo(session, map));
+        id -> commonService.writeMenuAndSiteInfo(session, map));
   }
 
   @PutMapping("/{id}")

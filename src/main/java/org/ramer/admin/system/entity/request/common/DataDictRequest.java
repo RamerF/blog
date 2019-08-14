@@ -16,7 +16,7 @@ import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("数据字典")
 public class DataDictRequest extends AbstractEntityRequest {
-  @ApiModelProperty(value = "CODE")
+  @ApiModelProperty(value = "标识")
   private String code;
 
   @ApiModelProperty(value = "名称")

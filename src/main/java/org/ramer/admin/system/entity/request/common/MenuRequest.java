@@ -20,9 +20,6 @@ public class MenuRequest extends AbstractEntityRequest {
   @ApiModelProperty(value = "名称")
   private String name;
 
-  @ApiModelProperty(value = "权限别名")
-  private String alia;
-
   @ApiModelProperty(value = "链接地址")
   private String url;
 
@@ -35,6 +32,6 @@ public class MenuRequest extends AbstractEntityRequest {
   @ApiModelProperty(value = "备注")
   private String remark;
 
-  @ApiModelProperty(value = "上级id")
+  @ApiModelProperty(value = "父菜单id")
   private Long parentId;
 }

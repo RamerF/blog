@@ -5,7 +5,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
-    <title>数据字典</title>
+    <title>数据字典分类</title>
     <style>
         .select-type {
             width: 400px;
@@ -36,39 +36,21 @@
             <!--            <i class="material-icons mdc-button__icon" aria-hidden="true">search</i>-->
             <!--            <span class="mdc-button__label">搜索</span>-->
             <!--        </button>-->
-            <!--字典分类-->
-            <div class="mdc-select select-width-fixed">
-                <input type="hidden" name="enhanced-select">
-                <i class="mdc-select__dropdown-icon"></i>
-                <!-- 预选第一个 -->
-                <div class="mdc-select__selected-text" data-value="-1">全部</div>
-                <div class="mdc-select__menu mdc-menu mdc-menu-surface select-width-fixed">
-                    <ul class="mdc-list">
-                        <li class="mdc-list-item mdc-list-item--selected" data-value="-1">全部</li>
-                        <li class="mdc-list-item"
-                            th:each="type,stat:${types}"
-                            th:data-value="${type.id}"
-                            th:text="${type.name}"></li>
-                    </ul>
-                </div>
-                <span class="mdc-floating-label mdc-floating-label--float-above">请选择分类</span>
-                <div class="mdc-line-ripple"></div>
-            </div>
         </div>
         <div class="operator-container">
             <button class="mdc-button mdc-button--raised" id="refreshBtn">
                 <span class="mdc-button__label">刷新</span>
             </button>
-            <a class="mdc-button mdc-button--raised" th:href="@{/manage/dataDict}"
-               sec:authorize="hasAnyAuthority('global:create','dataDict:create')">
+            <a class="mdc-button mdc-button--raised" th:href="@{/manage/dataDictType}"
+               sec:authorize="hasAnyAuthority('global:create','dataDictType:create')">
                 <span class="mdc-button__label">添加</span>
             </a>
             <button class="mdc-button mdc-button--raised" id="editBtn" disabled
-                    sec:authorize="hasAnyAuthority('global:write','dataDict:write')">
+                    sec:authorize="hasAnyAuthority('global:write','dataDictType:write')">
                 <span class="mdc-button__label">编辑</span>
             </button>
             <button class="mdc-button mdc-button--raised" id="delBtn" disabled
-                    sec:authorize="hasAnyAuthority('global:delete','dataDict:delete')">
+                    sec:authorize="hasAnyAuthority('global:delete','dataDictType:delete')">
                 <span class="mdc-button__label">删除</span>
             </button>
         </div>
@@ -77,18 +59,9 @@
 <th:block layout:fragment="script">
     <script type="text/javascript">
       $(function() {
-        // 自动注册 data-mdc-auto-init 元素
-        mdc.autoInit();
-        const select = new mdc.select.MDCSelect(document.querySelector('.mdc-select'));
-        // 下拉选中更新表格
-        select.listen('MDCSelect:change', () => {
-          mdcDataTable.refresh({
-            typeId: select.value
-          });
-        });
         // 表格初始化
         let mdcDataTable = $('#mdc-data-table').mdcDataTable({
-          url: '/manage/dataDict/page',
+          url: '/manage/dataDictType/page',
           queryParams: {},
           container: '#mdc-data-table',
           columns: [
@@ -99,25 +72,17 @@
               data: 'name'
             },
             {
-              data: 'dataDictTypeName'
-            },
-            {
               data: 'remark'
             }
           ],
           thead: [
             {
-              data: 'CODE',
+              data: '标识',
               style: 'mdc-data-table__cell--non-numeric'
               // width: '60px'
             },
             {
-              data: 'NAME',
-              style: 'mdc-data-table__cell--non-numeric'
-              // width: '60px'
-            },
-            {
-              data: '分类',
+              data: '名称',
               style: 'mdc-data-table__cell--non-numeric'
               // width: '60px'
             },
@@ -162,7 +127,7 @@
             $.alert('请选择一条记录');
             return false;
           }
-          window.location.href = '/manage/dataDict/' + selectItems[0].id;
+          window.location.href = '/manage/dataDictType/' + selectItems[0].id;
         });
         // 删除
         $('#delBtn').click(function() {
@@ -177,7 +142,7 @@
             selectItems.forEach(function(item) {
               ids.push(item.id);
             });
-            $.delete('/manage/dataDict/deleteBatch', {'ids': ids.toString()}, function(res) {
+            $.delete('/manage/dataDictType/deleteBatch', {'ids': ids.toString()}, function(res) {
               console.log(JSON.stringify(res));
               $.alert(res.msg);
               let delCount = selectItems.length;

@@ -1,12 +1,9 @@
 package org.ramer.admin.system.service.common.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.admin.system.entity.Constant.PrivilegeEnum;
 import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.exception.CommonException;
@@ -23,21 +20,6 @@ import org.springframework.util.StringUtils;
 public class PrivilegeServiceImpl implements PrivilegeService {
   @Resource private JPAQueryFactory jpaQueryFactory;
   @Resource private PrivilegeRepository repository;
-
-  @Transactional
-  @Override
-  public synchronized List<Privilege> create(final String expPrefix, final String expName) {
-    List<Privilege> privileges = new ArrayList<>();
-    PrivilegeEnum.map()
-        .forEach(
-            (name, remark) -> {
-              final Privilege p = new Privilege();
-              p.setExp(expPrefix + ":" + name);
-              p.setName(expName + ":" + remark);
-              privileges.add(create(p));
-            });
-    return repository.saveAll(privileges);
-  }
 
   @Override
   public Privilege getByExp(final String exp) {

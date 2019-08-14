@@ -30,17 +30,17 @@
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6" tabindex="0">
                     <!--字典分类-->
-                    <div class="mdc-select select-type">
-                        <input type="hidden" name="dataDictTypeId">
+                    <div class="mdc-select select-width-fixed">
+                        <input type="hidden" name="dataDictTypeId" required>
                         <i class="mdc-select__dropdown-icon"></i>
-                        <!-- 预选第一个 -->
+                        <!-- 预选 -->
                         <div class="mdc-select__selected-text"
-                             th:text="${not #lists.isEmpty(types)?types.get(0).name:''}"
-                             th:data-value="${not #lists.isEmpty(types)?types.get(0).id:''}"></div>
-                        <div class="mdc-select__menu mdc-menu mdc-menu-surface select-type">
+                             th:text="${not #lists.isEmpty(types)?(id ne null ? dataDict.dataDictType.name : types.get(0).name):''}"
+                             th:data-value="${not #lists.isEmpty(types)? (id ne null ? dataDict.dataDictTypeId : types.get(0).id):''}"></div>
+                        <div class="mdc-select__menu mdc-menu mdc-menu-surface select-width-fixed">
                             <ul class="mdc-list">
                                 <li th:each="type,stat:${types}"
-                                    th:class="|mdc-list-item${stat.index eq 0 ? ' mdc-list-item--selected':''}|"
+                                    th:class="|mdc-list-item${(id ne null and type.id eq  dataDict.dataDictTypeId) or (id eq null and stat.index eq 0) ? ' mdc-list-item--selected':''}|"
                                     th:data-value="${type.id}"
                                     th:text="${type.name}"></li>
                             </ul>
@@ -48,7 +48,7 @@
                         <span class="mdc-floating-label mdc-floating-label--float-above">请选择分类</span>
                         <div class="mdc-line-ripple"></div>
                     </div>
-                    <!--CODE-->
+                    <!--标识-->
                     <div class="text-field-container mdc-panel__margin-16">
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
@@ -58,12 +58,12 @@
                                    required
                                    data-validtip="CODE不能为空,且小于20个字符"
                                    autocomplete="off"
-                                   placeholder="请输入CODE"
+                                   placeholder="请输入标识"
                                    th:value="${dataDict ne null?dataDict.code:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
-                                    <label for="codeInput" class="mdc-floating-label">CODE</label>
+                                    <label for="codeInput" class="mdc-floating-label">标识</label>
                                 </div>
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>

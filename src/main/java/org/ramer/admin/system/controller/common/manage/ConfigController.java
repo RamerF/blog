@@ -93,7 +93,7 @@ public class ConfigController {
         "manage/config/edit",
         map,
         "config",
-        () -> commonService.writeMenuAndSiteInfo(session, map));
+        id -> commonService.writeMenuAndSiteInfo(session, map));
   }
 
   @PutMapping("/{id}")

@@ -1,8 +1,7 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -87,12 +86,21 @@ public class DataDictController {
   public String update(
       @PathVariable(value = "id") String idStr,
       @RequestParam(value = "typeId", required = false) String typeIdStr,
+      @ApiIgnore HttpSession session,
       @ApiIgnore Map<String, Object> map) {
-    //    if (typeCode == null) {
-    //      throw new CommonException(String.format("参数%s不能为空", "typeCode"));
-    //    }
     return commonService.update(
-        service, DataDictPoJo.class, idStr, "manage/data_dict/update", map, "dataDict", null, true);
+        service,
+        DataDictPoJo.class,
+        idStr,
+        "manage/data_dict/edit",
+        map,
+        "dataDict",
+        id -> {
+          commonService.writeMenuAndSiteInfo(session, map);
+          map.put("types", typeService.list(null));
+          map.put("dataDict", service.getById(id));
+        },
+        false);
   }
 
   @PutMapping("/{id}")
@@ -101,10 +109,10 @@ public class DataDictController {
   @ApiOperation("更新数据字典")
   public ResponseEntity<CommonResponse<Object>> update(
       @PathVariable(value = "id") String idStr,
-      @Valid DataDict dataDict,
+      @Valid DataDictRequest dataDictRequest,
       @ApiIgnore BindingResult bindingResult) {
-    log.info(" DataDictController.update : [{}]", dataDict);
-    return commonService.update(service, dataDict, idStr, bindingResult);
+    log.info(" DataDictController.update : [{}]", dataDictRequest);
+    return commonService.update(service, DataDict.class, dataDictRequest, idStr, bindingResult);
   }
 
   @DeleteMapping("/{id}")

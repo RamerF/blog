@@ -2,8 +2,7 @@ package org.ramer.admin.system.service.common;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import javax.servlet.http.HttpSession;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
@@ -34,7 +33,8 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> create(S invoke, T entity, BindingResult bindingResult);
+      ResponseEntity<CommonResponse<Object>> create(
+          S invoke, T entity, BindingResult bindingResult);
 
   /**
    * 跳转到更新页面.校验更新url正确性,写入POJO对象用于回显.
@@ -65,7 +65,7 @@ public interface CommonService {
    * @param page 页面路径.
    * @param map 用于写入数据到request.
    * @param propName 写入的属性名
-   * @param runnable 自定义操作,如果该值不为空,将不会写入POJO对象,通常用于写入额外的信息或写入domain对象
+   * @param consumer 自定义操作,如果该值不为空,将不会写入POJO对象,通常用于写入额外的信息或写入domain对象
    * @return 返回更新页面
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
@@ -76,7 +76,7 @@ public interface CommonService {
           String page,
           Map<String, Object> map,
           String propName,
-          Runnable runnable);
+          Consumer<Long> consumer);
   /**
    * 跳转到更新页面.校验更新url正确性,写入POJO对象用于回显.
    *
@@ -86,7 +86,7 @@ public interface CommonService {
    * @param page 页面路径.
    * @param map 用于写入数据到request.
    * @param propName 写入的属性名
-   * @param runnable 自定义操作,如果该值不为空,将不会写入POJO对象,通常用于写入额外的信息或写入domain对象
+   * @param consumer 自定义操作,如果该值不为空,将不会写入POJO对象,通常用于写入额外的信息或写入domain对象
    * @param mapPoJo 是否写入pojo对象到map中
    * @return 返回更新页面
    */
@@ -98,7 +98,7 @@ public interface CommonService {
           String page,
           Map<String, Object> map,
           String propName,
-          Runnable runnable,
+          Consumer<Long> consumer,
           boolean mapPoJo);
 
   /**
@@ -113,7 +113,8 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> update(S invoke, T entity, String idStr, BindingResult bindingResult);
+      ResponseEntity<CommonResponse<Object>> update(
+          S invoke, T entity, String idStr, BindingResult bindingResult);
 
   /**
    * 创建.

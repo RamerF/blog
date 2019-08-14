@@ -3,8 +3,7 @@ package org.ramer.admin.system.service.common.impl;
 import com.alibaba.fastjson.JSONObject;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -118,8 +117,8 @@ public class CommonServiceImpl implements CommonService {
           final String page,
           Map<String, Object> map,
           String propName,
-          Runnable runnable) {
-    return update(invoke, clazz, idStr, page, map, propName, runnable, true);
+          Consumer<Long> consumer) {
+    return update(invoke, clazz, idStr, page, map, propName, consumer, true);
   }
 
   @Override
@@ -131,14 +130,14 @@ public class CommonServiceImpl implements CommonService {
           final String page,
           Map<String, Object> map,
           String propName,
-          Runnable runnable,
+          Consumer<Long> consumer,
           boolean mapPoJo) {
     final long id = TextUtil.validLong(idStr, 0);
     if (id < 1) {
       throw new CommonException("id 格式不正确");
     }
-    if (Objects.nonNull(runnable)) {
-      runnable.run();
+    if (Objects.nonNull(consumer)) {
+      consumer.accept(id);
     }
     if (mapPoJo) {
       map.put(propName, invoke.getPoJoById(id, clazz));
@@ -214,7 +213,7 @@ public class CommonServiceImpl implements CommonService {
       log.warn(" CommonServiceImpl.update : [{}]", e.getMessage());
       return CommonResponse.fail(Txt.ERROR_SYSTEM);
     }
-    return createOrUpdate(invoke, clazz, entity, bindingResult, false);
+    return createOrUpdate(invoke, clazz, entity, bindingResult, false, includeNullProperties);
   }
 
   @Override
@@ -329,6 +328,7 @@ public class CommonServiceImpl implements CommonService {
           e instanceof CommonException || e instanceof NullPointerException
               ? e.getMessage()
               : Txt.ERROR_SYSTEM);
+      log.error(e.getMessage(), e);
       return CommonResponse.fail(
           !StringUtils.isEmpty(e.getMessage())
                   && (e instanceof CommonException || e instanceof NullPointerException)

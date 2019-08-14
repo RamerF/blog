@@ -116,8 +116,8 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
               Objects.requireNonNull(
                       BeanUtils.findDeclaredMethod(u.getClass(), "getId"), "getId方法不存在")
                   .invoke(u);
-      domain = getById(Objects.isNull(id) ? -1 : id);
-      if (!Objects.isNull(id) && Objects.isNull(domain)) {
+      domain = Objects.isNull(id) ? null : getById(id);
+      if (Objects.nonNull(id) && Objects.isNull(domain)) {
         return null;
       }
       domain = Objects.isNull(domain) ? clazz.newInstance() : domain;

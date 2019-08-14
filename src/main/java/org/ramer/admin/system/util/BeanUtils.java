@@ -1,7 +1,6 @@
 package org.ramer.admin.system.util;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -13,8 +12,7 @@ public class BeanUtils {
     java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
     Set<String> nullNames = new HashSet<>();
     for (java.beans.PropertyDescriptor pd : pds) {
-      Object srcValue = src.getPropertyValue(pd.getName());
-      if (srcValue == null) nullNames.add(pd.getName());
+      if (Objects.isNull(src.getPropertyValue(pd.getName()))) nullNames.add(pd.getName());
     }
     return nullNames.toArray(new String[0]);
   }

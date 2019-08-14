@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 @RestController
 @ControllerAdvice
@@ -26,6 +27,10 @@ public class GlobalExceptionHandler {
   public ResponseEntity handle(
       HttpServletRequest request, Exception exception, Authentication authentication) {
     log.error(request.getRequestURL().toString());
+    if (request instanceof StandardMultipartHttpServletRequest) {
+      log.warn("上传文件过大");
+      return CommonResponse.fail("上传文件过大");
+    }
     if (exception instanceof AccessDeniedException) {
       log.warn(exception.getMessage());
       ManageLog manageLogs = new ManageLog();

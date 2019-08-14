@@ -55,7 +55,7 @@ public class OrganizeServiceImpl implements OrganizeService {
 
   @Override
   public List<Manager> listMembers(final long id) {
-    return getById(id).getMembers();
+    return Optional.ofNullable(getById(id)).map(Organize::getMembers).orElse(new ArrayList<>());
   }
 
   @Override
@@ -65,7 +65,7 @@ public class OrganizeServiceImpl implements OrganizeService {
 
   @Override
   public List<Organize> listAfterDate(final Date updateTime) {
-    return repository.findByUpdateTimeGreaterThan(updateTime );
+    return repository.findByUpdateTimeGreaterThan(updateTime);
   }
 
   @SuppressWarnings({"unchecked"})

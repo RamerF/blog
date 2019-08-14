@@ -7,6 +7,7 @@ import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.*;

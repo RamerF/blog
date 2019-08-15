@@ -3040,9 +3040,6 @@ var MDCDataTableFoundation = /** @class */function (_super) {
         enumerable: true,
         configurable: true
     });
-    MDCDataTableFoundation.prototype.init = function () {
-        this.layout();
-    };
     /**
      * Re-initializes header row checkbox and row checkboxes when selectable rows are added or removed from table.
      * Use this if registering checkbox is synchronous.
@@ -3146,14 +3143,14 @@ var MDCDataTableFoundation = /** @class */function (_super) {
      */
     MDCDataTableFoundation.prototype.setHeaderRowCheckboxState_ = function () {
         if (this.adapter_.getSelectedRowCount() === this.adapter_.getRowCount()) {
-            this.adapter_.setHeaderRowCheckboxIndeterminate(false);
             this.adapter_.setHeaderRowCheckboxChecked(true);
+            this.adapter_.setHeaderRowCheckboxIndeterminate(false);
         } else if (this.adapter_.getSelectedRowCount() === 0) {
             this.adapter_.setHeaderRowCheckboxIndeterminate(false);
             this.adapter_.setHeaderRowCheckboxChecked(false);
         } else {
-            this.adapter_.setHeaderRowCheckboxChecked(false);
             this.adapter_.setHeaderRowCheckboxIndeterminate(true);
+            this.adapter_.setHeaderRowCheckboxChecked(false);
         }
     };
     /**
@@ -4786,6 +4783,10 @@ var foundation_3 = __webpack_require__(/*! ./modal/foundation */ "./packages/mdc
 var util = __importStar(__webpack_require__(/*! ./util */ "./packages/mdc-drawer/util.ts"));
 var cssClasses = foundation_2.MDCDismissibleDrawerFoundation.cssClasses,
     strings = foundation_2.MDCDismissibleDrawerFoundation.strings;
+/**
+ * @events `MDCDrawer:closed {}` Emits when the navigation drawer has closed.
+ * @events `MDCDrawer:opened {}` Emits when the navigation drawer has opened.
+ */
 var MDCDrawer = /** @class */function (_super) {
     __extends(MDCDrawer, _super);
     function MDCDrawer() {
@@ -4796,7 +4797,8 @@ var MDCDrawer = /** @class */function (_super) {
     };
     Object.defineProperty(MDCDrawer.prototype, "open", {
         /**
-         * Returns true if drawer is in the open position.
+         * @return boolean Proxies to the foundation's `open`/`close` methods.
+         * Also returns true if drawer is in the open position.
          */
         get: function get() {
             return this.foundation_.isOpen();
@@ -5126,6 +5128,9 @@ var MDCDismissibleDrawerFoundation = /** @class */function (_super) {
             clearTimeout(this.animationTimer_);
         }
     };
+    /**
+     * Opens the drawer from the closed state.
+     */
     MDCDismissibleDrawerFoundation.prototype.open = function () {
         var _this = this;
         if (this.isOpen() || this.isOpening() || this.isClosing()) {
@@ -5139,6 +5144,9 @@ var MDCDismissibleDrawerFoundation = /** @class */function (_super) {
         });
         this.adapter_.saveFocus();
     };
+    /**
+     * Closes the drawer from the open state.
+     */
     MDCDismissibleDrawerFoundation.prototype.close = function () {
         if (!this.isOpen() || this.isOpening() || this.isClosing()) {
             return;
@@ -5146,18 +5154,21 @@ var MDCDismissibleDrawerFoundation = /** @class */function (_super) {
         this.adapter_.addClass(constants_1.cssClasses.CLOSING);
     };
     /**
+     * Returns true if the drawer is in the open position.
      * @return true if drawer is in open state.
      */
     MDCDismissibleDrawerFoundation.prototype.isOpen = function () {
         return this.adapter_.hasClass(constants_1.cssClasses.OPEN);
     };
     /**
+     * Returns true if the drawer is animating open.
      * @return true if drawer is animating open.
      */
     MDCDismissibleDrawerFoundation.prototype.isOpening = function () {
         return this.adapter_.hasClass(constants_1.cssClasses.OPENING) || this.adapter_.hasClass(constants_1.cssClasses.ANIMATE);
     };
     /**
+     * Returns true if the drawer is animating closed.
      * @return true if drawer is animating closed.
      */
     MDCDismissibleDrawerFoundation.prototype.isClosing = function () {
@@ -5175,7 +5186,7 @@ var MDCDismissibleDrawerFoundation = /** @class */function (_super) {
         }
     };
     /**
-     * Handles a transition end event on the root element.
+     * Handles the `transitionend` event when the drawer finishes opening/closing.
      */
     MDCDismissibleDrawerFoundation.prototype.handleTransitionEnd = function (evt) {
         var OPENING = constants_1.cssClasses.OPENING,

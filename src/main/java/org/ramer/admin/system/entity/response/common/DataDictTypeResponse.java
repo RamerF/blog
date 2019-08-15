@@ -2,9 +2,15 @@ package org.ramer.admin.system.entity.response.common;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Objects;
-import lombok.*;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
+import org.ramer.admin.system.entity.pojo.common.DataDictTypePoJo;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import lombok.*;
 import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
@@ -20,14 +26,17 @@ import org.springframework.beans.BeanUtils;
 @ApiModel(value = "数据字典分类")
 public class DataDictTypeResponse extends AbstractEntityResponse {
 
-  @ApiModelProperty(value = "标识")
+  @ApiModelProperty(value = "String")
   private String code;
 
-  @ApiModelProperty(value = "名称")
+  @ApiModelProperty(value = "String")
   private String name;
 
-  @ApiModelProperty(value = "备注")
+  @ApiModelProperty(value = "String")
   private String remark;
+
+  @ApiModelProperty(value = "dataDicts")
+  private List<Long> dataDictsIds;
 
   public static DataDictTypeResponse of(final DataDictType dataDictType) {
     if (Objects.isNull(dataDictType)) {

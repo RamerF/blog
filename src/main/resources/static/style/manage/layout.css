@@ -1,3 +1,10 @@
+/*:root {*/
+/*    --mdc-theme-primary: #03a9f4;*/
+/*    --mdc-theme-secondary: #feeae6;*/
+/*    --mdc-theme-on-primary: #fff;*/
+/*    --mdc-theme-on-secondary: #fff;*/
+/*}*/
+
 html, body, div {
     font-family: "Helvetica", "Arial", sans-serif;
     font-size: 16px;
@@ -11,6 +18,10 @@ body {
     margin: 0;
     display: flex;
     height: 100vh;
+}
+
+li {
+    list-style: none;
 }
 
 .mdc-drawer-fixed {
@@ -52,7 +63,6 @@ body {
     z-index: 7;
 }
 
-
 .mdc-list-item-fix {
     position: relative;
     align-items: center;
@@ -62,7 +72,8 @@ body {
     overflow: hidden;
 }
 
-.mdc-list-group__subheader {
+/* 修复list内部文本未垂直居中 */
+aside.mdc-drawer .mdc-list-group__subheader {
     margin-block-start: 0;
     margin-block-end: 0;
     -moz-user-select: none;

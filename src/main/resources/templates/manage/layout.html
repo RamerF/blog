@@ -16,11 +16,12 @@
     <script src="/libs/material-components-web/material-components-web.js"></script>
     <script src="/script/utils/common-util.js"></script>
     <link href="/libs/material-components-web/material-components-web.min.css" rel="stylesheet">
+    <link href="/libs/material-components-web/my-styles.css" rel="stylesheet">
     <link rel="stylesheet" href="/libs/material-components-web/material-icons.css">
     <link rel="stylesheet" href="/style/manage/layout.css">
 </head>
 <body class="container" layout:fragment="container">
-<header class="mdc-top-app-bar mdc-top-app-bar--dense header">
+<header class="mdc-top-app-bar app-bar mdc-top-app-bar--dense header" id="app-bar">
     <div class="mdc-top-app-bar__row">
         <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
             <a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
@@ -28,8 +29,8 @@
         </section>
     </div>
 </header>
-<aside class="mdc-drawer-fixed mdc-top-app-bar--fixed-adjust">
-    <div class="menu-container mdc-list">
+<aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust mdc-drawer--open">
+    <div class="mdc-drawer__content">
         <th:block th:each="m,stat:${menus}" th:inline="text">
             <li th:if="${stat.index ne 0}" class="mdc-list-divider mdc-list-divider--padded"></li>
             <h3 class="mdc-list-group__subheader" th:attr="data-href=${m.url}">[[${m.name}]]</h3>
@@ -57,8 +58,15 @@
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
+        // 菜单隐藏/显示
+        const drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+        const topAppBar = new mdc.topAppBar.MDCTopAppBar.attachTo(document.getElementById('app-bar'));
+        topAppBar.setScrollTarget(document.getElementById('main-content'));
+        topAppBar.listen('MDCTopAppBar:nav', () => {
+          drawer.open = !drawer.open;
+        });
         // 菜单折叠
-        $.collapse('aside.mdc-drawer-fixed');
+        $.collapse('aside.mdc-drawer');
         //  下拉框宽度修复,保持与父容器同宽
         let clientWidth = document.body.clientWidth;
         window.onresize = function() {
@@ -78,8 +86,8 @@
           window.location.href = this.dataset.href;
         });
         // TODO-WARN: 自动选择菜单
-        // var url = location.href.substr(location.origin.length);
-        // url = url.endsWith('#') ? url.substr(0, url.length - 1) : url;
+        var url = location.pathname;
+        $('aside.mdc-drawer').find('li[data-href="' + url + '"]').addClass('mdc-list-item--activated');
         // var activeMenu = $('a[href="' + url + '"]');
         // activeMenu.parents('ul').prev('a')[0].click();
         // activeMenu.addClass('active-menu');

@@ -1,7 +1,6 @@
 package org.ramer.admin.system.controller.common;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -89,8 +88,8 @@ public class CommonController {
   @ApiOperation("通用文件上传")
   public ResponseEntity uploadFile(
       @RequestParam("file") MultipartFile file,
-      @RequestParam(value = "fileSuffix", required = false) String fileSuffix,
-      @RequestParam(value = "name", required = false) String name) {
+      @ApiParam("文件后缀") @RequestParam(value = "fileSuffix", required = false) String fileSuffix,
+      @ApiParam("文件名") @RequestParam(value = "name", required = false) String name) {
     String path = ImageUtil.save(file, name, SavingFolder.PUBLIC, fileSuffix);
     return path != null ? CommonResponse.ok(path) : CommonResponse.fail("上传失败");
   }

@@ -5,6 +5,4 @@ import org.ramer.admin.system.repository.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DataDictTypeRepository extends BaseRepository<DataDictType, Long> {
-  DataDictType findByCodeAndState(final String code, final int state);
-}
+public interface DataDictTypeRepository extends BaseRepository<DataDictType, Long> {}

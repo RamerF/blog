@@ -98,6 +98,7 @@ aside.mdc-drawer .mdc-list-group__subheader {
     white-space: nowrap;
     font-size: 13px;
     background-color: rgb(255, 255, 255);
+    display: table;
 }
 
 .mdc-data-table__container > div {

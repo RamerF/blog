@@ -34,3 +34,20 @@
 5. 复制到指定路径 ?(y/n)
     tip: n: 生成代码文件到当前(项目|jar同级)目录下,y: 指定每个文件的目录
 ```
+
+### 功能开发
+- [ ] 侧边栏自动收起
+- [ ] 基础功能模糊搜索
+
+### 待开发
+- [ ] 组织,组织角色
+- [ ] 组织数据权限
+- [ ] mdc组件MDCDataTable官方已开发完成,项目中的所有表格需要移植
+
+### 相关链接
+[material-components-web](https://github.com/material-components/material-components-web) 
+
+### 加入项目
+ - MAIL: feng1390635973@gmail.com
+ - QQ: 1874890499
+ - WX: ramer-

@@ -84,12 +84,15 @@
         $('aside li[data-href]').click(function() {
           window.location.href = this.dataset.href;
         });
-        // TODO-WARN: 自动选择菜单
-        var url = location.pathname;
+        // 菜单激活
+        let url = location.pathname;
         $('aside.mdc-drawer').find('li[data-href="' + url + '"]').addClass('mdc-list-item--activated');
-        // var activeMenu = $('a[href="' + url + '"]');
-        // activeMenu.parents('ul').prev('a')[0].click();
-        // activeMenu.addClass('active-menu');
+        // 元素回车事件绑定
+        $('[data-enter-trigger]').keypress(function(e) {
+          if (e.key === 'Enter') {
+            eval($(this).attr('data-enter-trigger') + '()');
+          }
+        });
       });
     </script>
     <th:block layout:fragment="script">

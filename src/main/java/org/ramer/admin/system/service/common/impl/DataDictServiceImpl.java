@@ -64,7 +64,7 @@ public class DataDictServiceImpl implements DataDictService {
     }
     if (!StringUtils.isEmpty(criteria)) {
       expression =
-          expression.or(dataDict.code.contains(criteria)).or(dataDict.name.contains(criteria));
+          expression.and(dataDict.code.contains(criteria).or(dataDict.name.contains(criteria)));
     }
     query.where(expression);
     return new PageImpl<>(query.fetch(), pageable, query.fetchCount());

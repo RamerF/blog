@@ -1,18 +1,13 @@
 package org.ramer.admin.system.service.common.impl;
 
-import org.ramer.admin.system.entity.Constant;
+import javax.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.DataDictTypeRepository;
-import org.ramer.admin.system.service.BaseService;
 import org.ramer.admin.system.service.common.DataDictTypeService;
-import org.ramer.admin.system.util.TextUtil;
-import java.util.*;
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,6 +17,18 @@ import org.springframework.util.StringUtils;
 @Service
 public class DataDictTypeServiceImpl implements DataDictTypeService {
   @Resource private DataDictTypeRepository repository;
+
+  @Override
+  public Specification<DataDictType> getSpec(final String criteria) {
+    return StringUtils.isEmpty(criteria)
+        ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
+        : (root, query, builder) ->
+            builder.and(
+                builder.equal(root.get("state"), State.STATE_ON),
+                builder.or(
+                    builder.like(root.get("code"), "%" + criteria + "%"),
+                    builder.like(root.get("name"), "%" + criteria + "%")));
+  }
 
   @SuppressWarnings({"unchecked"})
   @Override

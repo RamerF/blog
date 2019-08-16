@@ -39,8 +39,8 @@
                              th:data-value="${not #lists.isEmpty(ms) and menu ne null and menu.parent ne null ? menu.parentId :'-1'}"></div>
                         <div class="mdc-select__menu mdc-menu mdc-menu-surface select-width-fixed">
                             <ul class="mdc-list">
-                                <li data-value="-1"
-                                    th:class="|mdc-list-item${id eq null  ? ' mdc-list-item--selected':''}|"
+                                <li th:class="|mdc-list-item${menu.parentId eq null  ? ' mdc-list-item--selected':''}|"
+                                    data-value="-1"
                                     th:text="请选择父菜单"></li>
                                 <li th:each="m,stat:${ms}"
                                     th:class="|mdc-list-item${id ne null and m.id eq  menu.parentId ? ' mdc-list-item--selected':''}|"

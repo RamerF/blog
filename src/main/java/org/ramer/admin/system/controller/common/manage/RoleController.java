@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
-@Controller("rolec")
+@Controller("rolemc")
 @PreAuthorize("hasAnyAuthority('global:read','role:read')")
 @RequestMapping(AccessPath.MANAGE + "/role")
 @Api(tags = "管理端: 角色接口")
@@ -140,7 +140,7 @@ public class RoleController {
     if (Objects.isNull(role)) {
       throw new CommonException("id 无效");
     }
-    map.put("menus", CollectionUtils.list(menuService.list(null), MenuResponse::of, null, null));
+    map.put("ms", CollectionUtils.list(menuService.list(null), MenuResponse::of, null, null));
     map.put("withMenus", CollectionUtils.list(role.getMenus(), AbstractEntity::getId, null, null));
     return "manage/role/index::menus";
   }

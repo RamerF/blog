@@ -1,8 +1,8 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -96,7 +96,11 @@ public class MenuController {
         map,
         "menu",
         id -> {
-          map.put("ms", service.list(null));
+          map.put(
+              "ms",
+              service.list(null).stream()
+                  .filter(m -> !Objects.equals(m.getId(), id))
+                  .collect(Collectors.toList()));
           map.put("menu", service.getById(id));
         },
         false);

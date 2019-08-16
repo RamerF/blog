@@ -62,7 +62,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
                 builder.equal(root.get("state"), State.STATE_ON),
                 builder.or(
                     builder.like(root.get("exp"), "%" + criteria + "%"),
-                    builder.like(root.get("remark"), "%" + criteria + "%")));
+                    builder.like(root.get("name"), "%" + criteria + "%")));
   }
 
   @SuppressWarnings({"unchecked"})

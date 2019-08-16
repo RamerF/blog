@@ -19,31 +19,36 @@
 </th:block>
 <div layout:fragment="main-container" class="main-container">
     <div id="mdc-data-table" class="mdc-data-table__container">
-        <div class="search-container">
-            <div class="mdc-text-field mdc-text-field--fullwidth mdc-text-field--with-trailing-icon"
-                 data-mdc-auto-init="MDCTextField">
-                <input type="text" id="name" class="mdc-text-field__input" placeholder="请输入参数Code或名称"
-                       autocomplete="off">
-                <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">search</i>
-                <div class="mdc-line-ripple"></div>
-            </div>
+        <!--扩展搜索条件-->
+        <div class="search-container-extend">
         </div>
         <div class="operator-container">
-            <button class="mdc-button mdc-button--raised" id="refreshBtn">
-                <span class="mdc-button__label">刷新</span>
-            </button>
-            <a class="mdc-button mdc-button--raised" th:href="@{/manage/menu}"
-               sec:authorize="hasAnyAuthority('global:create','menu:create')">
-                <span class="mdc-button__label">添加</span>
-            </a>
-            <button class="mdc-button mdc-button--raised" id="editBtn" disabled
-                    sec:authorize="hasAnyAuthority('global:write','menu:write')">
-                <span class="mdc-button__label">编辑</span>
-            </button>
-            <button class="mdc-button mdc-button--raised" id="delBtn" disabled
-                    sec:authorize="hasAnyAuthority('global:delete','menu:delete')">
-                <span class="mdc-button__label">删除</span>
-            </button>
+            <div class="btn-container">
+                <button class="mdc-button mdc-button--raised" id="refreshBtn">
+                    <span class="mdc-button__label">刷新</span>
+                </button>
+                <a class="mdc-button mdc-button--raised" th:href="@{/manage/menu}"
+                   sec:authorize="hasAnyAuthority('global:create','menu:create')">
+                    <span class="mdc-button__label">添加</span>
+                </a>
+                <button class="mdc-button mdc-button--raised" id="editBtn" disabled
+                        sec:authorize="hasAnyAuthority('global:write','menu:write')">
+                    <span class="mdc-button__label">编辑</span>
+                </button>
+                <button class="mdc-button mdc-button--raised" id="delBtn" disabled
+                        sec:authorize="hasAnyAuthority('global:delete','menu:delete')">
+                    <span class="mdc-button__label">删除</span>
+                </button>
+            </div>
+            <div class="search-container">
+                <div class="mdc-text-field text-field mdc-text-field--fullwidth mdc-text-field--no-label mdc-ripple-upgraded mdc-text-field--with-trailing-icon"
+                     data-mdc-auto-init="MDCTextField">
+                    <input type="text" id="criteria" class="mdc-text-field__input"
+                           placeholder="请输入名称" autocomplete="off" data-enter-trigger="refreshTable">
+                    <i class="material-icons mdc-text-field__icon" tabindex="0" role="button" id="searchBtn">search</i>
+                    <div class="mdc-line-ripple"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -120,10 +125,12 @@
             $('#delBtn').prop('disabled', false);
           }
         });
-        // 刷新
-        $('#refreshBtn').click(function() {
-          mdcDataTable.refresh();
-        });
+        window.mdcDataTable = mdcDataTable;
+        window.refreshTable = function() {
+          window.mdcDataTable.refresh({criteria: $('#criteria').val()});
+        };
+        // 刷新,搜索
+        $('#refreshBtn,#searchBtn').click(refreshTable);
         // 编辑
         $('#editBtn').click(function() {
           let selectItems = mdcDataTable.getSelectItems();

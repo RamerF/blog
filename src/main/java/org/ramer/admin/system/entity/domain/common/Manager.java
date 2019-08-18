@@ -15,7 +15,7 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 @Table(appliesTo = Manager.TABLE_NAME, comment = "管理员")
 @Data
 @NoArgsConstructor
-@ToString(exclude = {"roles"})
+@ToString(exclude = {"roles", "posts"})
 @EqualsAndHashCode(callSuper = true)
 public class Manager extends AbstractEntity {
   public static final String TABLE_NAME = "manager";
@@ -40,11 +40,11 @@ public class Manager extends AbstractEntity {
   @Column(columnDefinition = "VARCHAR(11) NOT NULL COMMENT '联系电话'")
   private String phone;
 
-  /** 头图 */
+  /** 头图: 暂未启用 */
   @Column(length = 50, columnDefinition = "VARCHAR(50) COMMENT '头像'")
   private String avatar;
 
-  /** 审核状态 */
+  /** 审核状态: 暂未启用 */
   @Column(columnDefinition = "BIT DEFAULT 0 COMMENT '审核状态'")
   private Boolean isActive = false;
 
@@ -53,6 +53,12 @@ public class Manager extends AbstractEntity {
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
   private List<Role> roles;
+
+  @ManyToMany
+  @JoinTable
+  @JsonBackReference
+  @Where(clause = "state = " + State.STATE_ON)
+  private List<Post> posts;
 
   public static Manager of(Long id) {
     if (Objects.isNull(id)) {

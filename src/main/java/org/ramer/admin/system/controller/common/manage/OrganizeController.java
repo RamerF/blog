@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
-@Controller("organizemc")
+@Controller("organizecm")
 @PreAuthorize("hasAnyAuthority('global:read','organize:read')")
 @RequestMapping(AccessPath.MANAGE + "/system/common/organize")
 @Api(tags = "管理端: 组织接口")

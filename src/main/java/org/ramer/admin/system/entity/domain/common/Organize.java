@@ -1,11 +1,11 @@
 package org.ramer.admin.system.entity.domain.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Table;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 /**
  * 组织.
@@ -18,7 +18,7 @@ import org.hibernate.annotations.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ToString(exclude = {"leaders", "members", "root", "prev"})
+@ToString(exclude = {"leaders", "members", "root", "prev", "children"})
 public class Organize extends AbstractEntity {
   public static final String TABLE_NAME = "organize";
   /** 名称 */
@@ -31,15 +31,16 @@ public class Organize extends AbstractEntity {
   @ManyToMany private List<Manager> members;
 
   /** 上级 */
-  @Column(name = "prev_id", columnDefinition = "BIGINT(20) COMMENT '上级'")
+  @Column(name = "prev_id", columnDefinition = "BIGINT(20) NULL COMMENT '上级'")
   private Long prevId;
 
   @ManyToOne
   @JoinColumn(name = "prev_id", insertable = false, updatable = false)
   @JsonBackReference
   private Organize prev;
-  /** 最高级 */
-  @Column(name = "root_id", columnDefinition = "BIGINT(20) COMMENT '最高级'")
+
+  /** 顶级 */
+  @Column(name = "root_id", columnDefinition = "BIGINT(20) NULL COMMENT '顶级'")
   private Long rootId;
 
   @ManyToOne
@@ -51,8 +52,17 @@ public class Organize extends AbstractEntity {
   private Boolean hasChild = false;
 
   /** 备注 */
-  @Column(columnDefinition = "VARCHAR(255)")
+  @Column(columnDefinition = "VARCHAR(255) COMMENT '备注'")
   private String remark;
+
+  @Column(columnDefinition = "VARCHAR(100) COMMENT '徽标'")
+  private String logo;
+
+  /** 所有子组织,递归 */
+  @ManyToMany private List<Organize> children;
+
+  /** 岗位/职位 */
+  @OneToMany @JsonBackReference private List<Post> posts;
 
   public static Organize of(Long id) {
     Organize organize = new Organize();

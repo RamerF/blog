@@ -5,6 +5,14 @@
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>[[${site.title}]]</title>
+    <style>
+       #mdcTree  ul{
+            overflow: hidden;
+        }
+        /*li {*/
+        /*    border: 2px solid;*/
+        /*}*/
+    </style>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -17,32 +25,28 @@
     </th:block>
 </th:block>
 <div layout:fragment="main-container" class="main-container">
-    <div class="mdc-list-group">
-        <h3 class="mdc-list-group__subheader">List 1</h3>
-        <ul class="mdc-list">
-            <li class="mdc-list-item" tabindex="0">
-                <span class="mdc-list-item__text">line item</span>
-            </li>
-            <li class="mdc-list-item">
-                <span class="mdc-list-item__text">line item</span>
-            </li>
-            <li class="mdc-list-item">
-                <span class="mdc-list-item__text">line item</span>
-            </li>
-        </ul>
-        <h3 class="mdc-list-group__subheader">List 2</h3>
-        <ul class="mdc-list">
-            <li class="mdc-list-item">
-                <span class="mdc-list-item__text">line item</span>
-            </li>
-            <li class="mdc-list-item">
-                <span class="mdc-list-item__text">line item</span>
-            </li>
-            <li class="mdc-list-item">
-                <span class="mdc-list-item__text">line item</span>
-            </li>
-        </ul>
-    </div>
+    <div id="mdcTree"></div>
+</div>
+<div layout:fragment="script">
+    <script type="text/javascript" th:inline="javascript">
+      $(function() {
+        function Menu(id, pId, name) {
+          return {id: id, pId: pId, name: name};
+        }
+
+        $('#mdcTree').mdcTree({
+          datas: [
+            Menu(1, null, '顶级菜单'),
+            Menu(2, 1, '一级菜单1-1'),
+            Menu(3, 1, '一级菜单1-2'),
+            Menu(4, 1, '二级菜单2-1')],
+          id: 'id',
+          parentId: 'pId',
+          label: 'name',
+          icon: 'icon'
+        });
+      });
+    </script>
 </div>
 </body>
 </html>

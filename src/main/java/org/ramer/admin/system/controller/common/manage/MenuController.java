@@ -87,7 +87,6 @@ public class MenuController {
       @PathVariable("id") String idStr,
       @ApiIgnore HttpSession session,
       @ApiIgnore Map<String, Object> map) {
-    commonService.writeMenuAndSiteInfo(session, map);
     return commonService.update(
         service,
         MenuPoJo.class,
@@ -102,6 +101,7 @@ public class MenuController {
                   .filter(m -> !Objects.equals(m.getId(), id))
                   .collect(Collectors.toList()));
           map.put("menu", service.getById(id));
+          commonService.writeMenuAndSiteInfo(session, map);
         },
         false);
   }

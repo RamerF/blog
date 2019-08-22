@@ -23,6 +23,4 @@ public class OrganizeMemberRequest extends AbstractEntityRequest {
   @ApiModelProperty(example = "1", value = "操作类型: 0:删除,1:添加", required = true)
   private Integer bindingOperate;
 
-  @ApiModelProperty(example = "0", value = "操作角色: 0:成员,1(非0):负责人")
-  private Integer role;
 }

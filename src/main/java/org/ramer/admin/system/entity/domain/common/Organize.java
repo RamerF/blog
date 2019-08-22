@@ -18,14 +18,12 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ToString(exclude = {"leaders", "members", "root", "prev", "children"})
+@ToString(exclude = {"members", "root", "prev", "children"})
 public class Organize extends AbstractEntity {
   public static final String TABLE_NAME = "organize";
   /** 名称 */
   @Column(columnDefinition = "VARCHAR(255) COMMENT '名称'")
   private String name;
-  /** 负责人,所属于成员 */
-  @ManyToMany private List<Manager> leaders;
 
   /** 成员 */
   @ManyToMany private List<Manager> members;

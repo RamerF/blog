@@ -59,11 +59,6 @@ public class OrganizeServiceImpl implements OrganizeService {
   }
 
   @Override
-  public List<Manager> listLeaders(final long id) {
-    return getById(id).getLeaders();
-  }
-
-  @Override
   public List<Organize> listAfterDate(final Date updateTime) {
     return repository.findByUpdateTimeGreaterThan(updateTime);
   }

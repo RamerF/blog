@@ -1,5 +1,6 @@
 package org.ramer.admin.system.validator.common;
 
+import javax.annotation.Nonnull;
 import org.ramer.admin.system.entity.domain.common.Organize;
 import org.ramer.admin.system.entity.pojo.common.OrganizePoJo;
 import org.ramer.admin.system.entity.request.common.OrganizeRequest;
@@ -24,7 +25,7 @@ public class OrganizeValidator implements Validator {
   }
 
   @Override
-  public void validate(final Object target, final Errors errors) {
+  public void validate(final Object target, @Nonnull final Errors errors) {
     final OrganizeRequest organize = (OrganizeRequest) target;
     if (organize == null) {
       errors.rejectValue(null, "organize.null", "参数不能为空");

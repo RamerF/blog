@@ -767,4 +767,71 @@
     return pattern;
   };
 
+  $.arraySub = function(arr1 = [], arr2 = []) {
+    let result = arr1.concat();
+    if (result.length === 0) {
+      return [];
+    }
+    arr2.forEach(function(val) {
+      result.forEach(function(v, i) {
+        if (v === val) {
+          result.splice(i, 1);
+        }
+      });
+    });
+    return result;
+  };
+
+  $.fn.mdcTree = function(opts) {
+    let paras = $.extend({
+      datas: [],
+      id: 'id', // value
+      parentId: 'pId', // 上级
+      label: 'name', // 显示文本
+      icon: 'icon' // 显示图标
+    }, opts || {});
+    let _datas = paras.datas;
+    let _parentId = paras.parentId;
+    let _id = paras.id;
+    let _root = paras.root;
+    let _label = paras.label;
+    let containNode = $(this);
+    // 顶层节点
+    let roots2 = [];
+    let roots = $(_datas).filter(function(index, val) {
+      if (Number(val[_parentId]) <= 0) {
+        roots2.push(val);
+      }
+      return Number(val[_parentId]) <= 0;
+    });
+    let children = $.arraySub(_datas, roots2);
+    roots2.forEach(function(val) {
+      console.log(' logs: ' + val);
+      let rootNode = $(`<div></div>`);
+      retrieveTree(val, rootNode);
+      $(containNode).append(rootNode);
+    });
+    $.collapse(containNode);
+
+    function retrieveTree(root, dom) {
+      let h3Node = $(
+          `<h3 class="mdc-list-group__subheader" data-id="${root[_id]}">${root[_label]}</h3>`);
+      let ulNode = $(`<ul></ul>`);
+      let liNode = $(`<li></li>`);
+      dom.append(h3Node);
+      // 当前元素子元素
+      let cs = children.filter(o => o[_parentId] === root[_id]);
+      if (cs.length > 0) {
+        dom.append(ulNode.append(liNode));
+        cs.forEach(function(val) {
+          retrieveTree(val, liNode);
+        });
+      }
+    }
+
+    $(containNode).find('li.root > label').click(function(e) {
+      $(this).next('ul').toggle(500);
+    });
+  };
+
 }));

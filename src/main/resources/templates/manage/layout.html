@@ -65,7 +65,7 @@
           drawer.open = !drawer.open;
         });
         // 菜单折叠
-        $.collapse('aside.mdc-drawer');
+        $('aside.mdc-drawer').collapse();
         //  下拉框宽度修复,保持与父容器同宽
         let clientWidth = document.body.clientWidth;
         window.onresize = function() {

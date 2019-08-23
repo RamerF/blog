@@ -28,9 +28,22 @@
    * collapse menu eg.
    * @param opts
    */
-  $.collapse = function(opts) {
-    $(opts).find('h3.mdc-list-group__subheader').click(function() {
-      $(this).next().slideToggle(150);
+  $.fn.collapse = function(opts) {
+    console.log(' log: ' + opts);
+    // 如果是容器触发,就绑定事件到容器,否则绑定到容器内的元素上
+    let paras = $.extend({
+      triggerCell: 'h3.mdc-list-group__subheader',
+      triggerContainer: '.mdc-tree-heading',
+      trigger: 'click',
+      toggleCell: 'ul',
+      containerTrigger: true,
+    }, opts || {});
+    let _triggerCell = paras.triggerCell;
+    let _trigger = paras.trigger;
+    let _toggleCell = paras.toggleCell;
+    console.log(' log: ' + _triggerCell, _toggleCell);
+    $(this).find(_triggerCell).on(_trigger, function() {
+      $(this).next(_toggleCell).slideToggle(150);
     });
   };
 
@@ -767,6 +780,11 @@
     return pattern;
   };
 
+  /**
+   * 数组减法.
+   * @param arr1 被减数组
+   * @param arr2 减去数组
+   */
   $.arraySub = function(arr1 = [], arr2 = []) {
     let result = arr1.concat();
     if (result.length === 0) {
@@ -793,45 +811,54 @@
     let _datas = paras.datas;
     let _parentId = paras.parentId;
     let _id = paras.id;
-    let _root = paras.root;
     let _label = paras.label;
     let containNode = $(this);
     // 顶层节点
-    let roots2 = [];
-    let roots = $(_datas).filter(function(index, val) {
+    let roots = [];
+    _datas.forEach(function(val) {
       if (Number(val[_parentId]) <= 0) {
-        roots2.push(val);
+        roots.push(val);
       }
-      return Number(val[_parentId]) <= 0;
     });
-    let children = $.arraySub(_datas, roots2);
-    roots2.forEach(function(val) {
-      console.log(' logs: ' + val);
-      let rootNode = $(`<div></div>`);
-      retrieveTree(val, rootNode);
-      $(containNode).append(rootNode);
+    let children = $.arraySub(_datas, roots);
+
+    roots.forEach(function(val) {
+      let divNode = $('<div class="mdc-tree-heading-container"></div>');
+      const checkNodeStr =
+          ' <div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>';
+      let h3Node = $(
+          `<h3 class="mdc-tree-heading mdc-tree-link" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons">keyboard_arrow_left</i>`);
+      let ulNode = $(`<ul class="mdc-tree-list"></ul>`);
+      retrieveTree(val, ulNode);
+      divNode.append(checkNodeStr).append(h3Node);
+      $(containNode).append(divNode).append(ulNode);
     });
-    $.collapse(containNode);
+    $(containNode).collapse({
+      triggerContainer: '.mdc-tree-heading',
+      triggerCell: '.mdc-tree-heading-container',
+      containerTrigger: false,
+      toggleCell: 'ul.mdc-tree-list'
+    });
 
     function retrieveTree(root, dom) {
-      let h3Node = $(
-          `<h3 class="mdc-list-group__subheader" data-id="${root[_id]}">${root[_label]}</h3>`);
-      let ulNode = $(`<ul></ul>`);
-      let liNode = $(`<li></li>`);
-      dom.append(h3Node);
       // 当前元素子元素
       let cs = children.filter(o => o[_parentId] === root[_id]);
       if (cs.length > 0) {
-        dom.append(ulNode.append(liNode));
         cs.forEach(function(val) {
-          retrieveTree(val, liNode);
+          let liNode = $(`<li class="mdc-tree-list__item"></li>`);
+          dom.append(liNode);
+          let divNode = $('<div class="mdc-tree-heading-container"></div>');
+          const checkNodeStr =
+              ' <div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>';
+          let h3Node = $(
+              `<h3 class="mdc-tree-heading mdc-tree-link mdc-ripple-upgraded" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons">keyboard_arrow_left</i>`);
+          let ulNode = $(`<ul class="mdc-tree-list"></ul>`);
+          retrieveTree(val, ulNode);
+          divNode.append(checkNodeStr).append(h3Node);
+          liNode.append(divNode).append(ulNode);
         });
       }
     }
-
-    $(containNode).find('li.root > label').click(function(e) {
-      $(this).next('ul').toggle(500);
-    });
   };
 
 }));

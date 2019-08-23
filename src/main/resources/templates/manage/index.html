@@ -5,14 +5,6 @@
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>[[${site.title}]]</title>
-    <style>
-       #mdcTree  ul{
-            overflow: hidden;
-        }
-        /*li {*/
-        /*    border: 2px solid;*/
-        /*}*/
-    </style>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -25,7 +17,7 @@
     </th:block>
 </th:block>
 <div layout:fragment="main-container" class="main-container">
-    <div id="mdcTree"></div>
+    <div id="mdcTree" class="mdc-tree"></div>
 </div>
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
@@ -39,12 +31,13 @@
             Menu(1, null, '顶级菜单'),
             Menu(2, 1, '一级菜单1-1'),
             Menu(3, 1, '一级菜单1-2'),
-            Menu(4, 1, '二级菜单2-1')],
+            Menu(4, 2, '二级菜单2-1')],
           id: 'id',
           parentId: 'pId',
           label: 'name',
           icon: 'icon'
         });
+        $('#mdcTree2').collapse();
       });
     </script>
 </div>

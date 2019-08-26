@@ -48,6 +48,7 @@ public class OrganizeController {
   @GetMapping("/index")
   @ApiOperation("组织页面")
   public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    map.put("organizes", service.list(null));
     commonService.writeMenuAndSiteInfo(session, map);
     return "manage/organize/index";
   }
@@ -98,7 +99,16 @@ public class OrganizeController {
         "manage/organize/edit",
         map,
         "organize",
-        id -> commonService.writeMenuAndSiteInfo(session, map));
+        id -> {
+          map.put(
+              "organizes",
+              service.list(null).stream()
+                  .filter(o -> !Objects.equals(o.getId(), id))
+                  .collect(Collectors.toList()));
+          commonService.writeMenuAndSiteInfo(session, map);
+          map.put("organize", service.getById(id));
+        },
+        false);
   }
 
   @PutMapping("/{id}")

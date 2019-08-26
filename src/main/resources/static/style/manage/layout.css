@@ -261,6 +261,10 @@ aside.mdc-drawer .mdc-list-group__subheader {
     display: none;
 }
 
+.mdc-float__left {
+    float: left;
+}
+
 /*修复a标签disabled无效的问题*/
 a[disabled] {
     box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, .12) !important;
@@ -273,7 +277,9 @@ a[disabled] {
     max-height: 100vh;
     overflow-y: auto;
     width: 280px;
-    border-right: 1px solid #e5e5e5;
+    float: left;
+    /*border-right: 1px solid #e5e5e5;*/
+    overflow-x: hidden;
 }
 
 .mdc-tree .mdc-checkbox {
@@ -297,6 +303,29 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
 .mdc-tree-heading-container {
     display: flex;
     align-items: center;
+    border-radius: 4px;
+}
+
+.mdc-tree-heading-container:hover {
+    color: #202124;
+    background-color: rgba(0, 0, 0, .04);
+}
+
+.mdc-tree .mdc-tree-heading-container:not(:first-of-type) {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.mdc-tree ul li .mdc-tree-heading-container {
+    border-radius: 0;
+}
+
+.mdc-tree .mdc-tree-heading-container:not(:last-of-type) {
+    border-bottom-right-radius: 0;
+}
+
+.mdc-tree-heading-container.active {
+    background-color: #e0e0e0;
 }
 
 .mdc-tree .mdc-tree-heading {
@@ -307,6 +336,7 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
     letter-spacing: .04em;
     text-decoration: inherit;
     text-transform: inherit;
+    text-overflow: ellipsis;
     font-weight: 500;
     color: #202124;
     margin-bottom: 5px;
@@ -326,15 +356,11 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
 
 .mdc-tree-list__item {
     position: relative;
-    min-height: 42px;
+    /*min-height: 42px;*/
     padding-left: 24px;
     padding-bottom: 0;
 }
 
-.mdc-tree-link:hover {
-    color: #202124;
-    background-color: rgba(0, 0, 0, .04);
-}
 
 .mdc-tree-link.mdc-ripple-upgraded {
     --mdc-ripple-fg-opacity: 0.16;
@@ -372,6 +398,15 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
     letter-spacing: normal;
     overflow: hidden;
     color: #616161;
+}
+
+.mdc-tree-heading-container i.toggle-cell {
+    transition: all .5s;
+}
+
+.mdc-tree-toggle__expanded {
+    transform: rotateZ(-90deg);
+    transition: all .5s;
 }
 
 /*  mdc-tree  官方暂时没有该组件*/

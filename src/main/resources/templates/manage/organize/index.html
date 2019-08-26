@@ -6,6 +6,16 @@
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>组织管理</title>
+    <style rel="stylesheet">
+        .mdc-tree {
+            margin-top: 16px
+        }
+
+        .data-table {
+            width: calc(100% - 300px);
+            margin-left: 16px;
+        }
+    </style>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -18,7 +28,8 @@
     </th:block>
 </th:block>
 <div layout:fragment="main-container" class="main-container">
-    <div id="mdc-data-table" class="mdc-data-table__container">
+    <div id="mdcTree" class="mdc-tree"></div>
+    <div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table">
         <!--扩展搜索条件-->
         <div class="search-container-extend">
         </div>
@@ -59,50 +70,25 @@
             </div>
         </div>
     </div>
-    <div th:fragment="menus" id="menus">
-        <div class="mdc-form-field" th:each="m:${ms}">
-            <div class="mdc-checkbox">
-                <input type="checkbox"
-                       class="mdc-checkbox__native-control"
-                       th:id="${'checkbox-m'+m.id}"
-                       th:value="${m.id}"
-                       th:checked="${not #lists.isEmpty(withMenus) and #lists.contains(withMenus,m.id)?'checked':'false'}"/>
-                <div class="mdc-checkbox__background">
-                    <!--suppress ALL-->
-                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                        <path class="mdc-checkbox__checkmark-path" fill="none"
-                              d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
-                    </svg>
-                    <div class="mdc-checkbox__mixedmark"></div>
-                </div>
-            </div>
-            <label th:for="${'checkbox-m'+m.id}" th:text="${m.name}"></label>
-        </div>
-    </div>
-    <div th:fragment="privileges" id="privileges">
-        <div class="mdc-form-field" th:each="p:${privileges}">
-            <div class="mdc-checkbox">
-                <input type="checkbox"
-                       class="mdc-checkbox__native-control"
-                       th:id="${'checkbox-p'+p.id}"
-                       th:value="${p.id}"
-                       th:checked="${not #lists.isEmpty(withPrivileges) and #lists.contains(withPrivileges,p.id)?'checked':'false'}"/>
-                <div class="mdc-checkbox__background">
-                    <!--suppress ALL-->
-                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                        <path class="mdc-checkbox__checkmark-path" fill="none"
-                              d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
-                    </svg>
-                    <div class="mdc-checkbox__mixedmark"></div>
-                </div>
-            </div>
-            <label th:for="${'checkbox-p'+p.id}" th:text="${p.name}"></label>
-        </div>
-    </div>
 </div>
 <th:block layout:fragment="script">
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
       $(function() {
+        console.log(' organizes: ', [[${organizes}]]);
+        let mdcTree = $('#mdcTree').mdcTree({
+          data: [[${organizes}]],
+          id: 'id',
+          parentId: 'prevId',
+          label: 'name',
+          icon: 'icon',
+          expandAll: false,
+          checkbox: true,
+          toggleEvt: function(cell) {
+            console.log(' 点击元素: ', cell.dataset.id);
+            console.log('已选择项', mdcTree.getSelectItems());
+            window.mdcDataTable.refresh({id: cell.dataset.id, criteria: $('#criteria').val()});
+          }
+        });
         // 表格初始化
         let mdcDataTable = $('#mdc-data-table').mdcDataTable({
           url: '/manage/organize/page',

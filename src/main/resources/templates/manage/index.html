@@ -26,8 +26,8 @@
           return {id: id, pId: pId, name: name};
         }
 
-        $('#mdcTree').mdcTree({
-          datas: [
+        let mdcTree = $('#mdcTree').mdcTree({
+          data: [
             Menu(1, null, '顶级菜单'),
             Menu(2, 1, '一级菜单1-1'),
             Menu(3, 1, '一级菜单1-2'),
@@ -35,9 +35,14 @@
           id: 'id',
           parentId: 'pId',
           label: 'name',
-          icon: 'icon'
+          icon: 'icon',
+          expandAll: false,
+          checkbox: true,
+          toggleEvt: function() {
+            console.log('已选择项', mdcTree.getSelectItems());
+          }
         });
-        $('#mdcTree2').collapse();
+        console.log(' log: ', mdcTree);
       });
     </script>
 </div>

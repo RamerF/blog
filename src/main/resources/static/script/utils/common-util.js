@@ -36,13 +36,18 @@
       triggerContainer: '.mdc-tree-heading',
       trigger: 'click',
       toggleCell: 'ul',
-      containerTrigger: true,
+      expandAll: true, // 是否全部展开
+      containerTrigger: true, // 是否容器触发
+      toggleEvt: function() {}
     }, opts || {});
     let _triggerCell = paras.triggerCell;
     let _trigger = paras.trigger;
     let _toggleCell = paras.toggleCell;
+    let _expandAll = paras.expandAll;
+    let _toggleEvt = paras.toggleEvt;
     console.log(' log: ' + _triggerCell, _toggleCell);
     $(this).find(_triggerCell).on(_trigger, function() {
+      _toggleEvt && _toggleEvt(this);
       $(this).next(_toggleCell).slideToggle(150);
     });
   };
@@ -802,42 +807,65 @@
 
   $.fn.mdcTree = function(opts) {
     let paras = $.extend({
-      datas: [],
+      data: [],
       id: 'id', // value
       parentId: 'pId', // 上级
       label: 'name', // 显示文本
-      icon: 'icon' // 显示图标
+      icon: 'icon', // 显示图标
+      expandAll: true, //  默认展开所有
+      checkbox: true, // 显示复选框
+      toggleEvt: function() {} // 切换触发事件
     }, opts || {});
-    let _datas = paras.datas;
+    let _data = paras.data;
     let _parentId = paras.parentId;
     let _id = paras.id;
     let _label = paras.label;
+    let _expandAll = paras.expandAll;
+    let _checkbox = paras.checkbox;
+    let _toggleEvt = paras.toggleEvt;
     let containNode = $(this);
+    console.debug(_data);
     // 顶层节点
     let roots = [];
-    _datas.forEach(function(val) {
+    _data.forEach(function(val) {
       if (Number(val[_parentId]) <= 0) {
         roots.push(val);
       }
     });
-    let children = $.arraySub(_datas, roots);
+    let children = $.arraySub(_data, roots);
 
     roots.forEach(function(val) {
       let divNode = $('<div class="mdc-tree-heading-container"></div>');
       const checkNodeStr =
-          ' <div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>';
+          `<div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" value="${val[_id]}"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>`;
       let h3Node = $(
-          `<h3 class="mdc-tree-heading mdc-tree-link" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons">keyboard_arrow_left</i>`);
-      let ulNode = $(`<ul class="mdc-tree-list"></ul>`);
+          `<h3 class="mdc-tree-heading mdc-tree-link" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
+      let ulNode = $(`<ul class="mdc-tree-list${_expandAll
+          ? ''
+          : ' mdc-non-display'}"></ul>`);
       retrieveTree(val, ulNode);
-      divNode.append(checkNodeStr).append(h3Node);
+      _checkbox && divNode.append(checkNodeStr);
+      divNode.append(h3Node);
       $(containNode).append(divNode).append(ulNode);
     });
-    $(containNode).collapse({
-      triggerContainer: '.mdc-tree-heading',
-      triggerCell: '.mdc-tree-heading-container',
-      containerTrigger: false,
-      toggleCell: 'ul.mdc-tree-list'
+
+    // 展开
+    $('.mdc-tree-heading-container .mdc-tree-heading').on('click', function() {
+      $(this).next('i.toggle-cell').toggleClass('mdc-tree-toggle__expanded');
+      _toggleEvt && _toggleEvt(this);
+      let headingContainer = $(this).parent('.mdc-tree-heading-container');
+      headingContainer.toggleClass('active').
+                       next('ul.mdc-tree-list').
+                       slideToggle(150);
+      // 折叠,收起子元素
+      if (!headingContainer.hasClass('active')) {
+        let childHeadingContainer = headingContainer.next('ul.mdc-tree-list').
+                                                     find(
+                                                         '.mdc-tree-heading-container');
+        childHeadingContainer.removeClass('active');
+        childHeadingContainer.children('i.toggle-cell').
+                              removeClass('mdc-tree-toggle__expanded');
+      }
     });
 
     function retrieveTree(root, dom) {
@@ -849,16 +877,38 @@
           dom.append(liNode);
           let divNode = $('<div class="mdc-tree-heading-container"></div>');
           const checkNodeStr =
-              ' <div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>';
+              `<div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" value="${val[_id]}"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>`;
           let h3Node = $(
-              `<h3 class="mdc-tree-heading mdc-tree-link mdc-ripple-upgraded" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons">keyboard_arrow_left</i>`);
-          let ulNode = $(`<ul class="mdc-tree-list"></ul>`);
+              `<h3 class="mdc-tree-heading mdc-tree-link mdc-ripple-upgraded" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
+          let ulNode = $(`<ul class="mdc-tree-list${_expandAll
+              ? ''
+              : ' mdc-non-display'}"></ul>`);
           retrieveTree(val, ulNode);
-          divNode.append(checkNodeStr).append(h3Node);
+          _checkbox && divNode.append(checkNodeStr);
+          divNode.append(h3Node);
           liNode.append(divNode).append(ulNode);
         });
       }
     }
+
+    class MDCTable {
+      constructor() {
+      }
+
+      getSelectItems = function() {
+        let selectItems = [];
+        $.each($(containNode).
+            find(
+                '.mdc-tree-heading-container .mdc-checkbox__native-control:checked'),
+            (index, val) => {
+              selectItems.push(val.value);
+            });
+        return selectItems;
+      };
+
+    }
+
+    return new MDCTable();
   };
 
 }));

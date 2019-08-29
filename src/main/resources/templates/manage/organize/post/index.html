@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorate="~{manage/layout}" lang="zh">
+<head>
+    <title>组织管理</title>
+    <style rel="stylesheet">
+        .mdc-tree {
+            margin-top: 16px
+        }
+
+        .data-table {
+            width: calc(100% - 300px);
+            margin-left: 16px;
+        }
+    </style>
+</head>
+<body>
+<th:block th:fragment="retrieveChild(children)">
+    <th:block th:each="c:${children}">
+        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
+            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
+            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
+                th:include="this::retrieveChild(${c.children})"></ul>
+        </li>
+    </th:block>
+</th:block>
+<div layout:fragment="main-container" class="main-container">
+    <div id="mdcTree" class="mdc-tree"></div>
+    <div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table">
+        <!--扩展搜索条件-->
+        <div class="search-container-extend">
+        </div>
+        <div class="operator-container">
+            <div class="btn-container">
+                <button class="mdc-button mdc-button--raised" id="refreshBtn">
+                    <span class="mdc-button__label">刷新</span>
+                </button>
+                <a class="mdc-button mdc-button--raised" id="addBtn" data-href="/manage/post"
+                   sec:authorize="hasAnyAuthority('global:create','post:create')">
+                    <span class="mdc-button__label">添加</span>
+                </a>
+                <button class="mdc-button mdc-button--raised" id="editBtn" disabled
+                        sec:authorize="hasAnyAuthority('global:write','post:write')">
+                    <span class="mdc-button__label">编辑</span>
+                </button>
+                <button class="mdc-button mdc-button--raised" id="delBtn" disabled
+                        sec:authorize="hasAnyAuthority('global:delete','post:delete')">
+                    <span class="mdc-button__label">删除</span>
+                </button>
+                <button class="mdc-button mdc-button--raised" id="menuBtn" disabled
+                        sec:authorize="hasAnyAuthority('global:write','post:write')">
+                    <span class="mdc-button__label">菜单配置</span>
+                </button>
+            </div>
+            <div class="search-container">
+                <div class="mdc-text-field text-field mdc-text-field--fullwidth mdc-text-field--no-label mdc-ripple-upgraded mdc-text-field--with-trailing-icon"
+                     data-mdc-auto-init="MDCTextField">
+                    <input type="text" id="criteria" class="mdc-text-field__input"
+                           placeholder="请输入名称" autocomplete="off" data-enter-trigger="refreshTable">
+                    <i class="material-icons mdc-text-field__icon" tabindex="0" role="button" id="searchBtn">search</i>
+                    <div class="mdc-line-ripple"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:fragment="editContainer" id="editContainer"></div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript" th:inline="javascript">
+      $(function() {
+        console.log(' organizes: ', [[${organizes}]]);
+        let organizeId;
+        let initTable = 0;
+        let mdcTree = $('#mdcTree').mdcTree({
+          data: [[${organizes}]],
+          id: 'id',
+          parentId: 'prevId',
+          label: 'name',
+          icon: 'icon',
+          expandAll: false,
+          checkbox: false,
+          toggleEvt: function(cell) {
+            let selectItemId = cell.dataset.id;
+            console.log(' 点击元素: ', selectItemId, organizeId);
+            // 表格初始化,这里
+            !initTable++ ? window.mdcDataTable = $('#mdc-data-table').mdcDataTable({
+                  url: '/manage/post/page',
+                  queryParams: {'organizeId': selectItemId},
+                  container: '#mdc-data-table',
+                  columns: [
+                    {
+                      data: 'name'
+                    },
+                    {
+                      data: 'dataAccessDesc'
+                    }
+                  ],
+                  thead: [
+                    {
+                      data: '名称',
+                      style: 'mdc-data-table__cell--non-numeric'
+                    },
+                    {
+                      data: '数据权限',
+                      style: 'mdc-data-table__cell--non-numeric'
+                    },
+                  ],
+                  // 是否分页,暂不支持
+                  pagination: true,
+                  // 页面数据条数,暂不支持
+                  pageSize: 5,
+                  // 设置页面可以显示的数据条数,暂不支持
+                  pageList: [5, 10, 15, 20],
+                  // 首页页码
+                  pageNumber: 1,
+                  editable: false,
+                  callback: function() {
+                  },
+                  noneSelect: function() {
+                    $('#editBtn').prop('disabled', true);
+                    $('#delBtn').prop('disabled', true);
+                    $('#roleBtn').prop('disabled', true);
+                    $('#menuBtn').prop('disabled', true);
+                    $('#privilegeBtn').prop('disabled', true);
+                  },
+                  singleSelect: function() {
+                    $('#editBtn').prop('disabled', false);
+                    $('#delBtn').prop('disabled', false);
+                    $('#roleBtn').prop('disabled', false);
+                    $('#menuBtn').prop('disabled', false);
+                    $('#privilegeBtn').prop('disabled', false);
+                  },
+                  multipleSelect: function() {
+                    $('#editBtn').prop('disabled', true);
+                    $('#delBtn').prop('disabled', false);
+                    $('#roleBtn').prop('disabled', true);
+                    $('#menuBtn').prop('disabled', true);
+                    $('#privilegeBtn').prop('disabled', true);
+                  }
+                })
+                : (organizeId === selectItemId ? function() {} : window.mdcDataTable.refresh(
+                {'organizeId': selectItemId, criteria: $('#criteria').val()}));
+            organizeId = selectItemId;
+          }
+        });
+
+        window.refreshTable = function() {
+          window.mdcDataTable.refresh({'organizeId': organizeId, criteria: $('#criteria').val()});
+        };
+        // 刷新,搜索
+        $('#refreshBtn,#searchBtn').click(refreshTable);
+        // 添加
+        $('#addBtn').click(function() {
+          console.log(organizeId);
+          if ($.isNegativeNum(organizeId)) {
+            $.alert('请选择左侧组织');
+            return false;
+          }
+          $('#editContainer').load(this.dataset.href + '?organizeId=' + organizeId, function() {
+            let html = $(this).html();
+            $(this).empty();
+            $(this).hide();
+            $.modal({
+              'title': '添加组织岗位',
+              'content': html,
+              'titleAlign': 'center',
+              'openedCallback': function(data) {
+                console.log(' 打开回调log: ', data);
+                $.each($(data.target).find('.mdc-select'), function(index, value) {
+                  console.log(' log: value: ' + value);
+                  new mdc.select.MDCSelect(value);
+                });
+                window.fixSelect();
+              }
+            }, function(dom) {
+              let menuIds = [];
+              $.each($(dom.target).find('.mdc-form-field'), function(index, item) {
+                let checkbox = $(item).find('input[id^=checkbox-]');
+                if ($.checked(checkbox)) {
+                  menuIds.push(checkbox.val());
+                }
+              });
+              $.put('/manage/post/' + id + '/menus', {'menuIds': menuIds.toString()}, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  mdcDataTable.refresh();
+                }) : $.alert(res.msg);
+              });
+            });
+          });
+          return false;
+        });
+        // 编辑
+        $('#editBtn').click(function() {
+          let selectItems = window.mdcDataTable.getSelectItems();
+          if (selectItems.length !== 1) {
+            $.alert('请选择一条记录');
+            return false;
+          }
+          window.location.href = '/manage/post/' + selectItems[0].id;
+        });
+        // 删除
+        $('#delBtn').click(function() {
+          let selectItems = window.mdcDataTable.getSelectItems();
+          if (selectItems.length < 1) {
+            $.alert('请至少选择一条记录');
+            return false;
+          }
+          $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
+            let ids = [];
+            selectItems.forEach(function(item) {
+              ids.push(item.id);
+            });
+            $.delete('/manage/post/deleteBatch', {'ids': ids.toString()}, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+              let delCount = selectItems.length;
+              mdcDataTable.refresh({}, delCount);
+            }, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+            });
+          });
+        });
+        // 菜单配置
+        $('#menuBtn').click(function() {
+          let selectItems = window.mdcDataTable.getSelectItems();
+          if (selectItems.length < 1) {
+            $.alert('请至少选择一条记录');
+            return false;
+          }
+          let id = selectItems[0].id;
+          $('#menus').load('/manage/post/' + id + '/menus', function() {
+            let html = $(this).html();
+            $(this).empty();
+            $(this).hide();
+            $.modal(html, function(dom) {
+              let menuIds = [];
+              $.each($(dom.target).find('.mdc-form-field'), function(index, item) {
+                let checkbox = $(item).find('input[id^=checkbox-]');
+                if ($.checked(checkbox)) {
+                  menuIds.push(checkbox.val());
+                }
+              });
+              $.put('/manage/post/' + id + '/menus', {'menuIds': menuIds.toString()}, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  mdcDataTable.refresh();
+                }) : $.alert(res.msg);
+              });
+            });
+          });
+        });
+      });
+    </script>
+</th:block>
+</body>
+</html>

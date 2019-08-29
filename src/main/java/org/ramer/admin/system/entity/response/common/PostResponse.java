@@ -3,8 +3,10 @@ package org.ramer.admin.system.entity.response.common;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.*;
 import org.ramer.admin.system.entity.domain.common.Post;
+import org.ramer.admin.system.entity.domain.common.Post.DataAccess;
 import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
@@ -20,13 +22,16 @@ import org.springframework.beans.BeanUtils;
 @ApiModel(value = "岗位")
 public class PostResponse extends AbstractEntityResponse {
 
-  @ApiModelProperty(value = "String")
+  @ApiModelProperty(value = "名称")
   private String name;
 
-  @ApiModelProperty(value = "Integer")
+  @ApiModelProperty(value = "数据权限")
   private Integer dataAccess;
 
-  @ApiModelProperty(value = "Long")
+  @ApiModelProperty(value = "数据权限秒速")
+  private String dataAccessDesc;
+
+  @ApiModelProperty(value = "组织id")
   private Long organizeId;
 
   public static PostResponse of(final Post post) {
@@ -34,8 +39,9 @@ public class PostResponse extends AbstractEntityResponse {
       return null;
     }
     PostResponse poJo = new PostResponse();
-    // TODO-WARN:  将 Domain 对象转换成 Response 对象
     BeanUtils.copyProperties(post, poJo);
+    poJo.setDataAccessDesc(
+        Optional.ofNullable(post.getDataAccess()).map(DataAccess::desc).orElse(""));
     return poJo;
   }
 }

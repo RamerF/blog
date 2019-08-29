@@ -17,13 +17,15 @@ import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 @ApiModel("岗位")
 public class PostRequest extends AbstractEntityRequest {
 
-  @ApiModelProperty(value = "String")
+  @ApiModelProperty(value = "名称")
   private String name;
 
-  @ApiModelProperty(value = "Integer")
+  @ApiModelProperty(value = "数据权限")
   private Integer dataAccess;
 
-  @ApiModelProperty(value = "Long")
+  @ApiModelProperty(value = "组织")
   private Long organizeId;
 
+  @ApiModelProperty(value = "备注")
+  private String remark;
 }

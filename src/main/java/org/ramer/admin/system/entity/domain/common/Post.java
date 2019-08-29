@@ -32,6 +32,10 @@ public class Post extends AbstractEntity {
   @Column(columnDefinition = "TINYINT(2) COMMENT '数据访问权限'")
   private Integer dataAccess;
 
+  /** 备注 */
+  @Column(columnDefinition = "VARCHAR(255) COMMENT '备注'")
+  private String remark;
+
   @Column(name = "organize_id")
   private Long organizeId;
 
@@ -69,6 +73,15 @@ public class Post extends AbstractEntity {
 
     public static List<Integer> list() {
       return list;
+    }
+
+    public static String desc(int index) {
+      for (DataAccess dataAccess : values()) {
+        if (dataAccess.ordinal() == index) {
+          return dataAccess.desc;
+        }
+      }
+      return "无";
     }
   }
 }

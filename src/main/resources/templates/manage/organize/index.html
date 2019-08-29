@@ -75,6 +75,8 @@
     <script type="text/javascript" th:inline="javascript">
       $(function() {
         console.log(' organizes: ', [[${organizes}]]);
+        let mdcDataTable;
+        let organizeId;
         let mdcTree = $('#mdcTree').mdcTree({
           data: [[${organizes}]],
           id: 'id',
@@ -86,68 +88,69 @@
           toggleEvt: function(cell) {
             console.log(' 点击元素: ', cell.dataset.id);
             console.log('已选择项', mdcTree.getSelectItems());
-            window.mdcDataTable.refresh({id: cell.dataset.id, criteria: $('#criteria').val()});
+            organizeId = cell.dataset.id;
+            // 表格初始化
+            window.mdcDataTable = $('#mdc-data-table').mdcDataTable({
+              url: '/manage/organize/' + organizeId + '/post',
+              queryParams: {},
+              container: '#mdc-data-table',
+              columns: [
+                {
+                  data: 'name'
+                },
+                {
+                  data: 'remark'
+                }
+              ],
+              thead: [
+                {
+                  data: '姓名',
+                  style: 'mdc-data-table__cell--non-numeric'
+                },
+                {
+                  data: '备注',
+                  style: 'mdc-data-table__cell--non-numeric'
+                },
+              ],
+              // 是否分页,暂不支持
+              pagination: true,
+              // 页面数据条数,暂不支持
+              pageSize: 5,
+              // 设置页面可以显示的数据条数,暂不支持
+              pageList: [5, 10, 15, 20],
+              // 首页页码
+              pageNumber: 1,
+              editable: false,
+              callback: function() {
+              },
+              noneSelect: function() {
+                $('#editBtn').prop('disabled', true);
+                $('#delBtn').prop('disabled', true);
+                $('#roleBtn').prop('disabled', true);
+                $('#menuBtn').prop('disabled', true);
+                $('#privilegeBtn').prop('disabled', true);
+              },
+              singleSelect: function() {
+                $('#editBtn').prop('disabled', false);
+                $('#delBtn').prop('disabled', false);
+                $('#roleBtn').prop('disabled', false);
+                $('#menuBtn').prop('disabled', false);
+                $('#privilegeBtn').prop('disabled', false);
+              },
+              multipleSelect: function() {
+                $('#editBtn').prop('disabled', true);
+                $('#delBtn').prop('disabled', false);
+                $('#roleBtn').prop('disabled', true);
+                $('#menuBtn').prop('disabled', true);
+                $('#privilegeBtn').prop('disabled', true);
+              }
+            });
+            window.mdcDataTable.refresh({id: organizeId, criteria: $('#criteria').val()});
           }
         });
-        // 表格初始化
-        let mdcDataTable = $('#mdc-data-table').mdcDataTable({
-          url: '/manage/organize/page',
-          queryParams: {},
-          container: '#mdc-data-table',
-          columns: [
-            {
-              data: 'name'
-            },
-            {
-              data: 'remark'
-            }
-          ],
-          thead: [
-            {
-              data: '姓名',
-              style: 'mdc-data-table__cell--non-numeric'
-            },
-            {
-              data: '备注',
-              style: 'mdc-data-table__cell--non-numeric'
-            },
-          ],
-          // 是否分页
-          pagination: true,
-          // 页面数据条数
-          pageSize: 5,
-          // 设置页面可以显示的数据条数
-          pageList: [5, 10, 15, 20],
-          // 首页页码
-          pageNumber: 1,
-          editable: false,
-          callback: function() {
-          },
-          noneSelect: function() {
-            $('#editBtn').prop('disabled', true);
-            $('#delBtn').prop('disabled', true);
-            $('#roleBtn').prop('disabled', true);
-            $('#menuBtn').prop('disabled', true);
-            $('#privilegeBtn').prop('disabled', true);
-          },
-          singleSelect: function() {
-            $('#editBtn').prop('disabled', false);
-            $('#delBtn').prop('disabled', false);
-            $('#roleBtn').prop('disabled', false);
-            $('#menuBtn').prop('disabled', false);
-            $('#privilegeBtn').prop('disabled', false);
-          },
-          multipleSelect: function() {
-            $('#editBtn').prop('disabled', true);
-            $('#delBtn').prop('disabled', false);
-            $('#roleBtn').prop('disabled', true);
-            $('#menuBtn').prop('disabled', true);
-            $('#privilegeBtn').prop('disabled', true);
-          }
-        });
-        window.mdcDataTable = mdcDataTable;
+
         window.refreshTable = function() {
-          window.mdcDataTable.refresh({criteria: $('#criteria').val()});
+          window.mdcDataTable.refresh({id: organizeId, criteria: $('#criteria').val()});
         };
         // 刷新,搜索
         $('#refreshBtn,#searchBtn').click(refreshTable);
@@ -204,34 +207,6 @@
                 }
               });
               $.put('/manage/organize/' + id + '/menus', {'menuIds': menuIds.toString()}, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  mdcDataTable.refresh();
-                }) : $.alert(res.msg);
-              });
-            });
-          });
-        });
-        // 权限配置
-        $('#privilegeBtn').click(function() {
-          let selectItems = mdcDataTable.getSelectItems();
-          if (selectItems.length < 1) {
-            $.alert('请至少选择一条记录');
-            return false;
-          }
-          let id = selectItems[0].id;
-          $('#privileges').load('/manage/organize/' + id + '/privileges', function() {
-            let html = $(this).html();
-            $(this).empty();
-            $(this).hide();
-            $.modal(html, function(dom) {
-              let privilegeIds = [];
-              $.each($(dom.target).find('.mdc-form-field'), function(index, item) {
-                let checkbox = $(item).find('input[id^=checkbox-]');
-                if ($.checked(checkbox)) {
-                  privilegeIds.push(checkbox.val());
-                }
-              });
-              $.put('/manage/organize/' + id + '/privileges', {'privilegeIds': privilegeIds.toString()}, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
                   mdcDataTable.refresh();
                 }) : $.alert(res.msg);

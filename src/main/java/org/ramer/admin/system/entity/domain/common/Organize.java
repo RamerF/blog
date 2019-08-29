@@ -60,7 +60,9 @@ public class Organize extends AbstractEntity {
   @ManyToMany private List<Organize> children;
 
   /** 岗位/职位 */
-  @OneToMany @JsonBackReference private List<Post> posts;
+  @OneToMany(mappedBy = "organizeId")
+  @JsonBackReference
+  private List<Post> posts;
 
   public static Organize of(Long id) {
     Organize organize = new Organize();

@@ -35,6 +35,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "管理端: 组织接口")
 @SuppressWarnings("UnusedDeclaration")
 public class OrganizeController {
+  @Resource private PostService postService;
   @Resource private OrganizeService service;
   @Resource private ManagerService managerService;
   @Resource private CommonService commonService;

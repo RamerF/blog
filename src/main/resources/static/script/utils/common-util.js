@@ -589,6 +589,7 @@
     let paras = $.extend({
       title: '提示',
       content: '提示内容',
+      titleAlign: 'left', // 标题位置,可选值: left, center, right
       type: 1,
       cancelBtn: {
         show: true,
@@ -598,6 +599,8 @@
         show: true,
         content: '确定'
       },
+      openedCallback: function() {
+      },
       cancelCallback: function() {
       },
       confirmCallback: function() {
@@ -605,7 +608,9 @@
     }, opts || {});
     let _title = paras.title;
     let _content = paras.content;
+    let _titleAlign = paras.titleAlign;
     let _type = paras.type;
+    let _openedCallback = paras.openedCallback;
     let _cancelCallback = paras.cancelCallback;
     let _confirmCallback = paras.confirmCallback;
     let $container = $(`<div class="mdc-dialog"
@@ -616,7 +621,10 @@
       <div class="mdc-dialog__container">
       <div class="mdc-dialog__surface">
         <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-        <h2 class="mdc-dialog__title" id="my-dialog-title">${_title}</h2>
+        <h2 class="mdc-dialog__title" id="my-dialog-title" 
+            ${_titleAlign !== 'left'
+        ? `style="text-align: ${_titleAlign}"`
+        : ``}>${_title}</h2>
         <div class="mdc-dialog__content" id="my-dialog-content" tabindex="0">${_content}</div>
         ${_type === 3 ? '<footer style="height: 4px;"></footer>' :
         `<footer class="mdc-dialog__actions">
@@ -636,6 +644,7 @@
     dialog.open();
     dialog.listen('MDCDialog:opened', function(data) {
       $container.attr('aria-hidden', 'true');
+      _openedCallback && _openedCallback(data);
     });
 
     dialog.listen('MDCDialog:closing', function(data) {
@@ -670,11 +679,16 @@
   };
 
   $.modal = function(msg, callback) {
-    $.dialog($.extend({}, {
+    let param = {
       type: 2,
-      content: msg,
       confirmCallback: callback
-    }));
+    };
+    if (typeof msg === 'string') {
+      param.content = msg;
+    } else {
+      $.extend(param, msg);
+    }
+    $.dialog(param);
   };
 
   function ajaxReq(url, data, success, error) {
@@ -805,6 +819,16 @@
     return result;
   };
 
+  /** 校验字符串是否是一个正整数. */
+  $.isPositiveNum = function(str) {
+    return str && Number(str) > 0;
+  };
+
+  /** 校验字符串是否是一个非正整数. */
+  $.isNegativeNum = function(str) {
+    return !$.isPositiveNum(str);
+  };
+
   $.fn.mdcTree = function(opts) {
     let paras = $.extend({
       data: [],
@@ -849,24 +873,39 @@
       $(containNode).append(divNode).append(ulNode);
     });
 
-    // 展开
-    $('.mdc-tree-heading-container .mdc-tree-heading').on('click', function() {
-      $(this).next('i.toggle-cell').toggleClass('mdc-tree-toggle__expanded');
-      _toggleEvt && _toggleEvt(this);
-      let headingContainer = $(this).parent('.mdc-tree-heading-container');
-      headingContainer.toggleClass('active').
-                       next('ul.mdc-tree-list').
-                       slideToggle(150);
-      // 折叠,收起子元素
-      if (!headingContainer.hasClass('active')) {
-        let childHeadingContainer = headingContainer.next('ul.mdc-tree-list').
-                                                     find(
-                                                         '.mdc-tree-heading-container');
-        childHeadingContainer.removeClass('active');
-        childHeadingContainer.children('i.toggle-cell').
-                              removeClass('mdc-tree-toggle__expanded');
-      }
-    });
+    // 展开/收缩
+    containNode.find('.mdc-tree-heading-container .mdc-tree-heading').
+                on('click', function() {
+                  $(this).next('i.toggle-cell').
+                          toggleClass('mdc-tree-toggle__expanded');
+                  _toggleEvt && _toggleEvt(this);
+                  let headingContainer = $(this).
+                  parent('.mdc-tree-heading-container');
+                  // Tip: 如果没有复选框,只能有一个被选中
+                  if (!_checkbox) {
+                    console.debug('取消选中');
+                    containNode.find('.mdc-tree-heading-container.active').
+                                removeClass('active');
+                  }
+
+                  //  切换时始终保持选中状态
+                  // headingContainer.toggleClass('active').
+                  headingContainer.addClass('active').
+                                   next('ul.mdc-tree-list').
+                                   slideToggle(150);
+                  // 折叠,收起子元素
+                  if (headingContainer.hasClass('active')) {
+                    let childHeadingContainer = headingContainer.
+                    next('ul.mdc-tree-list').
+                    find('.mdc-tree-heading-container');
+                    console.log(childHeadingContainer);
+                    childHeadingContainer.next('ul.mdc-tree-list').slideUp(100);
+                    childHeadingContainer.removeClass('active');
+                    childHeadingContainer.
+                    children('i.toggle-cell').
+                    removeClass('mdc-tree-toggle__expanded');
+                  }
+                });
 
     function retrieveTree(root, dom) {
       // 当前元素子元素

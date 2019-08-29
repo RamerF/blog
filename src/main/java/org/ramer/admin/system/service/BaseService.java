@@ -86,7 +86,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
    * @param size 每页条目
    * @return {@link Page<T>}
    */
-  default Page<T> page(String criteria, final int page, final int size) {
+  default Page<T> page(final String criteria, final int page, final int size) {
     final PageRequest pageable = pageRequest(page, size);
     return Objects.isNull(pageable)
         ? new PageImpl<>(Collections.emptyList())

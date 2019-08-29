@@ -4,16 +4,18 @@ import io.swagger.annotations.*;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Post;
+import org.ramer.admin.system.entity.domain.common.Post.DataAccess;
 import org.ramer.admin.system.entity.pojo.common.PostPoJo;
 import org.ramer.admin.system.entity.request.common.PostRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.entity.response.common.PostResponse;
-import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.system.service.common.PostService;
+import org.ramer.admin.system.exception.CommonException;
+import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.PostValidator;
 import org.springframework.data.domain.PageImpl;
@@ -32,39 +34,58 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "岗位接口")
 @SuppressWarnings("UnusedDeclaration")
 public class PostController {
+  @Resource private OrganizeService organizeService;
   @Resource private PostService service;
   @Resource private CommonService commonService;
   @Resource private PostValidator validator;
 
-  @InitBinder
+  @InitBinder("postRequest")
   void initBinder(WebDataBinder binder) {
     binder.addValidators(validator);
   }
 
   @GetMapping("/index")
   @ApiOperation("岗位页面")
-  public String index() {
-    return "post/index";
+  public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+    map.put("organizes", organizeService.list(null));
+    commonService.writeMenuAndSiteInfo(session, map);
+    return "manage/organize/post/index";
   }
 
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取岗位列表")
   public ResponseEntity<CommonResponse<PageImpl<PostResponse>>> page(
+      @ApiParam("组织id") @RequestParam(value = "organizeId", required = false) String organizeIdStr,
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
       @RequestParam(value = "size", required = false, defaultValue = "10") String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
+    final long organizeId = TextUtil.validLong(organizeIdStr, -1);
+    if (TextUtil.nonValidId(organizeId)) {
+      return CommonResponse.canNotBlank("组织");
+    }
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
     return commonService.page(
-        service.page(criteria, pageAndSize[0], pageAndSize[1]), PostResponse::of);
+        service.page(organizeId, criteria, pageAndSize[0], pageAndSize[1]), PostResponse::of);
   }
 
   @GetMapping
   @ApiOperation("添加岗位页面")
-  public String create() {
-    return "post/edit";
+  public String create(
+      @ApiParam("组织id") @RequestParam(value = "organizeId", required = false) String organizeIdStr,
+      @ApiIgnore HttpSession session,
+      @ApiIgnore Map<String, Object> map) {
+    final long organizeId = TextUtil.validLong(organizeIdStr, -1);
+    if (TextUtil.nonValidId(organizeId)) {
+      throw new CommonException("参数值无效 [组织]");
+    }
+    map.put("organize", organizeService.getById(organizeId));
+    map.put("dataAccesses", DataAccess.map());
+    commonService.writeMenuAndSiteInfo(session, map);
+//    return "manage/organize/post/edit";
+    return "manage/organize/post/edit_pure::main-container";
   }
 
   @PostMapping
@@ -79,8 +100,25 @@ public class PostController {
 
   @GetMapping("/{id}")
   @ApiOperation("更新岗位页面")
-  public String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
-    return commonService.update(service, PostPoJo.class, idStr, "post/edit", map, "post");
+  public String update(
+      @PathVariable("id") String idStr,
+      @ApiIgnore HttpSession session,
+      @ApiIgnore Map<String, Object> map) {
+    return commonService.update(
+        service,
+        PostPoJo.class,
+        idStr,
+        "manage/organize/post/edit",
+        map,
+        "post",
+        id -> {
+          final Post post = service.getById(id);
+          map.put("post", post);
+          map.put("organize", post.getOrganize());
+          map.put("dataAccesses", DataAccess.map());
+          commonService.writeMenuAndSiteInfo(session, map);
+        },
+        false);
   }
 
   @PutMapping("/{id}")

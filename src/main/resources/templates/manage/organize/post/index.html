@@ -29,7 +29,7 @@
 </th:block>
 <div layout:fragment="main-container" class="main-container">
     <div id="mdcTree" class="mdc-tree"></div>
-    <div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table">
+    <div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table mdc-non-display">
         <!--扩展搜索条件-->
         <div class="search-container-extend">
         </div>
@@ -49,10 +49,6 @@
                 <button class="mdc-button mdc-button--raised" id="delBtn" disabled
                         sec:authorize="hasAnyAuthority('global:delete','post:delete')">
                     <span class="mdc-button__label">删除</span>
-                </button>
-                <button class="mdc-button mdc-button--raised" id="menuBtn" disabled
-                        sec:authorize="hasAnyAuthority('global:write','post:write')">
-                    <span class="mdc-button__label">菜单配置</span>
                 </button>
             </div>
             <div class="search-container">
@@ -144,12 +140,19 @@
                 : (organizeId === selectItemId ? function() {} : window.mdcDataTable.refresh(
                 {'organizeId': selectItemId, criteria: $('#criteria').val()}));
             organizeId = selectItemId;
+            $('#mdc-data-table').show(0);
           }
         });
 
-        window.refreshTable = function() {
-          window.mdcDataTable.refresh({'organizeId': organizeId, criteria: $('#criteria').val()});
+        window.refreshTable = function(delCount = 0) {
+          window.mdcDataTable.refresh({'organizeId': organizeId, criteria: $('#criteria').val()}, delCount);
+          $('#editBtn').prop('disabled', true);
+          $('#delBtn').prop('disabled', true);
+          $('#roleBtn').prop('disabled', true);
+          $('#menuBtn').prop('disabled', true);
+          $('#privilegeBtn').prop('disabled', true);
         };
+
         // 刷新,搜索
         $('#refreshBtn,#searchBtn').click(refreshTable);
 
@@ -160,56 +163,103 @@
             $.alert('请选择左侧组织');
             return false;
           }
-          $('#editContainer').load(this.dataset.href + '?organizeId=' + organizeId, function() {
-            let html = $(this).html();
-            $(this).empty();
-            $(this).hide();
-            $.modal({
-              'title': '添加组织岗位',
-              'content': html,
-              'titleAlign': 'center',
-              'openedCallback': function(data) {
-                console.log(' 打开回调log: ', data);
-                $.each($(data.target).find('.mdc-select'), function(index, value) {
-                  console.log(' log: value: ' + value);
-                  new mdc.select.MDCSelect(value);
-                });
-                window.fixSelect();
-              }
-            }, function(dom) {
-              let menuIds = [];
-              $.each($(dom.target).find('.mdc-form-field'), function(index, item) {
-                let checkbox = $(item).find('input[id^=checkbox-]');
-                if ($.checked(checkbox)) {
-                  menuIds.push(checkbox.val());
-                }
-              });
-              $.put('/manage/post/' + id + '/menus', {'menuIds': menuIds.toString()}, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  mdcDataTable.refresh();
-                }) : $.alert(res.msg);
-              });
-            });
-          });
+          $('#editContainer').load(this.dataset.href + '?organizeId=' + organizeId, edit);
           return false;
         });
         // 编辑
         $('#editBtn').click(function() {
+          console.log(organizeId);
+          if ($.isNegativeNum(organizeId)) {
+            $.alert('请选择左侧组织');
+            return false;
+          }
           let selectItems = window.mdcDataTable.getSelectItems();
           if (selectItems.length !== 1) {
             $.alert('请选择一条记录');
             return false;
           }
-          window.location.href = '/manage/post/' + selectItems[0].id;
+          $('#editContainer').load('/manage/post/' + selectItems[0].id, edit);
+          return false;
         });
+
+
+        // TODO-WARN: 已知BUG: 每次弹窗初始化mdc-select组件,导致body会无限拼接下拉元素
+
+        // 新增/更新
+        function edit() {
+          let html = $(this).html();
+          $(this).empty();
+          $(this).hide();
+          $.modal({
+            'title': '修改组织岗位',
+            'content': html,
+            'titleAlign': 'center',
+            'openedCallback': function(data) {
+              console.debug(' 打开回调log: ', data);
+              $(data.target).initMDCTextField();
+              $(data.target).initMDCSelect();
+            }
+          }, function(dom) {
+            let $form = $(dom.target).find('#form');
+            let data = {};
+            $form.serializeArray().forEach(function(item) {
+              data[item.name] = item.value;
+            });
+            let selects = $('.mdc-select input[name]');
+            for (let i = 0; i < selects.length; i++) {
+              let $input = $(selects[i]);
+              let value = $input.val();
+              let validTip = $input.attr('data-validtip');
+              if (!value || Number(value) < 0) {
+                $.alert(validTip, function() {
+                  $input.siblings('.mdc-select__selected-text').click();
+                });
+                return false;
+              }
+            }
+
+            let textFields = document.querySelectorAll('.mdc-text-field');
+            for (let i = 0; i < textFields.length; i++) {
+              console.log(i, textFields[i]);
+              let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
+              let value = $input.val();
+              let required = Boolean($input.prop('required'));
+              let minLength = $input.attr('minlength');
+              let maxLength = $input.attr('maxlength');
+              let validTip = $input.attr('data-validtip');
+              let pattern = $input.attr('data-pattern');
+              if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
+                $input.focus();
+                return false;
+              }
+            }
+            data.organizeId = $('input[name=organizeId]').val();
+            console.log(JSON.stringify(data));
+            let id = $(dom.target).find('input[name=id]').val();
+            console.log(' log: id = ', id);
+            id > 0 ?
+                $.put('/manage/post/' + id, data, function(res) {
+                  res.result === true ? $.alert(res.msg, function() {
+                    window.refreshTable();
+                  }) : $.alert(res.msg);
+                }) : $.post('/manage/post', data, function(res) {
+                  res.result === true ? $.alert(res.msg, function() {
+                    window.refreshTable();
+                  }) : $.alert(res.msg);
+                });
+            return false;
+          });
+        }
+
         // 删除
         $('#delBtn').click(function() {
           let selectItems = window.mdcDataTable.getSelectItems();
-          if (selectItems.length < 1) {
+          let delCount = selectItems.length;
+          if (delCount < 1) {
             $.alert('请至少选择一条记录');
             return false;
           }
-          $.confirm('确认要删除这' + selectItems.length + '条记录么 ?', function() {
+          $.confirm('确认要删除这' + delCount + '条记录么 ?', function() {
             let ids = [];
             selectItems.forEach(function(item) {
               ids.push(item.id);
@@ -217,39 +267,10 @@
             $.delete('/manage/post/deleteBatch', {'ids': ids.toString()}, function(res) {
               console.log(JSON.stringify(res));
               $.alert(res.msg);
-              let delCount = selectItems.length;
-              mdcDataTable.refresh({}, delCount);
+              window.refreshTable(delCount);
             }, function(res) {
               console.log(JSON.stringify(res));
               $.alert(res.msg);
-            });
-          });
-        });
-        // 菜单配置
-        $('#menuBtn').click(function() {
-          let selectItems = window.mdcDataTable.getSelectItems();
-          if (selectItems.length < 1) {
-            $.alert('请至少选择一条记录');
-            return false;
-          }
-          let id = selectItems[0].id;
-          $('#menus').load('/manage/post/' + id + '/menus', function() {
-            let html = $(this).html();
-            $(this).empty();
-            $(this).hide();
-            $.modal(html, function(dom) {
-              let menuIds = [];
-              $.each($(dom.target).find('.mdc-form-field'), function(index, item) {
-                let checkbox = $(item).find('input[id^=checkbox-]');
-                if ($.checked(checkbox)) {
-                  menuIds.push(checkbox.val());
-                }
-              });
-              $.put('/manage/post/' + id + '/menus', {'menuIds': menuIds.toString()}, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  mdcDataTable.refresh();
-                }) : $.alert(res.msg);
-              });
             });
           });
         });

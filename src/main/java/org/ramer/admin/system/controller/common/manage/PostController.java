@@ -84,7 +84,7 @@ public class PostController {
     map.put("organize", organizeService.getById(organizeId));
     map.put("dataAccesses", DataAccess.map());
     commonService.writeMenuAndSiteInfo(session, map);
-//    return "manage/organize/post/edit";
+    //    return "manage/organize/post/edit";
     return "manage/organize/post/edit_pure::main-container";
   }
 
@@ -108,7 +108,7 @@ public class PostController {
         service,
         PostPoJo.class,
         idStr,
-        "manage/organize/post/edit",
+        "manage/organize/post/edit_pure::main-container",
         map,
         "post",
         id -> {

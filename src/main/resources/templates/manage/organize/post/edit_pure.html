@@ -14,9 +14,10 @@
                    th:name="${_csrf.parameterName}"
                    id="_csrf"
                    th:value="${_csrf.token}"/>
-<!--            <h2 class="mdc-typography mdc-typography&#45;&#45;headline5 mdc-text__align-center" th:inline="text">-->
-<!--                [[${post ne null?'修改':'添加'}]]组织岗位-->
-<!--            </h2>-->
+            <input type="hidden" th:if="${post ne null}" th:value="${post.id}" name="id">
+            <!--            <h2 class="mdc-typography mdc-typography&#45;&#45;headline5 mdc-text__align-center" th:inline="text">-->
+            <!--                [[${post ne null?'修改':'添加'}]]组织岗位-->
+            <!--            </h2>-->
             <div class="mdc-layout-grid__inner mdc-panel__margin-16 mdc-form-field">
                 <!--                <div class="mdc-layout-grid__cell mdc-layout-grid__cell&#45;&#45;span-1-tablet"></div>-->
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" tabindex="0">

@@ -13,8 +13,9 @@
     <!--    <link rel="stylesheet" href="/libs/material-design-light/material.css"/>-->
     <!--    <script type="text/javascript" src="/libs/material-design-light/material.js"></script>-->
     <!-- mdc -->
-    <script src="/libs/material-components-web/material-components-web.js"></script>
+    <script src="/libs/material-components-web/material-components-web.min.js"></script>
     <script src="/script/utils/common-util.js"></script>
+    <script src="/script/utils/mdc-component-helper.js"></script>
     <link href="/libs/material-components-web/material-components-web.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/libs/material-components-web/material-icons.css">
     <link rel="stylesheet" href="/style/manage/layout.css">
@@ -67,22 +68,19 @@
         // 菜单折叠
         $('aside.mdc-drawer').collapse();
 
+        // 保持select与父元素同宽
         let clientWidth = document.body.clientWidth;
         window.onresize = function() {
           let clientWidthLive = document.body.clientWidth;
           if (clientWidth !== clientWidthLive) {
             clientWidth = clientWidthLive;
             console.log(' log: ' + '宽度更新');
-            window.fixSelect();
+            $.fixSelectWidth();
           }
         };
 
-        //  下拉框宽度修复,保持与父容器同宽
-        window.fixSelect = function() {
-          $('.select-width-fixed').width($('.mdc-select.select-width-fixed').parent().width());
-        };
+        $.fixSelectWidth();
 
-        $('.select-width-fixed').width($('.mdc-select.select-width-fixed').parent().width());
         // 添加ripple效果
         new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
             (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));

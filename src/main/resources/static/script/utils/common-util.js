@@ -649,9 +649,9 @@
 
     dialog.listen('MDCDialog:closing', function(data) {
       $container.removeAttr('aria-hidden');
-      $(this).remove();
       data.detail.action === 'yes' ?
           _confirmCallback(data) : _cancelCallback(data);
+      $(this).remove();
     });
   };
 

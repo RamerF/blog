@@ -29,7 +29,7 @@
         </section>
     </div>
 </header>
-<aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust mdc-drawer--open">
+<aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust mdc-drawer--open">
     <div class="mdc-drawer__content">
         <th:block th:each="m,stat:${menus}" th:inline="text">
             <div th:if="${stat.index ne 0}" class="mdc-list-divider mdc-list-divider--padded"></div>
@@ -69,13 +69,26 @@
         $('aside.mdc-drawer').collapse();
 
         // 保持select与父元素同宽
+        // 侧边栏自动收缩
         let clientWidth = document.body.clientWidth;
+        if (clientWidth > 1320 && !drawer.open) {
+          drawer.open = true;
+        }
+        if (clientWidth < 1320 && drawer.open) {
+          drawer.open = false;
+        }
         window.onresize = function() {
           let clientWidthLive = document.body.clientWidth;
           if (clientWidth !== clientWidthLive) {
             clientWidth = clientWidthLive;
             console.log(' log: ' + '宽度更新');
             $.fixSelectWidth();
+            if (clientWidthLive > 1320 && !drawer.open) {
+              drawer.open = true;
+            }
+            if (clientWidthLive < 1320 && drawer.open) {
+              drawer.open = false;
+            }
           }
         };
 

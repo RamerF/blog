@@ -50,30 +50,6 @@ li {
     position: relative;
 }
 
-@media (max-width: 1320px) {
-    .page__drawer {
-        display: none;
-    }
-
-    .mdc-drawer[mdc-drawer--open].page__drawer {
-        display: none;
-    }
-}
-
-@media (min-width: 1321px) {
-    .page__drawer {
-        transition: all .5s;
-        display: flex;
-        /*position: relative;*/
-        max-height: 100vh;
-        overflow-y: auto;
-    }
-
-    .mdc-drawer-app-content {
-        margin-left: 256px;
-        margin-right: 0;
-    }
-}
 
 .main-container {
     padding: 0 16px;

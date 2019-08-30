@@ -283,6 +283,11 @@ a[disabled] {
     color: rgba(0, 0, 0, .37) !important;;
 }
 
+.pointer {
+    cursor: pointer;
+    user-select: none;
+}
+
 /*  mdc-tree  官方暂时没有该组件*/
 .mdc-tree {
     max-height: 100vh;

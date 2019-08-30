@@ -83,7 +83,7 @@
           let clientWidthLive = document.body.clientWidth;
           if (clientWidth !== clientWidthLive) {
             clientWidth = clientWidthLive;
-            console.log(' log: ' + '宽度更新');
+            console.log(' log: ' + '宽度更新', clientWidthLive);
             $.fixSelectWidth();
             if (clientWidthLive > 1320 && !drawer.open) {
               drawer.open = true;
@@ -103,7 +103,7 @@
         $('aside li[data-href]').click(function() {
           window.location.href = this.dataset.href;
         });
-        // 菜单激活
+        // 菜单高亮
         let url = location.pathname;
         $('aside.mdc-drawer').find('li[data-href="' + url + '"]').addClass('mdc-list-item--activated');
         // 元素回车事件绑定

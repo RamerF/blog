@@ -26,7 +26,8 @@ public class Organize extends AbstractEntity {
   private String name;
 
   /** 成员 */
-  @ManyToMany private List<Manager> members;
+  @ManyToMany(mappedBy = "organizes")
+  private List<Manager> members;
 
   /** 上级 */
   @Column(name = "prev_id", columnDefinition = "BIGINT(20) NULL COMMENT '上级'")

@@ -100,9 +100,7 @@
             </div>
         </div>
     </div>
-    <!-- 添加/编辑 组织 -->
     <div th:fragment="editContainerOrg" id="editContainerOrg"></div>
-    <!-- 添加/编辑 岗位 -->
     <div th:fragment="editContainer" id="editContainer"></div>
 </div>
 <th:block layout:fragment="script">
@@ -305,7 +303,7 @@
               let $input = $(selects[i]);
               let value = $input.val();
               let validTip = $input.attr('data-validtip');
-              if ($input.prop('required') && (!value || Number(value) < 0)) {
+              if (!value || Number(value) < 0) {
                 $.alert(validTip, function() {
                   $input.siblings('.mdc-select__selected-text').click();
                 });
@@ -367,7 +365,7 @@
               let $input = $(selects[i]);
               let value = $input.val();
               let validTip = $input.attr('data-validtip');
-              if ($input.prop('required') && (!value || Number(value) < 0)) {
+              if (!value || Number(value) < 0) {
                 $.alert(validTip, function() {
                   $input.siblings('.mdc-select__selected-text').click();
                 });

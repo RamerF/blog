@@ -31,7 +31,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller("postcm")
 @PreAuthorize("hasAnyAuthority('global:read','post:read')")
 @RequestMapping(AccessPath.MANAGE + "/post")
-@Api(tags = "岗位接口")
+@Api(tags = "管理端: 岗位接口")
 @SuppressWarnings("UnusedDeclaration")
 public class PostController {
   @Resource private OrganizeService organizeService;

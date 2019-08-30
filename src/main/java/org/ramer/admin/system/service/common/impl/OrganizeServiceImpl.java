@@ -6,12 +6,12 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.State;
-import org.ramer.admin.system.entity.domain.common.Manager;
-import org.ramer.admin.system.entity.domain.common.Organize;
+import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.entity.response.common.OrganizeMemberRelationResponse;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.OrganizeRepository;
+import org.ramer.admin.system.service.common.OrganizeRelationService;
 import org.ramer.admin.system.service.common.OrganizeService;
 import org.springframework.stereotype.Service;
 
@@ -20,23 +20,72 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrganizeServiceImpl implements OrganizeService {
   @Resource private OrganizeRepository repository;
+  @Resource private OrganizeRelationService relationService;
 
   @Transactional
   @Override
   public Organize create(final Organize organize) throws RuntimeException {
     repository.saveAndFlush(organize);
     // 更新: 自身祖先(rootId),上级是否有子节点(hasChild)
-    if (Objects.isNull(organize.getPrevId())) {
+    final Long prevId = organize.getPrevId();
+    if (Objects.isNull(prevId)) {
       organize.setRootId(organize.getId());
       repository.saveAndFlush(organize);
     } else {
-      final Organize prev = getById(organize.getPrevId());
+      final Organize prev = getById(prevId);
       if (Objects.isNull(prev.getHasChild()) || !prev.getHasChild()) {
         prev.setHasChild(true);
         repository.saveAndFlush(prev);
       }
       organize.setRootId(prev.getRootId());
       repository.saveAndFlush(organize);
+    }
+
+    // TODO-WARN: 维护关系表
+
+    /*
+     * 保存以下结构(id),按顺序保存:
+     * 步骤: 1. 保存自身 3.获取并遍历next_id为prev_id的数据集,将next_id替换为当前保存元素id并保存.
+     * -1
+     * --11
+     * --12
+     * ---121
+     * ----1211
+     * prev_id    next_id   distance
+     * 1          1         0
+     *
+     * 11         11        0
+     * 1          11        1
+     *
+     * 12         12        0
+     * 1          12        1
+     *
+     * 121        121       0
+     * 12         121       1
+     * 1          121       2
+     *
+     * 1211       1211      0
+     * 121        1211      1
+     * 12         1211      2
+     * 1          1211      3
+     *
+     */
+    OrganizeRelation organizeRelation = new OrganizeRelation();
+    organizeRelation.setPrevId(organize.getId());
+    organizeRelation.setNextId(organize.getId());
+    organizeRelation.setDistance(0);
+    relationService.create(organizeRelation);
+
+    if (Objects.nonNull(prevId)) {
+      relationService.createBatch(
+          relationService.listByNextId(prevId).stream()
+              .map(
+                  o ->
+                      OrganizeRelation.of(
+                          o.getPrevId(),
+                          organize.getId(),
+                          Objects.equals(o.getPrevId(), prevId) ? 1 : o.getDistance() + 1))
+              .collect(Collectors.toList()));
     }
     return organize;
   }

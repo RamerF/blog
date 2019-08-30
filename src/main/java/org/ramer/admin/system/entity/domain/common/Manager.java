@@ -60,6 +60,12 @@ public class Manager extends AbstractEntity {
   @Where(clause = "state = " + State.STATE_ON)
   private List<Post> posts;
 
+  @ManyToMany
+  @JoinTable
+  @JsonBackReference
+  @Where(clause = "state = " + State.STATE_ON)
+  private List<Organize> organizes;
+
   public static Manager of(Long id) {
     if (Objects.isNull(id)) {
       return null;

@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Table;
+import org.hibernate.annotations.Where;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 /**
@@ -43,6 +45,11 @@ public class Post extends AbstractEntity {
   @JoinColumn(name = "organize_id", insertable = false, updatable = false)
   @JsonBackReference
   private Organize organize;
+
+  @ManyToMany(mappedBy = "posts")
+  @JsonBackReference
+  @Where(clause = "state = " + State.STATE_ON)
+  private List<Manager> members;
 
   /** 数据访问权限 */
   public enum DataAccess {

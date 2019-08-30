@@ -4,35 +4,35 @@
       xmlns:layout="http://www.thymeleaf.org"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
-    <title>组织管理</title>
+    <title>组织岗位管理</title>
 </head>
 <body>
-<div layout:fragment="main-container" class="main-container">
+<div layout:fragment="main-container" class="main-container" style="width: 600px;overflow: hidden;min-width: 600px;">
     <div class="mdc-layout-grid mdc-layout-grid-dialog__fixed" th:fragment="main-container">
         <form id="form" class="mdc-panel__padding-16" onsubmit="void(0);">
             <input th:if="${_csrf!=null}" type="hidden"
                    th:name="${_csrf.parameterName}"
                    id="_csrf"
                    th:value="${_csrf.token}"/>
-            <input type="hidden" th:if="${organize ne null}" th:value="${organize.id}" name="id">
+            <input type="hidden" th:if="${post ne null}" th:value="${post.id}" name="id">
             <div class="mdc-layout-grid__inner mdc-panel__margin-16 mdc-form-field">
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" tabindex="0">
-                    <!--上级组织-->
-                    <div class="mdc-select mdc-select--disabled select-width-fixed">
-                        <input type="hidden" name="prevId" data-validtip="sdfasdf不能为空,且小于20个字符">
+                    <!--所属组织-->
+                    <div class="mdc-select mdc-select--disabled select-width-fixed" data-mdc-auto-init="MDCSelect">
+                        <input type="hidden" name="organizeId" required data-validtip="所属组织不能为空">
                         <i class="mdc-select__dropdown-icon"></i>
                         <!-- 预选 -->
                         <div class="mdc-select__selected-text"
-                             th:text="${prev ne null ? prev.name :''}"
-                             th:data-value="${prev ne null ? prev.id :'-1'}"></div>
+                             th:text="${organize.name}"
+                             th:data-value="${organize.id}"></div>
                         <div class="mdc-select__menu mdc-menu mdc-menu-surface select-width-fixed">
                             <ul class="mdc-list">
                                 <li class="mdc-list-item mdc-list-item--selected"
-                                    th:data-value="${prev ne null ? prev.id : ''}"
-                                    th:text="${prev ne null ? prev.name : ''}"></li>
+                                    th:data-value="${organize.id}"
+                                    th:text="${organize.name}"></li>
                             </ul>
                         </div>
-                        <span class="mdc-floating-label mdc-floating-label--float-above">请选择上级组织</span>
+                        <span class="mdc-floating-label mdc-floating-label--float-above">所属组织</span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <!--名称-->
@@ -45,7 +45,7 @@
                                    data-validtip="名称不能为空,且小于20个字符"
                                    autocomplete="off"
                                    placeholder="请输入名称"
-                                   th:value="${organize ne null?organize.name:''}">
+                                   th:value="${post ne null?post.name:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
@@ -60,6 +60,28 @@
                             <div class="mdc-text-field-character-counter">0 / 20</div>
                         </div>
                     </div>
+                    <!--数据权限-->
+                    <div class="mdc-select select-width-fixed" data-mdc-auto-init="MDCSelect">
+                        <input type="hidden" name="dataAccess" required data-validtip="请指定数据权限">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <!-- 预选 -->
+                        <div class="mdc-select__selected-text"
+                             th:text="${post ne null and post.dataAccess ne null ? post.dataAccess :'请选择数据权限'}"
+                             th:data-value="${post ne null and post.dataAccess ne null ? post.dataAccess :'-1'}"></div>
+                        <div class="mdc-select__menu mdc-menu mdc-menu-surface select-width-fixed">
+                            <ul class="mdc-list">
+                                <li th:class="|mdc-list-item${id eq null ? ' mdc-list-item--selected':''}|"
+                                    data-value="-1"
+                                    th:text="请选择数据权限"></li>
+                                <li th:each="da:${dataAccesses}"
+                                    th:class="|mdc-list-item${post ne null and da.key eq post.dataAccess ? ' mdc-list-item--selected':''}|"
+                                    th:data-value="${da.key}"
+                                    th:text="${da.value}"></li>
+                            </ul>
+                        </div>
+                        <span class="mdc-floating-label mdc-floating-label--float-above">请选择数据权限</span>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
                     <!--备注-->
                     <div class="mdc-panel__margin-16">
                         <div class="mdc-text-field mdc-text-field--textarea mdc-text-field-row"
@@ -69,8 +91,8 @@
                                       class="mdc-text-field__input"
                                       rows="4" cols="40"
                                       maxlength="250" placeholder="请输入备注"
-                                      th:text="${organize ne null?organize.remark:''}"
-                                      th:value="${organize ne null?organize.remark:''}"></textarea>
+                                      th:text="${post ne null?post.remark:''}"
+                                      th:value="${post ne null?post.remark:''}"></textarea>
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
@@ -84,14 +106,12 @@
             </div>
         </form>
     </div>
-</div>
-<div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
       $(function() {
-        let id = [[${organize ne null ? organize.id:''}]];
-        new mdc.select.MDCSelect(document.querySelector('.mdc-select'));
+        let id = [[${post ne null ? post.id:''}]];
         // 初始化input计数器
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+
         // 提交表单
         $('#editBtn').click(function() {
           let $form = $('#form');
@@ -99,6 +119,19 @@
           $form.serializeArray().forEach(function(item) {
             data[item.name] = item.value;
           });
+          let selects = $('.mdc-select input[name]');
+          for (let i = 0; i < selects.length; i++) {
+            let $input = $(selects[i]);
+            let value = $input.val();
+            let validTip = $input.attr('data-validtip');
+            if (!value || Number(value) < 0) {
+              $.alert(validTip, function() {
+                $input.siblings('.mdc-select__selected-text').click();
+              });
+              return false;
+            }
+          }
+
           let textFields = document.querySelectorAll('.mdc-text-field');
           for (let i = 0; i < textFields.length; i++) {
             console.log(i, textFields[i]);
@@ -114,15 +147,16 @@
               return false;
             }
           }
+          data.organizeId = $('input[name=organizeId]').val();
           console.log(JSON.stringify(data));
           id > 0 ?
-              $.put('/manage/organize/' + id, data, function(res) {
+              $.put('/manage/post/' + id, data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/organize/index';
+                  window.location.href = '/manage/post/index';
                 }) : $.alert(res.msg);
-              }) : $.post('/manage/organize', data, function(res) {
+              }) : $.post('/manage/post', data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/organize/index';
+                  window.location.href = '/manage/post/index';
                 }) : $.alert(res.msg);
               });
           return false;

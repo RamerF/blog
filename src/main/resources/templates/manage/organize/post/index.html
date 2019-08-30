@@ -7,6 +7,22 @@
 <head>
     <title>组织管理</title>
     <style rel="stylesheet">
+        .organize-tree {
+            float: left;
+            margin-top: 16px;
+        }
+
+        .organize-operator-container {
+            height: 56px;
+            display: flex;
+            align-items: center;
+        }
+
+        .organize-operator-container .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
         .mdc-tree {
             margin-top: 16px
         }
@@ -15,6 +31,7 @@
             width: calc(100% - 300px);
             margin-left: 16px;
         }
+
     </style>
 </head>
 <body>
@@ -28,11 +45,32 @@
     </th:block>
 </th:block>
 <div layout:fragment="main-container" class="main-container">
-    <div id="mdcTree" class="mdc-tree"></div>
+    <div class="organize-tree">
+        <div class="organize-operator-container">
+            <div class="btn-container">
+                <button class="mdc-button mdc-button--raised" id="refreshBtnOrg">
+                    <span class="mdc-button__label">刷新</span>
+                </button>
+                <a class="mdc-button mdc-button--raised" id="addBtnOrg" data-href="/manage/organize"
+                   sec:authorize="hasAnyAuthority('global:create','organize:create')">
+                    <span class="mdc-button__label">添加</span>
+                </a>
+                <button class="mdc-button mdc-button--raised" id="editBtnOrg" disabled
+                        sec:authorize="hasAnyAuthority('global:write','organize:write')">
+                    <span class="mdc-button__label">编辑</span>
+                </button>
+                <button class="mdc-button mdc-button--raised" id="delBtnOrg" disabled
+                        sec:authorize="hasAnyAuthority('global:delete','organize:delete')">
+                    <span class="mdc-button__label">删除</span>
+                </button>
+            </div>
+        </div>
+        <div id="mdcTree" class="mdc-tree"></div>
+    </div>
     <div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table mdc-non-display">
         <!--扩展搜索条件-->
-        <div class="search-container-extend">
-        </div>
+        <!--        <div class="search-container-extend">-->
+        <!--        </div>-->
         <div class="operator-container">
             <div class="btn-container">
                 <button class="mdc-button mdc-button--raised" id="refreshBtn">
@@ -62,6 +100,7 @@
             </div>
         </div>
     </div>
+    <div th:fragment="editContainerOrg" id="editContainerOrg"></div>
     <div th:fragment="editContainer" id="editContainer"></div>
 </div>
 <th:block layout:fragment="script">
@@ -141,7 +180,60 @@
                 {'organizeId': selectItemId, criteria: $('#criteria').val()}));
             organizeId = selectItemId;
             $('#mdc-data-table').show(0);
+            // 组织树编辑/删除操作可用
+            $('#editBtnOrg').prop('disabled', false);
+            $('#delBtnOrg').prop('disabled', false);
           }
+        });
+
+        // 组织刷新
+        $('#refreshBtnOrg').click(refreshOrganize);
+
+        // 组织树刷新
+        function refreshOrganize() {
+          $.get('/manage/organize/page', {page: -1, size: -1}, function(res) {
+            res.result === true ? mdcTree.refresh({data: res.data.content}) : $.alert(res.msg);
+          });
+        }
+
+        // 组织添加
+        $('#addBtnOrg').click(function() {
+          console.log(organizeId);
+          // if ($.isNegativeNum(organizeId)) {
+          //   $.alert('请选择左侧组织');
+          //   return false;
+          // }
+          $('#editContainerOrg').load(this.dataset.href + '?prevId=' + organizeId, editOrganize);
+          return false;
+        });
+
+        // 编辑组织
+        $('#editBtnOrg').click(function() {
+          console.log(organizeId);
+          if ($.isNegativeNum(organizeId)) {
+            $.alert('请选择一条记录');
+            return false;
+          }
+          $('#editContainerOrg').load('/manage/organize/' + organizeId, editOrganize);
+          return false;
+        });
+
+        // 删除组织
+        $('#delBtnOrg').click(function() {
+          if ($.isNegativeNum(organizeId)) {
+            $.alert('请选择一条记录');
+            return false;
+          }
+          $.confirm('确认要删除这一条记录么 ?', function() {
+            $.delete('/manage/organize/deleteBatch', {'ids': organizeId}, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+              refreshOrganize();
+            }, function(res) {
+              console.log(JSON.stringify(res));
+              $.alert(res.msg);
+            });
+          });
         });
 
         window.refreshTable = function(delCount = 0) {
@@ -166,6 +258,7 @@
           $('#editContainer').load(this.dataset.href + '?organizeId=' + organizeId, edit);
           return false;
         });
+
         // 编辑
         $('#editBtn').click(function() {
           console.log(organizeId);
@@ -182,8 +275,70 @@
           return false;
         });
 
-
         // TODO-WARN: 已知BUG: 每次弹窗初始化mdc-select组件,导致body会无限拼接下拉元素
+        // TODO-WARN: 体验优化: 保存失败时,不应该关闭弹窗 [修复滞后]
+
+        // 新增/更新
+        function editOrganize() {
+          let html = $(this).html();
+          $(this).empty();
+          $(this).hide();
+          $.modal({
+            'title': '修改组织',
+            'content': html,
+            'titleAlign': 'center',
+            'openedCallback': function(data) {
+              console.debug(' 打开回调log: ', data);
+              $(data.target).initMDCTextField();
+              $(data.target).initMDCSelect();
+            }
+          }, function(dom) {
+            let $form = $(dom.target).find('#form');
+            let data = {};
+            $form.serializeArray().forEach(function(item) {
+              data[item.name] = item.value;
+            });
+            let selects = $('.mdc-select input[name]');
+            for (let i = 0; i < selects.length; i++) {
+              let $input = $(selects[i]);
+              let value = $input.val();
+              let validTip = $input.attr('data-validtip');
+              if (!value || Number(value) < 0) {
+                $.alert(validTip, function() {
+                  $input.siblings('.mdc-select__selected-text').click();
+                });
+                return false;
+              }
+            }
+
+            let textFields = document.querySelectorAll('.mdc-text-field');
+            for (let i = 0; i < textFields.length; i++) {
+              console.log(i, textFields[i]);
+              let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
+              let value = $input.val();
+              let required = Boolean($input.prop('required'));
+              let minLength = $input.attr('minlength');
+              let maxLength = $input.attr('maxlength');
+              let validTip = $input.attr('data-validtip');
+              let pattern = $input.attr('data-pattern');
+              if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
+                $input.focus();
+                return false;
+              }
+            }
+            data.prevId = $('input[name=prevId]').val();
+            console.log(JSON.stringify(data));
+            let id = $(dom.target).find('input[name=id]').val();
+            console.log(' log: id = ', id);
+            id > 0 ?
+                $.put('/manage/organize/' + id, data, function(res) {
+                  res.result === true ? $.alert(res.msg, refreshOrganize) : $.alert(res.msg);
+                }) : $.post('/manage/organize', data, function(res) {
+                  res.result === true ? $.alert(res.msg, refreshOrganize) : $.alert(res.msg);
+                });
+            return false;
+          });
+        }
 
         // 新增/更新
         function edit() {

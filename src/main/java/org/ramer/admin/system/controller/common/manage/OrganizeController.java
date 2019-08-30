@@ -70,11 +70,18 @@ public class OrganizeController {
 
   @GetMapping
   @ApiOperation("添加组织页面")
-  public String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
+  public String create(
+      @RequestParam(value = "prevId", required = false) String prevIdStr,
+      @ApiIgnore HttpSession session,
+      @ApiIgnore Map<String, Object> map) {
+    final long prevId = TextUtil.validLong(prevIdStr, -1);
+    if (TextUtil.isValidId(prevId)) {
+      map.put("prev", service.getById(prevId));
+    }
     commonService.writeMenuAndSiteInfo(session, map);
-    map.put("organizes", service.list(null));
-    map.put("managers", managerService.list(null));
-    return "manage/organize/edit";
+    //    map.put("organizes", service.list(null));
+    //    map.put("managers", managerService.list(null));
+    return "manage/organize/edit_pure::main-container";
   }
 
   @PostMapping
@@ -97,7 +104,7 @@ public class OrganizeController {
         service,
         OrganizePoJo.class,
         idStr,
-        "manage/organize/edit",
+        "manage/organize/edit_pure::main-container",
         map,
         "organize",
         id -> {
@@ -107,7 +114,9 @@ public class OrganizeController {
                   .filter(o -> !Objects.equals(o.getId(), id))
                   .collect(Collectors.toList()));
           commonService.writeMenuAndSiteInfo(session, map);
-          map.put("organize", service.getById(id));
+          final Organize organize = service.getById(id);
+          map.put("organize", organize);
+          map.put("prev", Optional.ofNullable(organize).map(Organize::getPrev).orElse(null));
         },
         false);
   }
@@ -204,6 +213,15 @@ public class OrganizeController {
   public ResponseEntity delete(@PathVariable("id") String idStr) {
     log.info(" OrganizeController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
+  }
+
+  @DeleteMapping("/deleteBatch")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('global:delete','organize:delete')")
+  @ApiOperation("删除岗位批量")
+  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+    log.info(" OrganizeController.deleteBatch : [{}]", ids);
+    return commonService.deleteBatch(service, ids);
   }
 
   @GetMapping("/getJsonTreeAll")

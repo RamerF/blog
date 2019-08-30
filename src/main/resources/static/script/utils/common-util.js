@@ -934,6 +934,7 @@
       constructor() {
       }
 
+      /** 当checkbox为false时,返回[] */
       getSelectItems = function() {
         let selectItems = [];
         $.each($(containNode).
@@ -943,6 +944,11 @@
               selectItems.push(val.value);
             });
         return selectItems;
+      };
+
+      refresh = function(opts) {
+        $(containNode).empty();
+        $(containNode).mdcTree($.extend(paras, opts || {}));
       };
 
     }

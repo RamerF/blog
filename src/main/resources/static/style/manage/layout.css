@@ -294,7 +294,8 @@ a[disabled] {
     overflow-y: auto;
     width: 280px;
     float: left;
-    /*border-right: 1px solid #e5e5e5;*/
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
     overflow-x: hidden;
 }
 

@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import org.ramer.admin.system.entity.Constant;
 import org.springframework.util.Assert;
 
 public class TextUtil {
@@ -26,7 +25,7 @@ public class TextUtil {
     if (page < 1) {
       page = -1;
     }
-    size = validInt(sizeStr, Constant.DEFAULT_PAGE_SIZE);
+    size = validInt(sizeStr, 0);
     if (size < 1) {
       size = -1;
     }

@@ -17,9 +17,9 @@ public interface ManagerRepository extends BaseRepository<Manager, Long> {
   List<Manager> findByUpdateTimeGreaterThanAndState(
       final LocalDateTime updateTime, final int state);
 
-  Page<Manager> findByOrganizesIdInAndState(
+  Page<Manager> findByOrganizeIdInAndState(
       final List<Long> organizeIds, final int state, final Pageable pageable);
 
-  Page<Manager> findByOrganizesInAndState(
+  Page<Manager> findByOrganizeInAndState(
       final List<Organize> organizes, final int state, final Pageable pageable);
 }

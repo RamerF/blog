@@ -46,7 +46,7 @@ public class Post extends AbstractEntity {
   @JsonBackReference
   private Organize organize;
 
-  @ManyToMany(mappedBy = "posts")
+  @OneToMany(mappedBy = "post")
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
   private List<Manager> members;

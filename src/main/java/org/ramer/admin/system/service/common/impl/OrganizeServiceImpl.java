@@ -73,18 +73,18 @@ public class OrganizeServiceImpl implements OrganizeService {
     OrganizeRelation organizeRelation = new OrganizeRelation();
     organizeRelation.setPrevId(organize.getId());
     organizeRelation.setNextId(organize.getId());
-    organizeRelation.setDistance(0);
+    organizeRelation.setDepth(0);
     relationService.create(organizeRelation);
 
     if (Objects.nonNull(prevId)) {
       relationService.createBatch(
-          relationService.listByNextId(prevId).stream()
+          relationService.listParent(prevId).stream()
               .map(
                   o ->
                       OrganizeRelation.of(
                           o.getPrevId(),
                           organize.getId(),
-                          Objects.equals(o.getPrevId(), prevId) ? 1 : o.getDistance() + 1))
+                          Objects.equals(o.getPrevId(), prevId) ? 1 : o.getDepth() + 1))
               .collect(Collectors.toList()));
     }
     return organize;
@@ -110,6 +110,16 @@ public class OrganizeServiceImpl implements OrganizeService {
   @Override
   public List<Organize> listAfterDate(final Date updateTime) {
     return repository.findByUpdateTimeGreaterThan(updateTime);
+  }
+
+  @Override
+  public List<Organize> listChildren(final long id, final boolean includeSelf) {
+    return listByIds(relationService.listChildrenIds(id, includeSelf));
+  }
+
+  @Override
+  public List<Organize> listChildren(final long id, final int distance) {
+    return null;
   }
 
   @SuppressWarnings({"unchecked"})

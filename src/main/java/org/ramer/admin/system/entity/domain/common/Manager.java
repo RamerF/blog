@@ -15,7 +15,7 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 @Table(appliesTo = Manager.TABLE_NAME, comment = "管理员")
 @Data
 @NoArgsConstructor
-@ToString(exclude = {"roles", "posts"})
+@ToString(exclude = {"roles", "post", "organize"})
 @EqualsAndHashCode(callSuper = true)
 public class Manager extends AbstractEntity {
   public static final String TABLE_NAME = "manager";
@@ -54,17 +54,23 @@ public class Manager extends AbstractEntity {
   @Where(clause = "state = " + State.STATE_ON)
   private List<Role> roles;
 
-  @ManyToMany
-  @JoinTable
-  @JsonBackReference
-  @Where(clause = "state = " + State.STATE_ON)
-  private List<Post> posts;
+  @Column(name = "post_id")
+  private Long postId;
 
-  @ManyToMany
-  @JoinTable
-  @JsonBackReference
+  @ManyToOne
+  @JoinColumn(name = "post_id", insertable = false, updatable = false)
   @Where(clause = "state = " + State.STATE_ON)
-  private List<Organize> organizes;
+  @JsonBackReference
+  private Post post;
+
+  @Column(name = "organize_id")
+  private Long organizeId;
+
+  @ManyToOne
+  @JoinColumn(name = "organize_id", insertable = false, updatable = false)
+  @Where(clause = "state = " + State.STATE_ON)
+  @JsonBackReference
+  private Organize organize;
 
   public static Manager of(Long id) {
     if (Objects.isNull(id)) {

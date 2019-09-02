@@ -4,11 +4,15 @@ import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.service.BaseService;
 import org.ramer.admin.system.service.common.impl.ManagerServiceImpl.ManagerLogin;
+import org.springframework.data.domain.Page;
 
 /** @author ramer */
 public interface ManagerService extends BaseService<Manager, ManagerPoJo> {
 
-  Manager getByEmpNo(String empNo);
+  Manager getByEmpNo(final String empNo);
+
+  Page<Manager> pageByOrganize(
+      final long organizeId, final String criteria, final int page, final int size);
 
   /**
    * 更新管理员密码.

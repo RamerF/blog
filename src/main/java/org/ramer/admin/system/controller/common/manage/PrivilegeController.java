@@ -74,7 +74,7 @@ public class PrivilegeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','privilege:create')")
   @ApiOperation("添加权限")
-  public ResponseEntity<CommonResponse> create(
+  public ResponseEntity<CommonResponse<Object>> create(
       @Valid PrivilegeRequest privilegeRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" PrivilegeController.create : [{}]", privilegeRequest);
     // 新增时,只需传递name属性,根据name自动生成五个对应的记录

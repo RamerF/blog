@@ -16,4 +16,8 @@ public interface OrganizeService extends BaseService<Organize, OrganizePoJo> {
   List<Manager> listMembers(final long id);
 
   List<Organize> listAfterDate(final Date updateTime);
+
+  List<Organize> listChildren(final long id, final boolean includeSelf);
+
+  List<Organize> listChildren(final long id, final int distance);
 }

@@ -2,6 +2,8 @@ package org.ramer.admin.system.service.common.impl;
 
 import java.util.*;
 import javax.annotation.Resource;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +13,9 @@ import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.ManagerRepository;
 import org.ramer.admin.system.service.common.ManagerService;
+import org.ramer.admin.system.service.common.OrganizeService;
 import org.ramer.admin.system.util.EncryptUtil;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,6 +24,7 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Service
 public class ManagerServiceImpl implements ManagerService {
+  @Resource private OrganizeService organizeService;
   @Resource private ManagerRepository repository;
 
   private static Map<String, ManagerLogin> LOGIN_STATUS_MAP = new HashMap<>();
@@ -27,8 +32,37 @@ public class ManagerServiceImpl implements ManagerService {
   private static Map<String, String> USER_LOGIN_MAP = new HashMap<>();
 
   @Override
-  public Manager getByEmpNo(String empNo) {
+  public Manager getByEmpNo(final String empNo) {
     return repository.findByEmpNoAndState(empNo, State.STATE_ON);
+  }
+
+  @Override
+  public Page<Manager> pageByOrganize(
+      final long organizeId, final String criteria, final int page, final int size) {
+    final PageRequest pageable = pageRequest(page, size);
+    return Objects.isNull(pageable)
+        ? new PageImpl<>(Collections.emptyList())
+        : repository.findAll(
+            (root, query, builder) -> {
+              final Predicate predicate =
+                  builder.and(builder.equal(root.get("state"), State.STATE_ON));
+              final List<Expression<Boolean>> expressions = predicate.getExpressions();
+              if (StringUtils.isEmpty(criteria)) {
+                expressions.add(
+                    builder.and(
+                        builder.or(
+                            builder.like(root.get("empNo"), "%" + criteria + "%"),
+                            builder.like(root.get("name"), "%" + criteria + "%"),
+                            builder.like(root.get("phone"), "%" + criteria + "%"))));
+              }
+              expressions.add(
+                  builder.and(
+                      builder
+                          .in(root.join("organizes").get("id"))
+                          .in(organizeService.listChildren(organizeId, true))));
+              return predicate;
+            },
+            pageable);
   }
 
   @Transactional
@@ -112,13 +146,16 @@ public class ManagerServiceImpl implements ManagerService {
   public Specification<Manager> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
         ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
-        : (root, query, builder) ->
-            builder.and(
-                builder.equal(root.get("state"), State.STATE_ON),
-                builder.or(
-                    builder.like(root.get("empNo"), "%" + criteria + "%"),
-                    builder.like(root.get("name"), "%" + criteria + "%"),
-                    builder.like(root.get("phone"), "%" + criteria + "%")));
+        : (root, query, builder) -> {
+          final Predicate and =
+              builder.and(
+                  builder.equal(root.get("state"), State.STATE_ON),
+                  builder.or(
+                      builder.like(root.get("empNo"), "%" + criteria + "%"),
+                      builder.like(root.get("name"), "%" + criteria + "%"),
+                      builder.like(root.get("phone"), "%" + criteria + "%")));
+          return and;
+        };
   }
 
   @Data

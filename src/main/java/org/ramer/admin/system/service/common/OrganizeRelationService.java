@@ -8,5 +8,9 @@ import org.ramer.admin.system.service.BaseService;
 /** @author ramer */
 public interface OrganizeRelationService
     extends BaseService<OrganizeRelation, OrganizeRelationPoJo> {
-  List<OrganizeRelation> listByNextId(final long nextId);
+  List<OrganizeRelation> listParent(final long nextId);
+
+  List<Long> listParentIds(final long nextId, final boolean includeSelf);
+
+  List<Long> listChildrenIds(final long id, final boolean includeSelf);
 }

@@ -39,7 +39,7 @@ public class CommonResponse<T> {
     this.msg = msg;
   }
 
-  public static ResponseEntity<CommonResponse> ok() {
+  public static <T> ResponseEntity<CommonResponse<T>> ok() {
     return ResponseEntity.ok(new CommonResponse<>(true, null, Txt.SUCCESS_EXEC));
   }
   /**

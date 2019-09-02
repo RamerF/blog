@@ -26,7 +26,7 @@ public class Organize extends AbstractEntity {
   private String name;
 
   /** 成员 */
-  @ManyToMany(mappedBy = "organizes")
+  @OneToMany(mappedBy = "organize")
   private List<Manager> members;
 
   /** 上级 */

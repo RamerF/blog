@@ -19,7 +19,7 @@
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" tabindex="0">
                     <!--上级组织-->
                     <div class="mdc-select mdc-select--disabled select-width-fixed">
-                        <input type="hidden" name="prevId" data-validtip="sdfasdf不能为空,且小于20个字符">
+                        <input type="hidden" name="prevId">
                         <i class="mdc-select__dropdown-icon"></i>
                         <!-- 预选 -->
                         <div class="mdc-select__selected-text"
@@ -87,47 +87,47 @@
 </div>
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
-      $(function() {
-        let id = [[${organize ne null ? organize.id:''}]];
-        new mdc.select.MDCSelect(document.querySelector('.mdc-select'));
-        // 初始化input计数器
-        new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
-        // 提交表单
-        $('#editBtn').click(function() {
-          let $form = $('#form');
-          let data = {};
-          $form.serializeArray().forEach(function(item) {
-            data[item.name] = item.value;
-          });
-          let textFields = document.querySelectorAll('.mdc-text-field');
-          for (let i = 0; i < textFields.length; i++) {
-            console.log(i, textFields[i]);
-            let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
-            let value = $input.val();
-            let required = Boolean($input.prop('required'));
-            let minLength = $input.attr('minlength');
-            let maxLength = $input.attr('maxlength');
-            let validTip = $input.attr('data-validtip');
-            let pattern = $input.attr('data-pattern');
-            if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
-              $input.focus();
-              return false;
-            }
-          }
-          console.log(JSON.stringify(data));
-          id > 0 ?
-              $.put('/manage/organize/' + id, data, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/organize/index';
-                }) : $.alert(res.msg);
-              }) : $.post('/manage/organize', data, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/organize/index';
-                }) : $.alert(res.msg);
-              });
-          return false;
+        $(function() {
+            let id = [[${organize ne null ? organize.id:''}]];
+            new mdc.select.MDCSelect(document.querySelector('.mdc-select'));
+            // 初始化input计数器
+            new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+            // 提交表单
+            $('#editBtn').click(function() {
+                let $form = $('#form');
+                let data = {};
+                $form.serializeArray().forEach(function(item) {
+                    data[item.name] = item.value;
+                });
+                let textFields = document.querySelectorAll('.mdc-text-field');
+                for (let i = 0; i < textFields.length; i++) {
+                    console.log(i, textFields[i]);
+                    let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
+                    let value = $input.val();
+                    let required = Boolean($input.prop('required'));
+                    let minLength = $input.attr('minlength');
+                    let maxLength = $input.attr('maxlength');
+                    let validTip = $input.attr('data-validtip');
+                    let pattern = $input.attr('data-pattern');
+                    if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
+                        $input.focus();
+                        return false;
+                    }
+                }
+                console.log(JSON.stringify(data));
+                id > 0 ?
+                  $.put('/manage/organize/' + id, data, function(res) {
+                      res.result === true ? $.alert(res.msg, function() {
+                          window.location.href = '/manage/organize/index';
+                      }) : $.alert(res.msg);
+                  }) : $.post('/manage/organize', data, function(res) {
+                      res.result === true ? $.alert(res.msg, function() {
+                          window.location.href = '/manage/organize/index';
+                      }) : $.alert(res.msg);
+                  });
+                return false;
+            });
         });
-      });
     </script>
 </div>
 </body>

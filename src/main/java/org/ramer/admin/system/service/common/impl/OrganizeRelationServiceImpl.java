@@ -41,7 +41,7 @@ public class OrganizeRelationServiceImpl implements OrganizeRelationService {
   public List<Long> listChildrenIds(final long prevId, final boolean includeSelf) {
     return includeSelf
         ? repository.findByPrevIdAndState(prevId, State.STATE_ON).stream()
-            .map(AbstractEntity::getId)
+            .map(OrganizeRelation::getNextId)
             .collect(Collectors.toList())
         : repository.findByPrevIdAndState(prevId, State.STATE_ON).stream()
             .filter(o -> !Objects.equals(o.getId(), prevId))

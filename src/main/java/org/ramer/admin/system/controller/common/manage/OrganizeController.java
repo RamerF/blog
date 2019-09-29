@@ -303,7 +303,7 @@ public class OrganizeController {
   @GetMapping("/listByMember")
   @ResponseBody
   @ApiOperation("获取成员所在组织列表")
-  public ResponseEntity listlistByMember(@RequestParam("memberId") String memberIdStr) {
+  public ResponseEntity listByMember(@RequestParam("memberId") String memberIdStr) {
     final long memberId = TextUtil.validLong(memberIdStr, -1);
     if (memberId < 1) {
       return CommonResponse.wrongValue("成员");

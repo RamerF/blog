@@ -1,5 +1,6 @@
 package org.ramer.admin.system.service.common.impl;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -51,7 +52,7 @@ public class OrganizeServiceImpl implements OrganizeService {
      * --12
      * ---121
      * ----1211
-     * prev_id    next_id   distance
+     * prev_id    next_id   depth
      * 1          1         0
      *
      * 11         11        0
@@ -92,6 +93,7 @@ public class OrganizeServiceImpl implements OrganizeService {
 
   @Override
   public Organize update(final Organize organize) throws RuntimeException {
+    // TODO-WARN: 组织更新逻辑
     return create(organize);
   }
 
@@ -108,17 +110,22 @@ public class OrganizeServiceImpl implements OrganizeService {
   }
 
   @Override
-  public List<Organize> listAfterDate(final Date updateTime) {
+  public List<Organize> listAfterDate(final LocalDateTime updateTime) {
     return repository.findByUpdateTimeGreaterThan(updateTime);
   }
 
   @Override
-  public List<Organize> listChildren(final long id, final boolean includeSelf) {
-    return listByIds(relationService.listChildrenIds(id, includeSelf));
+  public List<Long> listChildrenIds(final long id, final boolean includeSelf) {
+    return relationService.listChildrenIds(id, includeSelf);
   }
 
   @Override
-  public List<Organize> listChildren(final long id, final int distance) {
+  public List<Organize> listChildren(final long id, final boolean includeSelf) {
+    return listByIds(listChildrenIds(id, includeSelf));
+  }
+
+  @Override
+  public List<Organize> listChildren(final long id, final int depth) {
     return null;
   }
 

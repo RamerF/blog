@@ -1,11 +1,10 @@
 package org.ramer.admin.system.repository.common;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import org.ramer.admin.system.entity.domain.common.Organize;
 import org.ramer.admin.system.entity.response.common.OrganizeMemberRelationResponse;
 import org.ramer.admin.system.repository.BaseRepository;
-
-import java.util.Date;
-import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,5 +16,5 @@ public interface OrganizeRepository extends BaseRepository<Organize, Long> {
   List<OrganizeMemberRelationResponse> findOrganizeMemberRelation(
       @Param("membersId") Long membersId, @Param("state") final int state);
 
-  List<Organize> findByUpdateTimeGreaterThan(final Date updateTime);
+  List<Organize> findByUpdateTimeGreaterThan(final LocalDateTime updateTime);
 }

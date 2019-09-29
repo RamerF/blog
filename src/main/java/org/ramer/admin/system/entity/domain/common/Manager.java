@@ -66,6 +66,7 @@ public class Manager extends AbstractEntity {
   @Column(name = "organize_id")
   private Long organizeId;
 
+  /** 当前只允许一个人处于一个组织 */
   @ManyToOne
   @JoinColumn(name = "organize_id", insertable = false, updatable = false)
   @Where(clause = "state = " + State.STATE_ON)

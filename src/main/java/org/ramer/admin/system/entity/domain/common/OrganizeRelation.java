@@ -37,7 +37,7 @@ public class OrganizeRelation extends AbstractEntity {
   @JsonBackReference
   private Organize next;
 
-  @Column(columnDefinition = "tinyint(4) COMMENT 'left与right的深度'")
+  @Column(columnDefinition = "tinyint(4) COMMENT 'left到right的深度'")
   private Integer depth;
 
   public static OrganizeRelation of(final long prevId, final long nextId, final Integer depth) {

@@ -55,11 +55,12 @@ public class ManagerServiceImpl implements ManagerService {
                             builder.like(root.get("name"), "%" + criteria + "%"),
                             builder.like(root.get("phone"), "%" + criteria + "%"))));
               }
-              expressions.add(
-                  builder.and(
-                      builder
-                          .in(root.join("organizes").get("id"))
-                          .in(organizeService.listChildren(organizeId, true))));
+              // 包含子组织成员
+              //              final In<Object> in = builder.in(root.get("organizeId"));
+              //              organizeService.listChildrenIds(organizeId, true).forEach(in::value);
+              //              expressions.add(builder.and(in));
+              expressions.add(builder.and(builder.equal(root.get("organizeId"), organizeId)));
+              // TODO-WARN: 未确定是否包含子组织成员
               return predicate;
             },
             pageable);

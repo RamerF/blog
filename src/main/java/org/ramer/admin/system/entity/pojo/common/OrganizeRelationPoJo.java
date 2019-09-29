@@ -25,7 +25,7 @@ public class OrganizeRelationPoJo extends AbstractEntityPoJo {
   private Long nextId;
 
   @ApiModelProperty(value = "Integer")
-  private Integer distance;
+  private Integer depth;
 
   @Override
   @SuppressWarnings({"unchecked"})

@@ -1,8 +1,10 @@
 package org.ramer.admin.system.entity.response.common;
 
-import org.ramer.admin.system.entity.domain.common.Manager;
-import java.util.List;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.util.Optional;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 
@@ -15,23 +17,32 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "组织成员")
 public class OrganizeMemberResponse extends AbstractEntityResponse {
-
+  @ApiModelProperty(value = "id")
   private Long id;
 
+  @ApiModelProperty(value = "名称")
   private String name;
 
+  @ApiModelProperty(value = "工号")
   private String empNo;
 
+  @ApiModelProperty(value = "手机号")
   private Long phone;
 
-  private List<String> organizes;
+  @ApiModelProperty(value = "岗位名称")
+  private String postName;
 
-  private boolean isLeader;
+  @ApiModelProperty(value = "所处组织")
+  private String organizeName;
 
   public static OrganizeMemberResponse of(Manager manager) {
     OrganizeMemberResponse response = new OrganizeMemberResponse();
     BeanUtils.copyProperties(manager, response);
+    response.setPostName(Optional.ofNullable(manager.getPost()).map(Post::getName).orElse(""));
+    response.setOrganizeName(
+        Optional.ofNullable(manager.getOrganize()).map(Organize::getName).orElse(""));
     return response;
   }
 }

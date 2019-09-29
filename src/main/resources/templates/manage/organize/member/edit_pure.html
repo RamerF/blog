@@ -62,7 +62,7 @@
                     </div>
                     <!--岗位-->
                     <div class="mdc-select select-width-fixed" data-mdc-auto-init="MDCSelect">
-                        <input type="hidden" name="postId" required data-validtip="请指定数据权限">
+                        <input type="hidden" name="postId" required data-validtip="请选择岗位">
                         <i class="mdc-select__dropdown-icon"></i>
                         <!-- 预选 -->
                         <div class="mdc-select__selected-text"
@@ -73,13 +73,13 @@
                                 <li th:class="|mdc-list-item${id eq null ? ' mdc-list-item--selected':''}|"
                                     data-value="-1"
                                     th:text="请选择岗位"></li>
-                                <li th:each="p:${posts}"
+                                <li th:each="p:${organize.posts}"
                                     th:class="|mdc-list-item${member ne null and p.id eq member.postId ? ' mdc-list-item--selected':''}|"
                                     th:data-value="${p.id}"
                                     th:text="${p.name}"></li>
                             </ul>
                         </div>
-                        <span class="mdc-floating-label mdc-floating-label--float-above">请选择数据权限</span>
+                        <span class="mdc-floating-label mdc-floating-label--float-above">请选择岗位</span>
                         <div class="mdc-line-ripple"></div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
             new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
 
             // 提交表单
-            $('#editBtn').click(function() {
+            $('#editBtn').on("click", function() {
                 let $form = $('#form');
                 let data = {};
                 $form.serializeArray().forEach(function(item) {

@@ -88,7 +88,7 @@ public class OrganizeMemberController {
     return "manage/organize/member/add";
   }
 
-  @PostMapping
+  @PostMapping("/member")
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','organize:create')")
   @ApiOperation("添加组织人员")

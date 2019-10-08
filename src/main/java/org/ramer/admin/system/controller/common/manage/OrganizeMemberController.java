@@ -105,7 +105,7 @@ public class OrganizeMemberController {
     return CommonResponse.ok();
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/{id}/member")
   @ApiOperation("更新组织人员页面")
   public String update(
       @PathVariable("id") String idStr,

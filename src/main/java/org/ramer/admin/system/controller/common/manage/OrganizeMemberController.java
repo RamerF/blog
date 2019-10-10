@@ -29,7 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @Controller("organizemcm")
 @PreAuthorize("hasAnyAuthority('global:read','organize:read')")
-@RequestMapping(AccessPath.MANAGE + "/organize")
+@RequestMapping(AccessPath.MANAGE + "/organize/member")
 @Api(tags = "管理端: 组织成员接口")
 @SuppressWarnings("UnusedDeclaration")
 public class OrganizeMemberController {
@@ -44,7 +44,7 @@ public class OrganizeMemberController {
     binder.addValidators(validator);
   }
 
-  @GetMapping("/member/index")
+  @GetMapping("/index")
   @ApiOperation("组织成员页面")
   public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
     map.put("organizes", organizeService.list(null));
@@ -52,7 +52,7 @@ public class OrganizeMemberController {
     return "manage/organize/member/index";
   }
 
-  @GetMapping("/member/page")
+  @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取组织成员列表")
   public ResponseEntity<CommonResponse<PageImpl<OrganizeMemberResponse>>> page(
@@ -72,10 +72,10 @@ public class OrganizeMemberController {
         OrganizeMemberResponse::of);
   }
 
-  @GetMapping("/{organizeId}/member")
+  @GetMapping
   @ApiOperation("添加组织人员页面")
   public String create(
-      @ApiParam("组织id") @PathVariable(value = "organizeId", required = false) String organizeIdStr,
+      @ApiParam("组织id") @RequestParam(value = "organizeId", required = false) String organizeIdStr,
       @ApiIgnore HttpSession session,
       @ApiIgnore Map<String, Object> map) {
     final long organizeId = TextUtil.validLong(organizeIdStr, -1);
@@ -88,7 +88,7 @@ public class OrganizeMemberController {
     return "manage/organize/member/add";
   }
 
-  @PostMapping("/member")
+  @PostMapping
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','organize:create')")
   @ApiOperation("添加组织人员")
@@ -105,7 +105,7 @@ public class OrganizeMemberController {
     return CommonResponse.ok();
   }
 
-  @GetMapping("/{id}/member")
+  @GetMapping("/{id}")
   @ApiOperation("更新组织人员页面")
   public String update(
       @PathVariable("id") String idStr,

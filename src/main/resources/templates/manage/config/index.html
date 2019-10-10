@@ -126,7 +126,7 @@
         });
         window.mdcDataTable = mdcDataTable;
         window.refreshTable = function() {
-          window.mdcDataTable.refresh({criteria: $('#criteria').val()});
+          window.mdcDataTable.refresh({criteria: $('#criteria').val(), page: 1});
         };
         // 刷新,搜索
         $('#refreshBtn,#searchBtn').click(refreshTable);

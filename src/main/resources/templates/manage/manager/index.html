@@ -88,49 +88,49 @@
           container: '#mdc-data-table',
           columns: [
             {
-              data: 'empNo'
+              data: 'empNo',
             },
             {
-              data: 'name'
+              data: 'name',
             },
             {
-              data: 'genderDesc'
+              data: 'genderDesc',
             },
             {
-              data: 'phone'
+              data: 'phone',
             },
             {
-              data: 'isActiveDesc'
+              data: 'isActiveDesc',
             },
             {
-              data: 'rolesDesc'
-            }
+              data: 'rolesDesc',
+            },
           ],
           thead: [
             {
               data: '工号',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '姓名',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '性别',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '电话',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '是否可用',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '角色',
-              style: 'mdc-data-table__cell--non-numeric'
-            }
+              style: 'mdc-data-table__cell--non-numeric',
+            },
           ],
           // 是否分页
           pagination: true,
@@ -157,11 +157,11 @@
             $('#editBtn').prop('disabled', true);
             $('#delBtn').prop('disabled', false);
             $('#roleBtn').prop('disabled', true);
-          }
+          },
         });
         window.mdcDataTable = mdcDataTable;
         window.refreshTable = function() {
-          window.mdcDataTable.refresh({criteria: $('#criteria').val()});
+          window.mdcDataTable.refresh({criteria: $('#criteria').val(), page: 1});
         };
         // 刷新,搜索
         $('#refreshBtn,#searchBtn').click(refreshTable);

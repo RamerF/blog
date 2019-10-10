@@ -5,6 +5,15 @@
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>组织岗位管理</title>
+    <style rel="stylesheet">
+        .mdc-dialog .mdc-dialog__surface {
+            max-width: 100%;
+        }
+
+        .data-table {
+            width: 600px;
+        }
+    </style>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -24,7 +33,7 @@
                    id="_csrf"
                    th:value="${_csrf.token}"/>
             <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center" th:inline="text">
-                [[${post ne null?'修改':'添加'}]]组织岗位
+                [[${post ne null?'修改':'添加'}]]组织成员
             </h2>
             <div class="mdc-layout-grid__inner mdc-panel__margin-16 mdc-form-field">
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-3"></div>
@@ -48,7 +57,7 @@
                         <div class="mdc-line-ripple"></div>
                     </div>
                     <!--人员-->
-                    <div class="mdc-panel__margin-16">
+                    <div class="mdc-panel__margin-16" id="selectMember">
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
                             <input type="text" id="member" name="memberId" class="mdc-text-field__input"
@@ -96,7 +105,7 @@
                     </div>
                     <!--操作-->
                     <div class="mdc-panel__margin-16 mdc-layout-grid__inner mdc-card__action-buttons">
-                        <a href="/manage/post/index"
+                        <a href="/manage/organize/member/index"
                            class="mdc-button mdc-layout-grid__cell mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop  mdc-card__action mdc-button--raised mdc-ripple-upgraded">
                             返回
                         </a>
@@ -104,7 +113,7 @@
                         <button id="editBtn"
                                 class="mdc-button mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded"
                                 th:inline="text">
-                            [[${post eq null ? '添加':'更新'}]]
+                            [[${member eq null ? '添加':'更新'}]]
                         </button>
                     </div>
                 </div>
@@ -114,61 +123,158 @@
 </div>
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
-        $(function() {
-            let id = [[${post ne null ? post.id:''}]];
-            // 初始化input计数器
-            new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+      $(function() {
+        let id = [[${post ne null ? post.id:''}]];
+        // 初始化input计数器
+        new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
 
-            // 提交表单
-            $('#editBtn').click(function() {
-                let $form = $('#form');
-                let data = {};
-                $form.serializeArray().forEach(function(item) {
-                    data[item.name] = item.value;
-                });
-                let selects = $('.mdc-select input[name]');
-                for (let i = 0; i < selects.length; i++) {
-                    let $input = $(selects[i]);
-                    let value = $input.val();
-                    let validTip = $input.attr('data-validtip');
-                    if (!value || Number(value) < 0) {
-                        $.alert(validTip, function() {
-                            $input.siblings('.mdc-select__selected-text').click();
-                        });
-                        return false;
-                    }
-                }
-
-                let textFields = document.querySelectorAll('.mdc-text-field');
-                for (let i = 0; i < textFields.length; i++) {
-                    console.log(i, textFields[i]);
-                    let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
-                    let value = $input.val();
-                    let required = Boolean($input.prop('required'));
-                    let minLength = $input.attr('minlength');
-                    let maxLength = $input.attr('maxlength');
-                    let validTip = $input.attr('data-validtip');
-                    let pattern = $input.attr('data-pattern');
-                    if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
-                        $input.focus();
-                        return false;
-                    }
-                }
-                data.organizeId = $('input[name=organizeId]').val();
-                console.log(JSON.stringify(data));
-                id > 0 ?
-                  $.put('/manage/post/' + id, data, function(res) {
-                      res.result === true ? $.alert(res.msg, function() {
-                          window.location.href = '/manage/post/index';
-                      }) : $.alert(res.msg);
-                  }) : $.post('/manage/post', data, function(res) {
-                      res.result === true ? $.alert(res.msg, function() {
-                          window.location.href = '/manage/post/index';
-                      }) : $.alert(res.msg);
-                  });
-                return false;
-            });
+        // 选择成员弹窗
+        $('#selectMember').on('click', function() {
+          // let tableContainer = $('#mdc-data-table');
+          // tableContainer.children('table').remove();
+          // tableContainer.children('.pagination-container').remove();
+          let mdcDataTableContainer = $(
+              `<div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table">
+                    <div class="operator-container">
+                        <div class="btn-container"></div>
+                        <div class="search-container">
+                            <div class="mdc-text-field text-field mdc-text-field--fullwidth mdc-text-field--no-label mdc-ripple-upgraded mdc-text-field--with-trailing-icon"
+                                 data-mdc-auto-init="MDCTextField">
+                                <input type="text" id="criteria" class="mdc-text-field__input"
+                                       placeholder="请输入工号|名称|电话" autocomplete="off" data-enter-trigger="refreshTable">
+                                <i class="material-icons mdc-text-field__icon" tabindex="0" role="button"
+                                   id="searchBtn">search</i>
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>`,
+          );
+          window.mdcDataTable = $.mdcDataTable({
+            url: '/manage/manager/page',
+            queryParams: {},
+            container: mdcDataTableContainer,
+            columns: [
+              {
+                data: 'empNo',
+              },
+              {
+                data: 'name',
+              },
+              {
+                data: 'genderDesc',
+              },
+              {
+                data: 'phone',
+              },
+            ],
+            thead: [
+              {
+                data: '工号',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+              {
+                data: '姓名',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+              {
+                data: '性别',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+              {
+                data: '电话',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+            ],
+            check: false,
+            // 是否分页
+            pagination: true,
+            // 页面数据条数
+            pageSize: 2,
+            // 设置页面可以显示的数据条数
+            pageList: [5, 10, 15, 20],
+            // 首页页码
+            pageNumber: 1,
+            editable: false,
+            onInitFinish: function() {
+              // let popupHtml = tableContainer;
+              // tableContainer.addClass('mdc-non-display');
+              $.modal({
+                title: '员工信息',
+                content: mdcDataTableContainer,
+                contentType: 2,
+                openedCallback: function() {
+                  window.mdcDataTable.fixBtnColor();
+                },
+              }, function(data) {
+                console.log($.strFormat(' 选择员工: {}', JSON.stringify(data)));
+              });
+            },
+            rowClick: function(row, data, index) {
+              console.log($.strFormat('{},{}', JSON.stringify(row), index));
+              mdcDataTableContainer.parents('.mdc-dialog__surface').find(
+                  'button[data-mdc-dialog-action="yes"]').trigger('click');
+            },
+          });
+          return false;
         });
+
+        window.refreshTable = function() {
+          window.mdcDataTable.refresh({criteria: $('#criteria').val(), page: 1}, 0);
+        };
+        // 搜索
+        $('body').on('click', '#searchBtn', refreshTable);
+
+        // 提交表单
+        $('#editBtn').on('click', function() {
+          let $form = $('#form');
+          let data = {};
+          $form.serializeArray().forEach(function(item) {
+            data[item.name] = item.value;
+          });
+          let selects = $('.mdc-select input[name]');
+          for (let i = 0; i < selects.length; i++) {
+            let $input = $(selects[i]);
+            let value = $input.val();
+            let validTip = $input.attr('data-validtip');
+            if (!value || Number(value) < 0) {
+              $.alert(validTip, function() {
+                $input.siblings('.mdc-select__selected-text').trigger('click');
+              });
+              return false;
+            }
+          }
+
+          let textFields = document.querySelectorAll('.mdc-text-field');
+          for (let i = 0; i < textFields.length; i++) {
+            console.log(i, textFields[i]);
+            let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
+            let value = $input.val();
+            let required = Boolean($input.prop('required'));
+            let minLength = $input.attr('minlength');
+            let maxLength = $input.attr('maxlength');
+            let validTip = $input.attr('data-validtip');
+            let pattern = $input.attr('data-pattern');
+            if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
+              $input.trigger('focus');
+              return false;
+            }
+          }
+          data.organizeId = $('input[name=organizeId]').val();
+          console.log(JSON.stringify(data));
+          id > 0 ?
+              $.put('/manage/post/' + id, data, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  window.location.href = '/manage/post/index';
+                }) : $.alert(res.msg);
+              }) : $.post('/manage/post', data, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  window.location.href = '/manage/post/index';
+                }) : $.alert(res.msg);
+              });
+          return false;
+        });
+      });
     </script>
 </div>
 </body>

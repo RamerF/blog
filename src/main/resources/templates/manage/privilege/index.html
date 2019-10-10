@@ -64,21 +64,21 @@
           container: '#mdc-data-table',
           columns: [
             {
-              data: 'name'
+              data: 'name',
             },
             {
-              data: 'exp'
+              data: 'exp',
             },
           ],
           thead: [
             {
               data: '名称',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '表达式',
-              style: 'mdc-data-table__cell--non-numeric'
-            }
+              style: 'mdc-data-table__cell--non-numeric',
+            },
           ],
           // 是否分页
           pagination: true,
@@ -102,11 +102,11 @@
           multipleSelect: function() {
             $('#editBtn').prop('disabled', true);
             $('#delBtn').prop('disabled', false);
-          }
+          },
         });
         window.mdcDataTable = mdcDataTable;
         window.refreshTable = function() {
-          window.mdcDataTable.refresh({criteria: $('#criteria').val()});
+          window.mdcDataTable.refresh({criteria: $('#criteria').val(), page: 1});
         };
         // 刷新,搜索
         $('#refreshBtn,#searchBtn').click(refreshTable);

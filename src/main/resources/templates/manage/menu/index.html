@@ -5,7 +5,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
-    <title>管理员管理</title>
+    <title>菜单管理</title>
 </head>
 <body>
 <th:block th:fragment="retrieveChild(children)">
@@ -64,42 +64,42 @@
           container: '#mdc-data-table',
           columns: [
             {
-              data: 'name'
+              data: 'name',
             },
             {
-              data: 'url'
+              data: 'url',
             },
             {
-              data: 'icon'
+              data: 'icon',
             },
             {
-              data: 'sortWeight'
+              data: 'sortWeight',
             },
             {
-              data: 'remark'
-            }
+              data: 'remark',
+            },
           ],
           thead: [
             {
               data: '名称',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '地址',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '图标',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '权重',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '备注',
-              style: 'mdc-data-table__cell--non-numeric'
-            }
+              style: 'mdc-data-table__cell--non-numeric',
+            },
           ],
           // 是否分页
           pagination: true,
@@ -123,16 +123,16 @@
           multipleSelect: function() {
             $('#editBtn').prop('disabled', true);
             $('#delBtn').prop('disabled', false);
-          }
+          },
         });
         window.mdcDataTable = mdcDataTable;
         window.refreshTable = function() {
           window.mdcDataTable.refresh({criteria: $('#criteria').val(), page: 1});
         };
         // 刷新,搜索
-        $('#refreshBtn,#searchBtn').click(refreshTable);
+        $('#refreshBtn,#searchBtn').on('click', refreshTable);
         // 编辑
-        $('#editBtn').click(function() {
+        $('#editBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length !== 1) {
             $.alert('请选择一条记录');
@@ -141,7 +141,7 @@
           window.location.href = '/manage/menu/' + selectItems[0].id;
         });
         // 删除
-        $('#delBtn').click(function() {
+        $('#delBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {
             $.alert('请至少选择一条记录');

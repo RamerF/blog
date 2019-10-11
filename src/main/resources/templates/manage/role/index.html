@@ -110,20 +110,20 @@
           container: '#mdc-data-table',
           columns: [
             {
-              data: 'name'
+              data: 'name',
             },
             {
-              data: 'remark'
-            }
+              data: 'remark',
+            },
           ],
           thead: [
             {
               data: '姓名',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
             {
               data: '备注',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
             },
           ],
           // 是否分页
@@ -157,16 +157,16 @@
             $('#roleBtn').prop('disabled', true);
             $('#menuBtn').prop('disabled', true);
             $('#privilegeBtn').prop('disabled', true);
-          }
+          },
         });
         window.mdcDataTable = mdcDataTable;
         window.refreshTable = function() {
           window.mdcDataTable.refresh({criteria: $('#criteria').val(), page: 1});
         };
         // 刷新,搜索
-        $('#refreshBtn,#searchBtn').click(refreshTable);
+        $('#refreshBtn,#searchBtn').on('click', refreshTable);
         // 编辑
-        $('#editBtn').click(function() {
+        $('#editBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length !== 1) {
             $.alert('请选择一条记录');
@@ -175,7 +175,7 @@
           window.location.href = '/manage/role/' + selectItems[0].id;
         });
         // 删除
-        $('#delBtn').click(function() {
+        $('#delBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {
             $.alert('请至少选择一条记录');
@@ -198,7 +198,7 @@
           });
         });
         // 菜单配置
-        $('#menuBtn').click(function() {
+        $('#menuBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {
             $.alert('请至少选择一条记录');
@@ -226,7 +226,7 @@
           });
         });
         // 权限配置
-        $('#privilegeBtn').click(function() {
+        $('#privilegeBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {
             $.alert('请至少选择一条记录');

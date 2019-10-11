@@ -9,13 +9,13 @@
     <style rel="stylesheet">
         .organize-tree {
             float: left;
-            margin-top: 16px;
         }
 
         .organize-operator-container {
             height: 56px;
             display: flex;
             align-items: center;
+            margin-top: 16px;
         }
 
         .organize-operator-container .btn-container {
@@ -46,6 +46,7 @@
 </th:block>
 <div layout:fragment="main-container" class="main-container">
     <div class="organize-tree">
+        <h2>组织管理</h2>
         <div class="organize-operator-container">
             <div class="btn-container">
                 <button class="mdc-button mdc-button--raised" id="refreshBtnOrg">
@@ -68,6 +69,7 @@
         <div id="mdcTree" class="mdc-tree"></div>
     </div>
     <div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table mdc-non-display">
+        <h2>岗位成员管理</h2>
         <!--扩展搜索条件-->
         <!--        <div class="search-container-extend">-->
         <!--        </div>-->
@@ -122,7 +124,8 @@
                 let selectItemId = cell.dataset.id;
                 console.log(' 点击元素: ', selectItemId, organizeId);
                 // 表格初始化,这里
-                !initTable++ ? window.mdcDataTable = $('#mdc-data-table').mdcDataTable({
+                let $mdcDataTable = $('#mdc-data-table');
+                !initTable++ ? window.mdcDataTable = $mdcDataTable.mdcDataTable({
                       url: '/manage/organize/member/page',
                       queryParams: {'organizeId': selectItemId},
                       container: '#mdc-data-table',
@@ -180,7 +183,7 @@
                     : (organizeId === selectItemId ? function() {} : window.mdcDataTable.refresh(
                     {'organizeId': selectItemId, criteria: $('#criteria').val()}));
                 organizeId = selectItemId;
-                $('#mdc-data-table').show(0);
+                $mdcDataTable.show(0);
                 // 组织树编辑/删除操作可用
                 $('#editBtnOrg').prop('disabled', false);
                 $('#delBtnOrg').prop('disabled', false);
@@ -213,7 +216,7 @@
           //   $.alert('请选择左侧组织');
           //   return false;
           // }
-          $('#editContainerOrg').load(this.dataset.href + '?prevId=' + organizeId, editOrganize);
+          $('#editContainerOrg').load(this.dataset.href + '?prevId=' + organizeId, () => editOrganize(0));
           return false;
         });
 
@@ -224,7 +227,7 @@
             $.alert('请选择一条记录');
             return false;
           }
-          $('#editContainerOrg').load('/manage/organize/' + organizeId, editOrganize);
+          $('#editContainerOrg').load('/manage/organize/' + organizeId, () => editOrganize(1));
           return false;
         });
 
@@ -281,7 +284,7 @@
             $.alert('请选择一条记录');
             return false;
           }
-          $('#editContainer').load('/manage/organize/member/' + selectItems[0].id, edit);
+          $('#editContainer').load('/manage/organize/member/' + selectItems[0].id, () => edit(1));
           return false;
         });
 
@@ -289,12 +292,13 @@
         // TODO-WARN: 体验优化: 保存失败时,不应该关闭弹窗 [修复滞后]
 
         // 新增/更新
-        function editOrganize() {
-          let html = $(this).html();
-          $(this).empty();
-          $(this).hide();
+        function editOrganize(type = 0) {
+          let thisNode = $('#editContainerOrg');
+          let html = $(thisNode).html();
+          $(thisNode).empty();
+          $(thisNode).hide();
           $.modal({
-            'title': '修改组织',
+            'title': (type === 0 ? '添加' : '编辑') + '组织',
             'content': html,
             'titleAlign': 'center',
             'openedCallback': function(data) {
@@ -315,7 +319,7 @@
               let validTip = $input.attr('data-validtip');
               if ($input.prop('required') && (!value || Number(value) < 0)) {
                 $.alert(validTip, function() {
-                  $input.siblings('.mdc-select__selected-text').click();
+                  $input.siblings('.mdc-select__selected-text').trigger('click');
                 });
                 return false;
               }
@@ -332,7 +336,7 @@
               let validTip = $input.attr('data-validtip');
               let pattern = $input.attr('data-pattern');
               if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
-                $input.focus();
+                $input.trigger('focus');
                 return false;
               }
             }
@@ -351,12 +355,13 @@
         }
 
         // 新增/更新
-        function edit() {
-          let html = $(this).html();
-          $(this).empty();
-          $(this).hide();
+        function edit(type = 0) {
+          let thisNode = $('#editContainer');
+          let html = $(thisNode).html();
+          $(thisNode).empty();
+          $(thisNode).hide();
           $.modal({
-            'title': '修改组织人员',
+            'title': (type === 0 ? '添加' : '修改') + '组织人员',
             'content': html,
             'titleAlign': 'center',
             'openedCallback': function(data) {
@@ -377,7 +382,7 @@
               let validTip = $input.attr('data-validtip');
               if (!value || Number(value) < 0) {
                 $.alert(validTip, function() {
-                  $input.siblings('.mdc-select__selected-text').click();
+                  $input.siblings('.mdc-select__selected-text').trigger('click');
                 });
                 return false;
               }
@@ -394,7 +399,7 @@
               let validTip = $input.attr('data-validtip');
               let pattern = $input.attr('data-pattern');
               if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
-                $input.focus();
+                $input.trigger('focus');
                 return false;
               }
             }

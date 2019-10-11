@@ -148,7 +148,7 @@
         // 初始化input计数器
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
         // 提交表单
-        $('#editBtn').click(function() {
+        $('#editBtn').on('click', function() {
           let $form = $('#form');
           let data = {};
           $form.serializeArray().forEach(function(item) {

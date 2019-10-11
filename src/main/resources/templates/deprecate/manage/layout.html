@@ -77,7 +77,7 @@
 <script src="/lib/utils/common-util.js"></script>
 <script type="text/javascript">
   $(function() {
-    $('.left-nav #nav li').click(function(event) {
+    $('.left-nav #nav li').on('click', function(event) {
       if ($(this).children('.sub-menu').length) {
         if ($(this).hasClass('open')) {
           $(this).removeClass('open');

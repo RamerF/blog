@@ -76,12 +76,12 @@
     // 自动注册 data-mdc-auto-init 元素
     mdc.autoInit();
     let path = '';
-    $('#back').click(function() {
+    $('#back').on('click', function() {
       path = path.length > 0 ? path.substr(0, path.lastIndexOf('\\')) : '';
       console.log(path);
       refreshFileList(path);
     });
-    $('#createFolder').click(function() {
+    $('#createFolder').on('click', function() {
       layer.prompt({title: '请输入文件夹名称'}, function(value, index) {
         if ((value = value.trim()) === '') {
           return false;
@@ -112,7 +112,7 @@
       return false;
     });
 
-    $('#uploadFile').click(function() {
+    $('#uploadFile').on('click', function() {
       let file = $('#uploadInput')[0].files[0];
       if (!file) {
         layer.alert('请选择待上传文件');

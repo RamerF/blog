@@ -158,7 +158,7 @@
         // 刷新,搜索
         $('#refreshBtn,#searchBtn').click(refreshTable);
         // 编辑
-        $('#editBtn').click(function() {
+        $('#editBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length !== 1) {
             $.alert('请选择一条记录');
@@ -167,7 +167,7 @@
           window.location.href = '/manage/dataDict/' + selectItems[0].id;
         });
         // 删除
-        $('#delBtn').click(function() {
+        $('#delBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();
           if (selectItems.length < 1) {
             $.alert('请至少选择一条记录');

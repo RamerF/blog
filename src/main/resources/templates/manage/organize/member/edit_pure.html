@@ -87,61 +87,61 @@
         </form>
     </div>
     <script type="text/javascript" th:inline="javascript">
-        $(function() {
-            let id = [[${post ne null ? post.id:''}]];
-            // 初始化input计数器
-            new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+      $(function() {
+        let id = [[${post ne null ? post.id:''}]];
+        // 初始化input计数器
+        new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
 
-            // 提交表单
-            $('#editBtn').on("click", function() {
-                let $form = $('#form');
-                let data = {};
-                $form.serializeArray().forEach(function(item) {
-                    data[item.name] = item.value;
-                });
-                let selects = $('.mdc-select input[name]');
-                for (let i = 0; i < selects.length; i++) {
-                    let $input = $(selects[i]);
-                    let value = $input.val();
-                    let validTip = $input.attr('data-validtip');
-                    if (!value || Number(value) < 0) {
-                        $.alert(validTip, function() {
-                            $input.siblings('.mdc-select__selected-text').click();
-                        });
-                        return false;
-                    }
-                }
+        // 提交表单
+        $('#editBtn').on('click', function() {
+          let $form = $('#form');
+          let data = {};
+          $form.serializeArray().forEach(function(item) {
+            data[item.name] = item.value;
+          });
+          let selects = $('.mdc-select input[name]');
+          for (let i = 0; i < selects.length; i++) {
+            let $input = $(selects[i]);
+            let value = $input.val();
+            let validTip = $input.attr('data-validtip');
+            if (!value || Number(value) < 0) {
+              $.alert(validTip, function() {
+                $input.siblings('.mdc-select__selected-text').trigger('click');
+              });
+              return false;
+            }
+          }
 
-                let textFields = document.querySelectorAll('.mdc-text-field');
-                for (let i = 0; i < textFields.length; i++) {
-                    console.log(i, textFields[i]);
-                    let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
-                    let value = $input.val();
-                    let required = Boolean($input.prop('required'));
-                    let minLength = $input.attr('minlength');
-                    let maxLength = $input.attr('maxlength');
-                    let validTip = $input.attr('data-validtip');
-                    let pattern = $input.attr('data-pattern');
-                    if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
-                        $input.focus();
-                        return false;
-                    }
-                }
-                data.organizeId = $('input[name=organizeId]').val();
-                console.log(JSON.stringify(data));
-                id > 0 ?
-                  $.put('/manage/post/' + id, data, function(res) {
-                      res.result === true ? $.alert(res.msg, function() {
-                          window.location.href = '/manage/post/index';
-                      }) : $.alert(res.msg);
-                  }) : $.post('/manage/post', data, function(res) {
-                      res.result === true ? $.alert(res.msg, function() {
-                          window.location.href = '/manage/post/index';
-                      }) : $.alert(res.msg);
-                  });
-                return false;
-            });
+          let textFields = document.querySelectorAll('.mdc-text-field');
+          for (let i = 0; i < textFields.length; i++) {
+            console.log(i, textFields[i]);
+            let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
+            let value = $input.val();
+            let required = Boolean($input.prop('required'));
+            let minLength = $input.attr('minlength');
+            let maxLength = $input.attr('maxlength');
+            let validTip = $input.attr('data-validtip');
+            let pattern = $input.attr('data-pattern');
+            if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
+              $input.focus();
+              return false;
+            }
+          }
+          data.organizeId = $('input[name=organizeId]').val();
+          console.log(JSON.stringify(data));
+          id > 0 ?
+              $.put('/manage/post/' + id, data, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  window.location.href = '/manage/post/index';
+                }) : $.alert(res.msg);
+              }) : $.post('/manage/post', data, function(res) {
+                res.result === true ? $.alert(res.msg, function() {
+                  window.location.href = '/manage/post/index';
+                }) : $.alert(res.msg);
+              });
+          return false;
         });
+      });
     </script>
 </div>
 </body>

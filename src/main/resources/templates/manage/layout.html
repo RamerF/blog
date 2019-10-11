@@ -100,7 +100,7 @@
         new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
             (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
         // 链接跳转
-        $('aside li[data-href]').click(function() {
+        $('aside li[data-href]').on('click', function() {
           window.location.href = this.dataset.href;
         });
         // 菜单高亮
@@ -113,7 +113,7 @@
           }
         });
         // 包含该class属性的元素,注册点击跳转
-        $('.data-href__auto[data-href]').click(function() {
+        $('.data-href__auto[data-href]').on('click', function() {
           window.location.href = this.dataset.href;
         });
       });

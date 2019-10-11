@@ -96,7 +96,7 @@
                 } else {
                   layer.alert(data.msg, {icon: 2});
                 }
-              }
+              },
             });
           });
         } else {
@@ -124,13 +124,13 @@
           if (name.val() === '') {
             return {
               size: params.limit,//params.limit, // 每页要显示的数据条数
-              page: (params.offset / params.limit) + 1 // 当前页
+              page: (params.offset / params.limit) + 1, // 当前页
             };
           } else {
             return {
               criteria: name.val(),
               size: params.limit,//params.limit, // 每页要显示的数据条数
-              page: (params.offset / params.limit) + 1 // 当前页
+              page: (params.offset / params.limit) + 1, // 当前页
             };
           }
         },
@@ -142,26 +142,26 @@
             title: 'Code',
             cellStyle: function() {
               return {classes: 'mdl-data-table__cell--non-numeric'};
-            }
+            },
           }, {
             field: 'name',
             title: '名称',
             cellStyle: function() {
               return {classes: 'mdl-data-table__cell--non-numeric'};
-            }
+            },
           }, {
             field: 'value',
             title: '值',
             cellStyle: function() {
               return {classes: 'mdl-data-table__cell--non-numeric'};
-            }
+            },
           }, {
             field: 'remark',
             title: '备注',
             cellStyle: function() {
               return {classes: 'mdl-data-table__cell--non-numeric'};
-            }
-          }
+            },
+          },
         ],
         responseHandler: function(res) {
           return {total: res.data.totalElements, rows: res.data.content};
@@ -175,20 +175,20 @@
         },
         //单击选中
         onClickRow: function(row, $element) {
-          $($element.children()[0]).children().click();
-        }
+          $($element.children()[0]).children().trigger('click');
+        },
       });
       layui.use('laydate', function() {
         var laydate = layui.laydate;
 
         //执行一个laydate实例
         laydate.render({
-          elem: '#start' //指定元素
+          elem: '#start', //指定元素
         });
 
         //执行一个laydate实例
         laydate.render({
-          elem: '#end' //指定元素
+          elem: '#end', //指定元素
         });
       });
     </script>

@@ -69,7 +69,7 @@
         <div id="mdcTree" class="mdc-tree"></div>
     </div>
     <div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table mdc-non-display">
-        <h2>岗位成员管理</h2>
+        <h2 id="title">岗位成员管理</h2>
         <!--扩展搜索条件-->
         <!--        <div class="search-container-extend">-->
         <!--        </div>-->
@@ -180,9 +180,11 @@
                         $('#privilegeBtn').prop('disabled', true);
                       },
                     })
-                    : (organizeId === selectItemId ? function() {} : window.mdcDataTable.refresh(
+                    : (organizeId === selectItemId ? function() {
+                    } : window.mdcDataTable.refresh(
                     {'organizeId': selectItemId, criteria: $('#criteria').val()}));
                 organizeId = selectItemId;
+                $('#title').text($(cell).text() + '成员管理');
                 $mdcDataTable.show(0);
                 // 组织树编辑/删除操作可用
                 $('#editBtnOrg').prop('disabled', false);
@@ -216,7 +218,7 @@
           //   $.alert('请选择左侧组织');
           //   return false;
           // }
-          $('#editContainerOrg').load(this.dataset.href + '?prevId=' + organizeId, () => editOrganize(0));
+          $('#editContainerOrg').load(this.dataset.href + '?prevId=' + organizeId, () => editOrganize());
           return false;
         });
 
@@ -268,7 +270,7 @@
             $.alert('请选择左侧组织');
             return false;
           }
-          window.location.href = $.strFormat(this.dataset.href, organizeId);
+          $('#editContainer').load($.strFormat(this.dataset.href, organizeId), () => edit());
           return false;
         });
 

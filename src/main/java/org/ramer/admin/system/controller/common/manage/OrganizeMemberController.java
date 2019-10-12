@@ -1,11 +1,8 @@
 package org.ramer.admin.system.controller.common.manage;
 
-import io.swagger.annotations.*;
-import java.util.Map;
-import java.util.Objects;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Manager;
@@ -14,7 +11,10 @@ import org.ramer.admin.system.entity.request.common.OrganizeMemberRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.entity.response.common.OrganizeMemberResponse;
 import org.ramer.admin.system.exception.CommonException;
-import org.ramer.admin.system.service.common.*;
+import org.ramer.admin.system.service.common.CommonService;
+import org.ramer.admin.system.service.common.ManagerService;
+import org.ramer.admin.system.service.common.OrganizeService;
+import org.ramer.admin.system.service.common.PostService;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.OrganizeMemberValidator;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +25,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Controller("organizemcm")
@@ -84,8 +90,8 @@ public class OrganizeMemberController {
     }
     map.put("organize", organizeService.getById(organizeId));
     map.put("posts", postService.page(organizeId, null, -1, -1));
-    commonService.writeMenuAndSiteInfo(session, map);
-    return "manage/organize/member/add";
+    //    return "manage/organize/member/add";
+    return "manage/organize/member/edit_pure::main-container";
   }
 
   @PostMapping

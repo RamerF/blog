@@ -62,4 +62,5 @@ server:
 org:
   ramer:
     resource:
+      netdisk: /home/ramer/Desktop/
       prefix: /home/ramer/Desktop/

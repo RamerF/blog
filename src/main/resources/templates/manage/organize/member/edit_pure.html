@@ -35,21 +35,21 @@
                         <span class="mdc-floating-label mdc-floating-label--float-above">所属组织</span>
                         <div class="mdc-line-ripple"></div>
                     </div>
-                    <!--名称-->
-                    <div class="mdc-panel__margin-16">
+                    <!--人员-->
+                    <div class="mdc-panel__margin-16" id="selectMember">
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
-                            <input type="text" id="nameInput" name="name" class="mdc-text-field__input"
+                            <input type="text" id="member" name="name" class="mdc-text-field__input"
                                    maxlength="20"
                                    required
-                                   data-validtip="名称不能为空,且小于20个字符"
+                                   data-validtip="人员不能为空"
                                    autocomplete="off"
-                                   placeholder="请输入名称"
-                                   th:value="${member ne null?member.name:''}">
+                                   placeholder="请点击选择成员"
+                                   th:value="${member ne null?member.id:''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
-                                    <label for="nameInput" class="mdc-floating-label">名称</label>
+                                    <label for="member" class="mdc-floating-label">人员</label>
                                 </div>
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>
@@ -91,6 +91,97 @@
         let id = [[${post ne null ? post.id:''}]];
         // 初始化input计数器
         new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
+
+        // 选择成员弹窗
+        $('#selectMember').on('click', function() {
+          // let tableContainer = $('#mdc-data-table');
+          // tableContainer.children('table').remove();
+          // tableContainer.children('.pagination-container').remove();
+          let mdcDataTableContainer = $(
+              `<div id="mdc-data-table" class="mdc-data-table__container mdc-float__left data-table">
+                    <div class="operator-container">
+                        <div class="btn-container"></div>
+                        <div class="search-container">
+                            <div class="mdc-text-field text-field mdc-text-field--fullwidth mdc-text-field--no-label mdc-ripple-upgraded mdc-text-field--with-trailing-icon"
+                                 data-mdc-auto-init="MDCTextField">
+                                <input type="text" id="criteria" class="mdc-text-field__input"
+                                       placeholder="请输入工号|名称|电话" autocomplete="off" data-enter-trigger="refreshTable">
+                                <i class="material-icons mdc-text-field__icon" tabindex="0" role="button"
+                                   id="searchBtn">search</i>
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>`,
+          );
+          window.mdcDataTable = $.mdcDataTable({
+            url: '/manage/manager/page',
+            queryParams: {},
+            container: mdcDataTableContainer,
+            columns: [
+              {
+                data: 'empNo',
+              },
+              {
+                data: 'name',
+              },
+              {
+                data: 'genderDesc',
+              },
+              {
+                data: 'phone',
+              },
+            ],
+            thead: [
+              {
+                data: '工号',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+              {
+                data: '姓名',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+              {
+                data: '性别',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+              {
+                data: '电话',
+                style: 'mdc-data-table__cell--non-numeric',
+              },
+            ],
+            check: false,
+            // 是否分页
+            pagination: true,
+            // 页面数据条数
+            pageSize: 2,
+            // 设置页面可以显示的数据条数
+            pageList: [5, 10, 15, 20],
+            // 首页页码
+            pageNumber: 1,
+            editable: false,
+            onInitFinish: function() {
+              // let popupHtml = tableContainer;
+              // tableContainer.addClass('mdc-non-display');
+              $.modal({
+                title: '员工信息',
+                content: mdcDataTableContainer,
+                contentType: 2,
+                openedCallback: function() {
+                  window.mdcDataTable.fixBtnColor();
+                },
+              }, function(data) {
+                console.log($.strFormat(' 选择成员: {}', JSON.stringify(data)));
+              });
+            },
+            rowClick: function(row, data, index) {
+              console.log($.strFormat('{},{}', JSON.stringify(row), index));
+              mdcDataTableContainer.parents('.mdc-dialog__surface').find(
+                  'button[data-mdc-dialog-action="yes"]').trigger('click');
+            },
+          });
+          return false;
+        });
 
         // 提交表单
         $('#editBtn').on('click', function() {

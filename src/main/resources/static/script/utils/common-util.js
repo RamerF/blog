@@ -93,8 +93,8 @@
      */
     refresh(queryParams, delCount = 0) {
       let totalElements = this.queryParams.totalElements - delCount;
-      let page = this.queryParams.page;
-      let size = this.queryParams.size;
+      let page = queryParams.page ? queryParams.page : this.queryParams.page;
+      let size = queryParams.size ? queryParams.size : this.queryParams.size;
       // 删除元素: 第一页删除页号不变,否则判断当前页号是否大于删除后的数据总页号,更新页号
       // 删除元素后,点击刷新,有问题,内部页码没有更新
       let fixTotalPage = totalElements % size === 0
@@ -152,6 +152,7 @@
     let paras = $.extend({
       url: null,
       queryParams: {},
+      container: null,
       type: 'GET',
       dataType: 'json',
       contentType: 'application/x-www-form-urlencoded',
@@ -227,7 +228,7 @@
     /** 查询条件 */
     let _queryParams = paras.queryParams;
     /** table父容器 */
-    let _container = this;
+    let _container = paras.container ? $(paras.container) : this;
     let _columns = paras.columns;
     let _check = paras.check;
     let _thead = paras.thead;
@@ -430,10 +431,12 @@
      */
     function updateNumberBtn(number, totalPages) {
       // 取消表头选中
-      new mdc.checkbox.MDCCheckbox(
-          $(checkNodeTh.find('input[type=checkbox]')).
-              parent('.mdc-checkbox').
-              get(0)).checked = false;
+      if (_check) {
+        new mdc.checkbox.MDCCheckbox(
+            $(checkNodeTh.find('input[type=checkbox]')).
+                parent('.mdc-checkbox').
+                get(0)).checked = false;
+      }
       _container.find('.pagination-container ul button.num-btn7').
           text(totalPages);
       let $prevBtn = _container.find(
@@ -536,7 +539,7 @@
           if (_rowClick) {
             tr.attr('data-index', rowIndex++);
             tr.click(function() {
-              _rowClick(_obj, data, tr.attr('data-index'));
+              _rowClick(_obj, data, tr.attr('data-index'), this);
             });
           }
           _columns.forEach(function(_col, index) {
@@ -722,10 +725,10 @@
         <div class="mdc-dialog__content" id="${myDialogContentId}" tabindex="0"></div>
         ${_type === 3 ? '<footer style="height: 4px;"></footer>' :
         `<footer class="mdc-dialog__actions">
-          ${_type !== 1 ? `<button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
+          ${_type !== 1 ? `<button type="button" class="mdc-button mdc-dialog__button button-cancel" data-mdc-dialog-action="no">
             <span class="mdc-button__label">取消</span>
           </button>` : ``}
-        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+        <button type="button" class="mdc-button mdc-dialog__button button-confirm" data-mdc-dialog-action="yes">
           <span class="mdc-button__label">确定</span>
         </button>
         </footer>`}
@@ -743,16 +746,23 @@
     }
     let dialog = new mdc.dialog.MDCDialog($container.get(0));
     dialog.open();
+    // 打开时触发
+    // MDCDialog:opening
+    // 打开后触发
     dialog.listen('MDCDialog:opened', function(data) {
       $container.attr('aria-hidden', 'true');
       _openedCallback && _openedCallback(data);
     });
-
+    // 关闭后触发
+    // MDCDialog:closed
+    // 关闭时触发
     dialog.listen('MDCDialog:closing', function(data) {
       $container.removeAttr('aria-hidden');
-      data.detail.action === 'yes' ?
-          _confirmCallback(data) : _cancelCallback(data);
-      $(this).remove();
+      let result = (data.detail.action === 'yes' ?
+          _confirmCallback(data) : _cancelCallback(data));
+      // if (result !== false) {
+      //   $(this).remove();
+      // }
     });
   };
 
@@ -779,10 +789,11 @@
     // $.dialog($.extend(opts, {type: 3}));
   };
 
-  $.modal = function(msg, callback) {
+  $.modal = function(msg, confirmCallback, cancelCallback) {
     let param = {
       type: 2,
-      confirmCallback: callback,
+      confirmCallback: confirmCallback,
+      cancelCallback: cancelCallback,
     };
     if (typeof msg === 'string') {
       param.content = msg;

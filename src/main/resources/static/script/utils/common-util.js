@@ -682,6 +682,8 @@
       // 弹窗类型: 1:提示框 2:确认框 3:
       type: 1,
       contentType: 1,
+      // 遮罩层关闭
+      shadeClose: true,
       cancelBtn: {
         show: true,
         content: '取消',
@@ -703,6 +705,7 @@
     console.log($.strFormat('弹窗宽度: {}', _width));
     let _titleAlign = paras.titleAlign;
     let _contentType = paras.contentType;
+    let _shadeClose = paras.shadeClose;
     let _type = paras.type;
     let _openedCallback = paras.openedCallback;
     let _cancelCallback = paras.cancelCallback;
@@ -746,32 +749,67 @@
     }
     let dialog = new mdc.dialog.MDCDialog($container.get(0));
     dialog.open();
+    // 禁用遮罩层关闭
+    if (!_shadeClose) {
+      $container.find('.mdc-dialog__scrim').click(function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      });
+    }
     // 打开时触发
     // MDCDialog:opening
+    dialog.listen('MDCDialog:opening', function(data) {
+      console.debug('opening...');
+    });
     // 打开后触发
     dialog.listen('MDCDialog:opened', function(data) {
+      console.debug('opened...');
       $container.attr('aria-hidden', 'true');
       _openedCallback && _openedCallback(data);
     });
-    // 关闭后触发
-    // MDCDialog:closed
+
     // 关闭时触发
     dialog.listen('MDCDialog:closing', function(data) {
+      console.debug('closing...');
       $container.removeAttr('aria-hidden');
       let result = (data.detail.action === 'yes' ?
           _confirmCallback(data) : _cancelCallback(data));
       // if (result !== false) {
-      //   $(this).remove();
       // }
+      $(this).remove();
+    });
+    // 关闭后触发
+    // MDCDialog:closed
+    dialog.listen('MDCDialog:closed', function(data) {
+      console.debug('closed...');
+    });
+    // 取消触发元素默认事件
+    $container.find('*[data-mdc-dialog-action]').click(function() {
+      ($(this).attr('data-mdc-dialog-action') === 'yes' ?
+          _confirmCallback(dialog, $container) :
+          _cancelCallback(dialog, $container)) !== false && function() {
+        // $container.find('.mdc-dialog__surface').
+        //     css({'transition': 'all .3s', 'transform': 'scale(.1),opacity(0)'});
+        $container.addClass('mdc-fade-out-simplify');
+        $container.find('.mdc-dialog__surface').addClass('mdc-fade-out');
+        setTimeout(function() {
+          $container.removeClass('mdc-dialog--open');
+          $container.remove();
+        }, 150);
+      }();
+      return false;
     });
   };
 
   $.alert = function(msg, callback) {
-    $.dialog($.extend({}, {
+    $.dialog({
       type: 1,
-      content: msg,
+      title: msg.title || undefined,
+      content: msg.content || msg,
+      shadeClose: false,
       confirmCallback: callback,
-    }));
+    });
   };
 
   $.confirm = function(msg, confirmCallback, cancelCallback) {

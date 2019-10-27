@@ -488,11 +488,20 @@
               },
             }, function(data) {
               console.log('确认回调');
-              $('#pop-table-container').append($('#selectMemberTable'));
+              let selectItems = window.mdcDataTableMember.getSelectItems();
+              if (selectItems.length < 1) {
+                $.alert({'title': '警告', 'content': '请选择成员'});
+                return false;
+              }
+              setTimeout(function() {
+                $('#pop-table-container').append($('#selectMemberTable'));
+              }, 100);
               console.log($.strFormat(' 选择员工: {}', JSON.stringify(data)));
             }, function() {
               console.log('取消回调');
-              $('#pop-table-container').append($('#selectMemberTable'));
+              setTimeout(function() {
+                $('#pop-table-container').append($('#selectMemberTable'));
+              }, 100);
             });
           } else {
             window.mdcDataTableMember = $('#selectMemberTable').mdcDataTable({
@@ -546,6 +555,7 @@
                 $.modal({
                   title: '请选择成员',
                   content: $('#selectMemberTable'),
+                  shadeClose: false,
                   width: 800,
                   contentType: 2,
                   openedCallback: function(data) {
@@ -555,15 +565,19 @@
                   let selectIds = [];
                   let selectItems = window.mdcDataTableMember.getSelectItems();
                   if (selectItems.length < 1) {
-                    // $.alert('请选择成员');
+                    $.alert({'title': '警告', 'content': '请选择成员'});
                     return false;
                   }
                   selectItems.forEach(item => selectIds.push(item));
-                  $('#pop-table-container').append($('#selectMemberTable'));
+                  setTimeout(function() {
+                    $('#pop-table-container').append($('#selectMemberTable'));
+                  }, 100);
                   console.log($.strFormat(' 选择员工: {}', JSON.stringify(selectItems)));
                   // TODO-WARN: 将id和name分别赋值
                 }, function() {
-                  $('#pop-table-container').append($('#selectMemberTable'));
+                  setTimeout(function() {
+                    $('#pop-table-container').append($('#selectMemberTable'));
+                  }, 100);
                 });
               },
               rowClick: function(row, data, index, rowNode) {

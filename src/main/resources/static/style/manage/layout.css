@@ -435,5 +435,50 @@ a[disabled] {
 
 /*  mdc-tree  官方暂时没有该组件*/
 
+/* animation */
+/* mdc-fade-out: 透明度加缩放 */
+.mdc-fade-out {
+    animation: mdc-fade-out;
+    animation-duration: .3s;
+    animation-fill-mode: forwards;
+}
+
+/* 仅透明度 */
+.mdc-fade-out-simplify {
+    animation: mdc-fade-out-simplify;
+    animation-duration: .3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes mdc-fade-out {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0;
+        transform: scale(.8);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(.8);
+    }
+}
+
+@keyframes mdc-fade-out-simplify {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* mdc-fade-out */
+/* animation */
+
 /* custom */
 

@@ -109,6 +109,25 @@
     </div>
     <div th:fragment="editContainerOrg" id="editContainerOrg"></div>
     <div th:fragment="editContainer" id="editContainer"></div>
+
+    <!-- 选择成员弹窗 -->
+    <div id="pop-table-container" class="mdc-non-display">
+        <div id="mdc-data-table2" class="mdc-data-table__container mdc-float__left fixed-width">
+            <div class="operator-container">
+                <div class="btn-container"></div>
+                <div class="search-container">
+                    <div class="mdc-text-field text-field mdc-text-field--fullwidth mdc-text-field--no-label mdc-ripple-upgraded mdc-text-field--with-trailing-icon"
+                         data-mdc-auto-init="MDCTextField">
+                        <input type="text" id="criteria" class="mdc-text-field__input"
+                               placeholder="请输入工号 | 名称 | 电话" autocomplete="off" data-enter-trigger="refreshTable">
+                        <i class="material-icons mdc-text-field__icon" tabindex="0" role="button"
+                           id="searchBtn">search</i>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <th:block layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
@@ -457,14 +476,14 @@
           // tableContainer.children('table').remove();
           // tableContainer.children('.pagination-container').remove();
           let mdcDataTableContainer = $(
-              `<div id="mdc-data-table" class="mdc-data-table__container mdc-float__left fixed-width">
+              `<div id="mdc-data-table2" class="mdc-data-table__container mdc-float__left fixed-width">
                     <div class="operator-container">
                         <div class="btn-container"></div>
                         <div class="search-container">
                             <div class="mdc-text-field text-field mdc-text-field--fullwidth mdc-text-field--no-label mdc-ripple-upgraded mdc-text-field--with-trailing-icon"
                                  data-mdc-auto-init="MDCTextField">
                                 <input type="text" id="criteria" class="mdc-text-field__input"
-                                       placeholder="请输入工号|名称|电话" autocomplete="off" data-enter-trigger="refreshTable">
+                                       placeholder="请输入工号 | 名称 | 电话" autocomplete="off" data-enter-trigger="refreshTable">
                                 <i class="material-icons mdc-text-field__icon" tabindex="0" role="button"
                                    id="searchBtn">search</i>
                                 <div class="mdc-line-ripple"></div>
@@ -477,7 +496,7 @@
             url: '/manage/manager/page',
             queryParams: {},
             externalStyle: 'fixed-width',
-            container: mdcDataTableContainer,
+            container: '#mdc-data-table2',
             columns: [
               {
                 data: 'empNo',

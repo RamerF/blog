@@ -38,7 +38,8 @@
       toggleCell: 'ul',
       expandAll: true, // 是否全部展开
       containerTrigger: true, // 是否容器触发
-      toggleEvt: function() {},
+      toggleEvt: function() {
+      },
     }, opts || {});
     let _triggerCell = paras.triggerCell;
     let _trigger = paras.trigger;
@@ -109,7 +110,6 @@
     }
   }
 
-  let mdcDataTableCountId = 'mdcDataTableCount';
   /**
    * 基于谷歌Material-Design样式的动态数据表格.
    * https://github.com/ramerf/mdc-data-table.git
@@ -211,11 +211,14 @@
       // 行点击事件,入参(row(当前行数据),data(所有行数据),当前行索引;从1开始)
       rowClick: undefined,
       // 初始化完成后回调
-      onInitFinish: () => {},
+      onInitFinish: () => {
+      },
       // 每次加载成功后回调
-      onLoadSuccess: () => {},
+      onLoadSuccess: () => {
+      },
       // 每次加载失败后回调
-      onLoadError: () => {},
+      onLoadError: () => {
+      },
     }, opts || {});
     let _url = paras.url;
     let _contentType = paras.contentType;
@@ -254,7 +257,7 @@
     let thTrNode = $('<tr></tr>');
     let checkNodeTh = $('<th class="mdc-data-table__cell--non-numeric"></th>');
     let pageContainer = $('<div class="pagination-container"></div>');
-    let pageCountCode = $(`<p class="count" id="${mdcDataTableCountId}"></p>`);
+    let pageCountCode = $(`<p class="count static-info"></p>`);
     let pageBtnContainer = $('<ul></ul>');
     pageContainer.append(pageCountCode).append(pageBtnContainer);
     const checkNodeStr =
@@ -281,7 +284,7 @@
     tableNode.append(theadNode);
     tableNode.append(tbodyNode);
     tableNode.append(tfootNode);
-    $(_container).append(tableNode).append(pageContainer);
+    _container.append(tableNode).append(pageContainer);
     /** 服务器数据(数组),不包含分页信息 */
     let dataList = [];
     /** 分页信息,包含page,size */
@@ -337,7 +340,7 @@
       appendBodyData(dataList);
       let from = `${((_pageInfo.page - 1) * _pageInfo.size + 1)}`;
       let to = `${(_pageInfo.totalElements % _pageInfo.size !== 0
-                   && _pageInfo.page === _pageInfo.totalPages)
+          && _pageInfo.page === _pageInfo.totalPages)
           ? _pageInfo.totalElements
           : _pageInfo.page * _pageInfo.size}`;
       let total = `${_pageInfo.totalElements}`;
@@ -346,21 +349,23 @@
       if (refreshBtn) {
         initNumberBtn(pageContainer);
       }
-      $('#' + mdcDataTableCountId).text(staticInfo);
+      _container.
+          find('.pagination-container p.static-info').
+          text(staticInfo);
       updateNumberBtn(_pageInfo.page, _pageInfo.totalPages);
       // 上一页,下一页点击事件
-      $(_container).find('button[id="prevBtn"],button[id="nextBtn"]').unbind();
-      $(_container).
-      on('click', 'button[id="prevBtn"],button[id="nextBtn"]', function() {
-        pageInfo.page = $(this).attr('id') === 'prevBtn'
-            ? --_pageInfo.page
-            : ++_pageInfo.page;
-        updateNumberBtn(_pageInfo.page, _pageInfo.totalPages);
-        pullData($.extend(_queryParams, _pageInfo), true);
-      });
+      _container.find('button.prev-btn,button.next-btn').unbind();
+      _container.find('button.prev-btn,button.next-btn').
+          on('click', function() {
+            pageInfo.page = $(this).hasClass('prev-btn')
+                ? --_pageInfo.page
+                : ++_pageInfo.page;
+            updateNumberBtn(_pageInfo.page, _pageInfo.totalPages);
+            pullData($.extend(_queryParams, _pageInfo), true);
+          });
       // 页号点击事件
-      $(_container).find('button[id*="pageBtn"]').unbind();
-      $(_container).on('click', 'button[id*="pageBtn"]', function() {
+      _container.find('button[class*="num-btn"]').unbind();
+      _container.find('button[class*="num-btn"]').on('click', function() {
         let numberClick = Number($(this).text());
         if ($(this).hasClass('mdc-button--raised') || isNaN(numberClick)) {
           return false;
@@ -382,13 +387,24 @@
     function initNumberBtn() {
       $(pageBtnContainer).empty();
       let prevBtn = $(
-          '<li><button class="mdc-icon-button material-icons mdc-ripple-upgraded prev-btn" id="prevBtn">keyboard_arrow_left</button></li>');
+          '<li><button class="mdc-icon-button material-icons mdc-ripple-upgraded prev-btn">keyboard_arrow_left</button></li>');
       $(pageBtnContainer).append(prevBtn);
-      if (pageInfo.totalPages >= 7) {
+      if (pageInfo.totalPages > 7) {
         for (let i = 1; i < 8; i++) {
           let li = $('<li></li>');
-          let btn = $(
-              `<button class="mdc-button mdc-ripple-upgraded" id="pageBtn${i}"><span class="mdc-fab__label">${i}</span></button>`);
+          let btn;
+          if (i === 6) {
+            btn = $(`<button class="mdc-button mdc-ripple-upgraded num-btn${i}">
+                        <span class="mdc-fab__label">...</span>
+                     </button>`);
+          } else if (i === 7) {
+            btn = $(`<button class="mdc-button mdc-ripple-upgraded num-btn${i}">
+                        <span class="mdc-fab__label">${pageInfo.totalPages}</span>
+                     </button>`);
+          } else {
+            btn = $(
+                `<button class="mdc-button mdc-ripple-upgraded num-btn${i}"><span class="mdc-fab__label">${i}</span></button>`);
+          }
           $(li).append(btn);
           $(pageBtnContainer).append(li);
         }
@@ -396,13 +412,13 @@
         for (let i = 1; i < pageInfo.totalPages + 1; i++) {
           let li = $('<li></li>');
           let btn = $(
-              `<button data-mdc-auto-init="MDCButton" class="mdc-button mdc-ripple-upgraded" id="pageBtn${i}"><span class="mdc-fab__label">${i}</span></button>`);
+              `<button data-mdc-auto-init="MDCButton" class="mdc-button mdc-ripple-upgraded num-btn${i}"><span class="mdc-fab__label">${i}</span></button>`);
           $(li).append(btn);
           $(pageBtnContainer).append(li);
         }
       }
       let nextBtn = $(
-          '<li><button class="mdc-icon-button material-icons mdc-ripple-upgraded next-btn" id="nextBtn">keyboard_arrow_right</button></li>');
+          '<li><button class="mdc-icon-button material-icons mdc-ripple-upgraded next-btn">keyboard_arrow_right</button></li>');
       $(pageBtnContainer).append(nextBtn);
     }
 
@@ -413,62 +429,75 @@
      * @returns {boolean}
      */
     function updateNumberBtn(number, totalPages) {
-      if (_check) {
-        // 取消表头选中
-        new mdc.checkbox.MDCCheckbox(
-            $(checkNodeTh.find('input[type=checkbox]')).
-            parent('.mdc-checkbox').
-            get(0)).checked = false;
-      }
-      $('#pageBtn7').text(totalPages);
-      let $prevBtn = $('#prevBtn');
-      let $nextBtn = $('#nextBtn');
+      // 取消表头选中
+      new mdc.checkbox.MDCCheckbox(
+          $(checkNodeTh.find('input[type=checkbox]')).
+              parent('.mdc-checkbox').
+              get(0)).checked = false;
+      _container.find('.pagination-container ul button.num-btn7').
+          text(totalPages);
+      let $prevBtn = _container.find(
+          '.pagination-container ul button.prev-btn');
+      let $nextBtn = _container.find(
+          '.pagination-container ul button.next-btn');
       $prevBtn.prop('disabled', false);
       $nextBtn.prop('disabled', false);
       if (number === 1) {
         $prevBtn.prop('disabled', 'disabled');
-        colorPageBtn('#pageBtn1');
+        colorPageBtn('.pagination-container ul button.num-btn1');
       }
       if (number >= totalPages) {
         $nextBtn.prop('disabled', 'disabled');
-        colorPageBtn('#pageBtn7');
+        colorPageBtn('.pagination-container ul button.num-btn7');
       }
       if (totalPages <= 7) {
         for (let i = 1; i <= totalPages; i++) {
-          $('#pageBtn' + i).text(i);
-          // if (i === number) {
-          // colorPageBtn('#pageBtn' + i);
-          // }
+          _container.find('.pagination-container ul button.num-btn' + i).
+              text(i);
+          if (i === number) {
+            colorPageBtn('.pagination-container ul button.num-btn' + i);
+          }
         }
-        colorPageBtn('#pageBtn' + number);
         return false;
       }
       if (number <= 4) {
-        // for (let i = 2; i < 6; i++) {
-        //     $('#pageBtn' + i).text(i);
-        // if (i === number) {
-        //     colorPageBtn('#pageBtn' + number);
-        // }
-        // }
-        $('#pageBtn6').text('...');
-        colorPageBtn('#pageBtn' + number);
-      } else if (number > totalPages - 4) {
-        let btnNum = 3;
-        for (let i = totalPages - 4; i < totalPages; i++) {
-          $('#pageBtn' + btnNum).text(i);
+        for (let i = 2; i < 7; i++) {
+          if (i === 6) {
+            _container.find('.pagination-container ul button.num-btn' + i).
+                text('...');
+          } else {
+            _container.find('.pagination-container ul button.num-btn' + i).
+                text(i);
+          }
           if (i === number) {
-            colorPageBtn('#pageBtn' + btnNum);
+            colorPageBtn('.pagination-container ul button.num-btn' + number);
+          }
+        }
+      } else if (number > totalPages - 4) {
+        let btnNum = 2;
+        for (let i = totalPages - 5; i < totalPages; i++) {
+          if (btnNum === 2) {
+            _container.find('.pagination-container ul button.num-btn' + btnNum).
+                text('...');
+          } else {
+            _container.find('.pagination-container ul button.num-btn' + btnNum).
+                text(i);
+          }
+          if (i === number) {
+            colorPageBtn('.pagination-container ul button.num-btn' + btnNum);
           }
           btnNum++;
         }
-        $('#pageBtn2').text('...');
       } else {
-        $('#pageBtn2').text('...');
-        $('#pageBtn3').text(number - 1);
-        $('#pageBtn4').text(number);
-        $('#pageBtn5').text(number + 1);
-        $('#pageBtn6').text('...');
-        colorPageBtn('#pageBtn4');
+        _container.find('.pagination-container ul button.num-btn2').text('...');
+        _container.find('.pagination-container ul button.num-btn3').
+            text(number - 1);
+        _container.find('.pagination-container ul button.num-btn4').
+            text(number);
+        _container.find('.pagination-container ul button.num-btn5').
+            text(number + 1);
+        _container.find('.pagination-container ul button.num-btn6').text('...');
+        colorPageBtn('.pagination-container ul button.num-btn4');
       }
     }
 
@@ -477,11 +506,12 @@
      * @param selector 选择器
      */
     function colorPageBtn(selector) {
-      $(selector).
-      parents('ul').
-      find('button[class*="mdc-button"]').
-      removeClass('mdc-button--raised');
-      $(selector).addClass('mdc-button--raised mdc-button--circle');
+      _container.find(selector).
+          parents('ul').
+          find('button[class*="mdc-button"]').
+          removeClass('mdc-button--raised');
+      _container.find(selector).
+          addClass('mdc-button--raised mdc-button--circle');
     }
 
     /**
@@ -546,7 +576,7 @@
       obj.change(function() {
         const checkbox = new mdc.checkbox.MDCCheckbox(
             $(this).parent('.mdc-checkbox').get(0));
-        $.each($(_container).find('tr td:first-of-type div.mdc-checkbox'),
+        $.each(_container.find('tr td:first-of-type div.mdc-checkbox'),
             function(index, item) {
               new mdc.checkbox.MDCCheckbox(item).checked = checkbox.checked;
               checkbox.checked ?
@@ -603,7 +633,7 @@
     /**获取已选择项*/
     function getSelectItems() {
       let selectItems = [];
-      $.each($(_container).find('tbody tr td:first-of-type div.mdc-checkbox'),
+      $.each(_container.find('tbody tr td:first-of-type div.mdc-checkbox'),
           function(index, item) {
             if (new mdc.checkbox.MDCCheckbox(item).checked) {
               selectItems.push(dataList[index]);
@@ -643,6 +673,7 @@
     let paras = $.extend({
       title: '提示',
       content: '提示内容',
+      width: null,
       // 标题位置,可选值: left, center, right
       titleAlign: 'left',
       // 弹窗类型: 1:提示框 2:确认框 3:
@@ -665,25 +696,30 @@
     }, opts || {});
     let _title = paras.title;
     let _content = paras.content;
+    let _width = paras.width;
+    console.log($.strFormat('弹窗宽度: {}', _width));
     let _titleAlign = paras.titleAlign;
     let _contentType = paras.contentType;
     let _type = paras.type;
     let _openedCallback = paras.openedCallback;
     let _cancelCallback = paras.cancelCallback;
     let _confirmCallback = paras.confirmCallback;
+    let randomId = $.generateUuid(4);
+    let myDialogTitleId = 'my-dialog-title-' + randomId;
+    let myDialogContentId = 'my-dialog-content-' + randomId;
     let $container = $(`<div class="mdc-dialog"
       role="alertdialog"
       aria-modal="true"
-      aria-labelledby="my-dialog-title"
-      aria-describedby="my-dialog-content">
+      aria-labelledby="${myDialogTitleId}"
+      aria-describedby="${myDialogContentId}">
       <div class="mdc-dialog__container">
       <div class="mdc-dialog__surface">
         <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-        <h2 class="mdc-dialog__title" id="my-dialog-title" 
+        <h2 class="mdc-dialog__title" id="${myDialogTitleId}" 
             ${_titleAlign !== 'left'
         ? `style="text-align: ${_titleAlign}"`
         : ``}>${_title}</h2>
-        <div class="mdc-dialog__content" id="my-dialog-content" tabindex="0"></div>
+        <div class="mdc-dialog__content" id="${myDialogContentId}" tabindex="0"></div>
         ${_type === 3 ? '<footer style="height: 4px;"></footer>' :
         `<footer class="mdc-dialog__actions">
           ${_type !== 1 ? `<button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
@@ -697,11 +733,13 @@
       </div>
       <div class="mdc-dialog__scrim"></div>
     </div>`);
+    _width ? $container.find('.mdc-dialog__surface').
+        css({'width': _width, 'max-width': _width}) : '';
     $('body').append($container);
     if (_contentType === 2) {
-      $('#my-dialog-content').append(_content);
+      $('#' + myDialogContentId).append(_content);
     } else {
-      $('#my-dialog-content').html(_content);
+      $('#' + myDialogContentId).html(_content);
     }
     let dialog = new mdc.dialog.MDCDialog($container.get(0));
     dialog.open();
@@ -759,8 +797,10 @@
       url: url,
       type: 'POST',
       data: data,
-      success: success ? success : function(data) {},
-      error: error ? error : function(data) {},
+      success: success ? success : function(data) {
+      },
+      error: error ? error : function(data) {
+      },
     });
   }
 
@@ -795,7 +835,7 @@
    */
   $.checked = function(selector) {
     return $(selector).prop('checked') ||
-           $(selector).prop('checked') === 'checked';
+        $(selector).prop('checked') === 'checked';
   };
   /***
    * 校验字符串是否为指定长度.
@@ -904,6 +944,15 @@
     return oldStr;
   };
 
+  /** 获取UUID,默认长度36 */
+  $.generateUuid = function(length = 36) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+        function(c) {
+          let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        }).substr(0, length);
+  };
+
   $.fn.mdcTree = function(opts) {
     let paras = $.extend({
       data: [],
@@ -913,7 +962,8 @@
       icon: 'icon', // 显示图标
       expandAll: true, //  默认展开所有
       checkbox: true, // 显示复选框
-      toggleEvt: function() {}, // 切换触发事件
+      toggleEvt: function() {
+      }, // 切换触发事件
     }, opts || {});
     let _data = paras.data;
     let _parentId = paras.parentId;
@@ -950,38 +1000,38 @@
 
     // 展开/收缩
     containNode.find('.mdc-tree-heading-container .mdc-tree-heading').
-                on('click', function() {
-                  $(this).
-                  next('i.toggle-cell').
-                  toggleClass('mdc-tree-toggle__expanded');
-                  _toggleEvt && _toggleEvt(this);
-                  let headingContainer = $(this).
-                  parent('.mdc-tree-heading-container');
-                  // Tip: 如果没有复选框,只能有一个被选中
-                  if (!_checkbox) {
-                    console.debug('取消选中');
-                    containNode.find('.mdc-tree-heading-container.active').
-                                removeClass('active');
-                  }
+        on('click', function() {
+          $(this).
+              next('i.toggle-cell').
+              toggleClass('mdc-tree-toggle__expanded');
+          _toggleEvt && _toggleEvt(this);
+          let headingContainer = $(this).
+              parent('.mdc-tree-heading-container');
+          // Tip: 如果没有复选框,只能有一个被选中
+          if (!_checkbox) {
+            console.debug('取消选中');
+            containNode.find('.mdc-tree-heading-container.active').
+                removeClass('active');
+          }
 
-                  //  切换时始终保持选中状态
-                  // headingContainer.toggleClass('active').
-                  headingContainer.addClass('active').
-                                   next('ul.mdc-tree-list').
-                                   slideToggle(150);
-                  // 折叠,收起子元素
-                  if (headingContainer.hasClass('active')) {
-                    let childHeadingContainer = headingContainer.next(
-                        'ul.mdc-tree-list').find(
-                        '.mdc-tree-heading-container');
-                    console.log(childHeadingContainer);
-                    childHeadingContainer.next('ul.mdc-tree-list').slideUp(100);
-                    childHeadingContainer.removeClass('active');
-                    childHeadingContainer.children('i.toggle-cell').
-                                          removeClass(
-                                              'mdc-tree-toggle__expanded');
-                  }
-                });
+          //  切换时始终保持选中状态
+          // headingContainer.toggleClass('active').
+          headingContainer.addClass('active').
+              next('ul.mdc-tree-list').
+              slideToggle(150);
+          // 折叠,收起子元素
+          if (headingContainer.hasClass('active')) {
+            let childHeadingContainer = headingContainer.next(
+                'ul.mdc-tree-list').find(
+                '.mdc-tree-heading-container');
+            console.log(childHeadingContainer);
+            childHeadingContainer.next('ul.mdc-tree-list').slideUp(100);
+            childHeadingContainer.removeClass('active');
+            childHeadingContainer.children('i.toggle-cell').
+                removeClass(
+                    'mdc-tree-toggle__expanded');
+          }
+        });
 
     function retrieveTree(root, dom) {
       // 当前元素子元素

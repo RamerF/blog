@@ -394,24 +394,17 @@
               $(data.target).initMDCSelect();
             },
           }, function(dom) {
-            let $form = $(dom.target).find('#form');
-            let data = {};
-            $form.serializeArray().forEach(function(item) {
-              data[item.name] = item.value;
-            });
             let selects = $('.mdc-select input[name]');
             for (let i = 0; i < selects.length; i++) {
               let $input = $(selects[i]);
-              let value = $input.val();
-              let validTip = $input.attr('data-validtip');
-              if (!value || Number(value) < 0) {
-                $.alert(validTip, function() {
+              if ($.isNegativeNum($input.val())) {
+                $.alert($input.attr('data-validtip'), function() {
                   $input.siblings('.mdc-select__selected-text').trigger('click');
                 });
                 return false;
               }
             }
-
+            let data = {};
             let textFields = document.querySelectorAll('.mdc-text-field');
             for (let i = 0; i < textFields.length; i++) {
               console.log(i, textFields[i]);
@@ -428,20 +421,26 @@
               }
             }
             data.organizeId = $('input[name=organizeId]').val();
+            let memberIds = $('#memberIds').attr('data-value').split(',');
+            if (!memberIds.find(item => $.isPositiveNum(item))) {
+              $.alert('请选择成员');
+              return false;
+            }
+            data.memberIds = memberIds.toString();
+            data.postId = $('input[name=postId]').val();
             console.log(JSON.stringify(data));
             let id = $(dom.target).find('input[name=id]').val();
             console.log(' log: id = ', id);
             id > 0 ?
-                $.put('/manage/post/' + id, data, function(res) {
+                $.put('/manage/organize/member/' + id, data, function(res) {
                   res.result === true ? $.alert(res.msg, function() {
                     window.refreshTable();
                   }) : $.alert(res.msg);
-                }) : $.post('/manage/post', data, function(res) {
+                }) : $.post('/manage/organize/member', data, function(res) {
                   res.result === true ? $.alert(res.msg, function() {
                     window.refreshTable();
                   }) : $.alert(res.msg);
                 });
-            return false;
           });
         }
 
@@ -474,8 +473,8 @@
         // 添加/编辑成员
         // 选择成员弹窗
         $('body').on('click', '#selectMember', function() {
-          // 重置页号
           if (window.mdcDataTableMember) {
+            // 重置表格信息
             $('#criteriaMember').val('');
             window.mdcDataTableMember.refresh({page: 1}, 0);
             $.modal({
@@ -483,29 +482,34 @@
               content: $('#selectMemberTable'),
               width: 800,
               contentType: 2,
-              openedCallback: function(data) {
+              openedCallback: function() {
                 window.mdcDataTable.fixBtnColor();
               },
-            }, function(data) {
-              console.log('确认回调');
+            }, function(data, container) {
               let selectItems = window.mdcDataTableMember.getSelectItems();
               if (selectItems.length < 1) {
                 $.alert({'title': '警告', 'content': '请选择成员'});
                 return false;
               }
+              let selectIds = selectItems.map(item => item['id']);
+              let selectNames = selectItems.map(item => item['name']);
               setTimeout(function() {
                 $('#pop-table-container').append($('#selectMemberTable'));
               }, 100);
-              console.log($.strFormat(' 选择员工: {}', JSON.stringify(data)));
+              let $member = $('#memberIds');
+              $member.val(selectNames);
+              $member.attr('data-value', selectIds);
+              console.log($.strFormat(' 选择员工: {},{}', JSON.stringify(selectIds), container));
+              // 刷新文本框,具体是浮动label
+              new mdc.textField.MDCTextField($member.parent('.mdc-text-field').get(0));
             }, function() {
-              console.log('取消回调');
               setTimeout(function() {
                 $('#pop-table-container').append($('#selectMemberTable'));
               }, 100);
             });
           } else {
             window.mdcDataTableMember = $('#selectMemberTable').mdcDataTable({
-              url: '/manage/manager/page',
+              url: '/manage/organize/member/pageDetach',
               queryParams: {},
               externalStyle: 'fixed-width',
               container: '#selectMemberTable',
@@ -561,19 +565,24 @@
                   openedCallback: function(data) {
                     window.mdcDataTable.fixBtnColor();
                   },
-                }, function(e) {
-                  let selectIds = [];
+                }, function() {
+                  // 可能需要支持选择多个成员
                   let selectItems = window.mdcDataTableMember.getSelectItems();
                   if (selectItems.length < 1) {
                     $.alert({'title': '警告', 'content': '请选择成员'});
                     return false;
                   }
-                  selectItems.forEach(item => selectIds.push(item));
+                  let selectIds = selectItems.map(item => item['id']);
+                  let selectNames = selectItems.map(item => item['name']);
                   setTimeout(function() {
                     $('#pop-table-container').append($('#selectMemberTable'));
                   }, 100);
-                  console.log($.strFormat(' 选择员工: {}', JSON.stringify(selectItems)));
-                  // TODO-WARN: 将id和name分别赋值
+                  let $member = $('#memberIds');
+                  $member.val(selectNames);
+                  $member.attr('data-value', selectIds);
+                  console.log($.strFormat(' 选择员工: {}', JSON.stringify(selectIds)));
+                  // 刷新文本框,具体是浮动label
+                  new mdc.textField.MDCTextField($member.parent('.mdc-text-field').get(0));
                 }, function() {
                   setTimeout(function() {
                     $('#pop-table-container').append($('#selectMemberTable'));
@@ -587,9 +596,9 @@
                     $(rowNode).find('td:first-of-type div.mdc-checkbox').get(0)).checked = true;
                 $(rowNode).addClass('is-selected');
                 $('#selectMemberTable').
-                    parents('.mdc-dialog__surface').
-                    find('button[data-mdc-dialog-action="yes"]').
-                    trigger('click');
+                parents('.mdc-dialog__surface').
+                find('button[data-mdc-dialog-action="yes"]').
+                trigger('click');
               },
             });
           }
@@ -601,14 +610,15 @@
         };
 
         // 刷新,搜索
-        $('#searchBtnMember').on('click', refreshTable);
+        $('#searchBtnMember').on('click', refreshTableMember);
 
         // 提交表单
         $('#editBtnMember').on('click', function() {
           let $form = $('#form');
           let data = {};
           $form.serializeArray().forEach(function(item) {
-            data[item.name] = item.value;
+            debugger
+            item.name === 'memberIds' ? data[item.name] = item.attr('data-value') : data[item.name] = item.value;
           });
           let selects = $('.mdc-select input[name]');
           for (let i = 0; i < selects.length; i++) {
@@ -641,13 +651,13 @@
           data.organizeId = $('input[name=organizeId]').val();
           console.log(JSON.stringify(data));
           id > 0 ?
-              $.put('/manage/post/' + id, data, function(res) {
+              $.put('/manage/organize/member/' + id, data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
                   window.location.href = '/manage/post/index';
                 }) : $.alert(res.msg);
-              }) : $.post('/manage/post', data, function(res) {
+              }) : $.post('/manage/organize/member', data, function(res) {
                 res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/post/index';
+                  window.location.href = '/manage/organize/member/index';
                 }) : $.alert(res.msg);
               });
           return false;

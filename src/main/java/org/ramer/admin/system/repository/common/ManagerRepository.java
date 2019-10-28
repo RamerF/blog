@@ -22,4 +22,6 @@ public interface ManagerRepository extends BaseRepository<Manager, Long> {
 
   Page<Manager> findByOrganizeInAndState(
       final List<Organize> organizes, final int state, final Pageable pageable);
+
+  List<Manager> findByPostIdAndState(final long postId, final int state);
 }

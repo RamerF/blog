@@ -2,6 +2,7 @@ package org.ramer.admin.system.entity.request.common;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
 import lombok.*;
 import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 
@@ -17,7 +18,7 @@ import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 @ApiModel("组织成员")
 public class OrganizeMemberRequest extends AbstractEntityRequest {
   @ApiModelProperty(example = "1", value = "成员", required = true)
-  private Long memberId;
+  private List<Long> memberIds;
 
   @ApiModelProperty(example = "1", value = "组织", required = true)
   private Long organizeId;

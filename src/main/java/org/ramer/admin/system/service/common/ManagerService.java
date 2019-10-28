@@ -1,5 +1,6 @@
 package org.ramer.admin.system.service.common;
 
+import java.util.List;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.service.BaseService;
@@ -11,8 +12,13 @@ public interface ManagerService extends BaseService<Manager, ManagerPoJo> {
 
   Manager getByEmpNo(final String empNo);
 
+  /** 获取未分配岗位的管理员列表 */
+  Page<Manager> pageDetach(final String criteria, final int page, final int size);
+
   Page<Manager> pageByOrganize(
       final long organizeId, final String criteria, final int page, final int size);
+
+  List<Manager> listByPost(final long postId);
 
   /**
    * 更新管理员密码.
@@ -26,6 +32,8 @@ public interface ManagerService extends BaseService<Manager, ManagerPoJo> {
    * </pre>
    */
   int updatePassword(Long id, String old, String password);
+
+  boolean updatePost(final List<Long> ids, final long organizeId, final long postId);
 
   ManagerLogin getLoginStatus(String empNo);
 

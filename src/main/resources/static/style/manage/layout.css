@@ -193,7 +193,7 @@ aside.mdc-drawer .mdc-list-group__subheader {
     border-radius: 100%;
 }
 
-/*mdc-table opetator-container*/
+/*mdc-table operator-container*/
 .operator-container {
     display: flex;
     align-items: center;
@@ -209,7 +209,7 @@ aside.mdc-drawer .mdc-list-group__subheader {
     min-width: 250px;
 }
 
-/*mdc-table opetate-container*/
+/*mdc-table operate-container*/
 
 /* material component web table */
 
@@ -292,13 +292,19 @@ aside.mdc-drawer .mdc-list-group__subheader {
 
 /*修复a标签disabled无效的问题*/
 a[disabled] {
-    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, .12) !important;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, .12) !important;
     background-color: rgba(0, 0, 0, .12) !important;;
     color: rgba(0, 0, 0, .37) !important;;
 }
 
 .pointer {
     cursor: pointer;
+    user-select: none;
+}
+
+/* 取消icon字体的双击效果 */
+i.material-icons {
+    outline: none;
     user-select: none;
 }
 

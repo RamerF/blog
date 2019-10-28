@@ -9,7 +9,7 @@
 <body>
 <div layout:fragment="main-container" class="main-container" style="width: 600px;overflow: hidden;min-width: 600px;">
     <div class="mdc-layout-grid mdc-layout-grid-dialog__fixed" th:fragment="main-container">
-        <form id="form" class="mdc-panel__padding-16" onsubmit="void(0);">
+        <form id="formMember" class="mdc-panel__padding-16" onsubmit="void(0);">
             <input th:if="${_csrf!=null}" type="hidden"
                    th:name="${_csrf.parameterName}"
                    id="_csrf"
@@ -39,17 +39,18 @@
                     <div class="mdc-panel__margin-16" id="selectMember">
                         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                              data-mdc-auto-init="MDCTextField">
-                            <input type="text" id="member" name="name" class="mdc-text-field__input"
+                            <input type="text" id="memberIds" name="memberIds" class="mdc-text-field__input pointer"
                                    maxlength="20"
                                    required
                                    data-validtip="人员不能为空"
                                    autocomplete="off"
                                    placeholder="请点击选择成员"
-                                   th:value="${member ne null?member.id:''}">
+                                   th:attr="data-value=${member ne null ? member.id : ''}"
+                                   th:value="${member ne null ? member.name : ''}">
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
-                                    <label for="member" class="mdc-floating-label">人员</label>
+                                    <label for="memberIds" class="mdc-floating-label">人员</label>
                                 </div>
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>

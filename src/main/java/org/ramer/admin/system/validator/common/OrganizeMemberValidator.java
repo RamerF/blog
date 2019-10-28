@@ -1,9 +1,11 @@
 package org.ramer.admin.system.validator.common;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import org.ramer.admin.system.entity.request.common.OrganizeMemberRequest;
 import org.ramer.admin.system.util.TextUtil;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -22,8 +24,11 @@ public class OrganizeMemberValidator implements Validator {
     if (organizeMember == null) {
       errors.rejectValue(null, "organizeMember.null", "组织成员 不能为空");
     } else {
-      if (TextUtil.nonValidId(organizeMember.getMemberId())) {
-        errors.rejectValue("memberId", "organizeMember.memberId.length", "成员 不能为空");
+      final List<Long> memberIds = organizeMember.getMemberIds();
+      if (CollectionUtils.isEmpty(memberIds)) {
+        errors.rejectValue("memberIds", "organizeMember.memberIds.length", "成员 不能为空");
+      } else if (memberIds.stream().anyMatch(TextUtil::nonValidId)) {
+        errors.rejectValue("memberIds", "organizeMember.memberIds.length", "成员 不能为空");
       }
       if (TextUtil.nonValidId(organizeMember.getOrganizeId())) {
         errors.rejectValue("organizeId", "organizeMember.organizeId.length", "组织 不能为空");

@@ -1,6 +1,8 @@
 package org.ramer.admin.system.service.common.impl;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import javafx.scene.transform.Rotate;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
@@ -18,13 +20,13 @@ import org.ramer.admin.system.util.EncryptUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /** @author ramer */
 @Slf4j
 @Service
 public class ManagerServiceImpl implements ManagerService {
-  @Resource private OrganizeService organizeService;
   @Resource private ManagerRepository repository;
 
   private static Map<String, ManagerLogin> LOGIN_STATUS_MAP = new HashMap<>();
@@ -34,6 +36,28 @@ public class ManagerServiceImpl implements ManagerService {
   @Override
   public Manager getByEmpNo(final String empNo) {
     return repository.findByEmpNoAndState(empNo, State.STATE_ON);
+  }
+
+  @Override
+  public Page<Manager> pageDetach(String criteria, int page, int size) {
+    final PageRequest pageable = pageRequest(page, size);
+    final Specification<Manager> spec =
+        StringUtils.isEmpty(criteria)
+            ? (root, query, builder) ->
+                builder.and(
+                    builder.equal(root.get("state"), State.STATE_ON),
+                    builder.isNull(root.get("postId")))
+            : (root, query, builder) ->
+                builder.and(
+                    builder.equal(root.get("state"), State.STATE_ON),
+                    builder.isNull(root.get("postId")),
+                    builder.or(
+                        builder.like(root.get("empNo"), "%" + criteria + "%"),
+                        builder.like(root.get("name"), "%" + criteria + "%"),
+                        builder.like(root.get("phone"), "%" + criteria + "%")));
+    return Objects.isNull(pageable)
+        ? new PageImpl<>(Collections.emptyList())
+        : getRepository().findAll(spec, pageable);
   }
 
   @Override
@@ -66,6 +90,11 @@ public class ManagerServiceImpl implements ManagerService {
             pageable);
   }
 
+  @Override
+  public List<Manager> listByPost(long postId) {
+    return repository.findByPostIdAndState(postId, State.STATE_ON);
+  }
+
   @Transactional
   @Override
   public synchronized int updatePassword(Long id, String old, String password) {
@@ -81,6 +110,27 @@ public class ManagerServiceImpl implements ManagerService {
     } else {
       return -2;
     }
+  }
+
+  @Transactional(rollbackOn = Exception.class)
+  @Override
+  public boolean updatePost(List<Long> ids, long organizeId, long postId) {
+    final List<Manager> managerList =
+        Optional.ofNullable(ids)
+            .orElse(new ArrayList<>())
+            .parallelStream()
+            .map(this::getById)
+            .collect(Collectors.toList());
+    if (!CollectionUtils.isEmpty(managerList) && managerList.stream().anyMatch(Objects::isNull)) {
+      return false;
+    }
+    managerList.forEach(
+        m -> {
+          m.setPostId(postId);
+          m.setOrganizeId(organizeId);
+          update(m);
+        });
+    return true;
   }
 
   @Override
@@ -147,16 +197,13 @@ public class ManagerServiceImpl implements ManagerService {
   public Specification<Manager> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
         ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
-        : (root, query, builder) -> {
-          final Predicate and =
-              builder.and(
-                  builder.equal(root.get("state"), State.STATE_ON),
-                  builder.or(
-                      builder.like(root.get("empNo"), "%" + criteria + "%"),
-                      builder.like(root.get("name"), "%" + criteria + "%"),
-                      builder.like(root.get("phone"), "%" + criteria + "%")));
-          return and;
-        };
+        : (root, query, builder) ->
+            builder.and(
+                builder.equal(root.get("state"), State.STATE_ON),
+                builder.or(
+                    builder.like(root.get("empNo"), "%" + criteria + "%"),
+                    builder.like(root.get("name"), "%" + criteria + "%"),
+                    builder.like(root.get("phone"), "%" + criteria + "%")));
   }
 
   @Data

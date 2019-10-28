@@ -9,6 +9,7 @@ import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.entity.request.common.OrganizeMemberRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.common.ManagerResponse;
 import org.ramer.admin.system.entity.response.common.OrganizeMemberResponse;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.common.CommonService;
@@ -89,7 +90,7 @@ public class OrganizeMemberController {
       throw new CommonException("参数值无效 [组织]");
     }
     map.put("organize", organizeService.getById(organizeId));
-    map.put("posts", postService.page(organizeId, null, -1, -1));
+    //    map.put("posts", postService.page(organizeId, null, -1, -1));
     //    return "manage/organize/member/add";
     return "manage/organize/member/edit_pure::main-container";
   }
@@ -100,15 +101,13 @@ public class OrganizeMemberController {
   @ApiOperation("添加组织人员")
   public ResponseEntity<CommonResponse<String>> create(
       @Valid OrganizeMemberRequest organizeMemberRequest, @ApiIgnore BindingResult bindingResult) {
-    log.info(" PostController.create : [{}]", organizeMemberRequest);
-    final Manager member = service.getById(organizeMemberRequest.getMemberId());
-    if (Objects.isNull(member)) {
-      return CommonResponse.notExists("成员");
-    }
-    member.setPostId(organizeMemberRequest.getPostId());
-    member.setOrganizeId(organizeMemberRequest.getOrganizeId());
-    service.update(member);
-    return CommonResponse.ok();
+    log.info(" OrganizeMemberController.create : [{}]", organizeMemberRequest);
+    return service.updatePost(
+            organizeMemberRequest.getMemberIds(),
+            organizeMemberRequest.getOrganizeId(),
+            organizeMemberRequest.getPostId())
+        ? CommonResponse.ok()
+        : CommonResponse.fail("成员不存在");
   }
 
   @GetMapping("/{id}")
@@ -131,6 +130,21 @@ public class OrganizeMemberController {
         },
         false);
   }
+
+  @GetMapping("/pageDetach")
+  @ResponseBody
+  @ApiOperation("获取未分配岗位的成员(管理员)列表")
+  public ResponseEntity<CommonResponse<PageImpl<ManagerResponse>>> pageDetach(
+      @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
+          @RequestParam(value = "page", required = false, defaultValue = "1")
+          String pageStr,
+      @RequestParam(value = "size", required = false, defaultValue = "10") String sizeStr,
+      @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
+    final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
+    return commonService.page(
+        service.pageDetach(criteria, pageAndSize[0], pageAndSize[1]), ManagerResponse::of);
+  }
+
   //
   //  @PutMapping("/{id}")
   //  @ResponseBody

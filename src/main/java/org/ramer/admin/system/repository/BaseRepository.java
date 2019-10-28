@@ -48,7 +48,6 @@ public interface BaseRepository<T extends AbstractEntity, ID>
     List<T> ts = findAllById(ids);
     for (T t : ts) {
       t.setState(State.STATE_OFF);
-      t.setCreateTime(LocalDateTime.now());
       saveAndFlush(t);
     }
   }

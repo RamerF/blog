@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Table;
+import org.hibernate.annotations.Where;
+import org.ramer.admin.system.entity.Constant.State;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 /**
@@ -64,6 +66,7 @@ public class Organize extends AbstractEntity {
   /** 岗位/职位 */
   @OneToMany(mappedBy = "organizeId")
   @JsonBackReference
+  @Where(clause = "state = " + State.STATE_ON)
   private List<Post> posts;
 
   public static Organize of(Long id) {

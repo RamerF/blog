@@ -3,6 +3,7 @@ package org.ramer.admin.system.controller.common.manage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Manager;
@@ -30,8 +31,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Controller("organizemcm")
@@ -143,6 +142,27 @@ public class OrganizeMemberController {
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
     return commonService.page(
         service.pageDetach(criteria, pageAndSize[0], pageAndSize[1]), ManagerResponse::of);
+  }
+
+  @PutMapping("/{memberId}")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('global:create','organize:write')")
+  @ApiOperation("更新岗位成员")
+  public ResponseEntity<CommonResponse<String>> update(
+      @PathVariable("memberId") final String memberIdStr,
+      @Valid OrganizeMemberRequest organizeMemberRequest,
+      @ApiIgnore BindingResult bindingResult) {
+    log.info(" OrganizeMemberController.create : [{}]", organizeMemberRequest);
+    final Long memberId = TextUtil.validLong(memberIdStr, 0);
+    if (TextUtil.nonValidId(memberId)) {
+      return CommonResponse.fail("成员不存在");
+    }
+    return service.updatePost(
+            Collections.singletonList(memberId),
+            organizeMemberRequest.getOrganizeId(),
+            organizeMemberRequest.getPostId())
+        ? CommonResponse.ok()
+        : CommonResponse.fail("成员不存在");
   }
 
   //

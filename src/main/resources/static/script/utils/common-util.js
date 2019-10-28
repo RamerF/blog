@@ -93,8 +93,12 @@
      */
     refresh(queryParams, delCount = 0) {
       let totalElements = this.queryParams.totalElements - delCount;
-      let page = queryParams.page ? queryParams.page : this.queryParams.page;
-      let size = queryParams.size ? queryParams.size : this.queryParams.size;
+      let page = queryParams && queryParams.page
+          ? queryParams.page
+          : this.queryParams.page;
+      let size = queryParams && queryParams.size
+          ? queryParams.size
+          : this.queryParams.size;
       // 删除元素: 第一页删除页号不变,否则判断当前页号是否大于删除后的数据总页号,更新页号
       // 删除元素后,点击刷新,有问题,内部页码没有更新
       let fixTotalPage = totalElements % size === 0
@@ -786,9 +790,11 @@
     });
     // 取消触发元素默认事件
     $container.find('*[data-mdc-dialog-action]').click(function() {
+      let data = {};
+      data.target = $container.get(0);
       ($(this).attr('data-mdc-dialog-action') === 'yes' ?
-          _confirmCallback(dialog, $container) :
-          _cancelCallback(dialog, $container)) !== false && function() {
+          _confirmCallback(data, dialog, $container) :
+          _cancelCallback(data, dialog, $container)) !== false && function() {
         // $container.find('.mdc-dialog__surface').
         //     css({'transition': 'all .3s', 'transform': 'scale(.1),opacity(0)'});
         $container.addClass('mdc-fade-out-simplify');

@@ -683,8 +683,12 @@
       width: null,
       // 标题位置,可选值: left, center, right
       titleAlign: 'left',
-      // 弹窗类型: 1:提示框 2:确认框 3:
+      // 弹窗类型: 1:提示框(一个按钮) 2:确认框(默认两个按钮) 3: 模态框(默认两个按钮) 4: 消息(无按钮)
       type: 1,
+      // 是否显示标题
+      showTitle: true,
+      // 是否显示底部按钮
+      showButton: true,
       contentType: 1,
       // 遮罩层关闭
       shadeClose: true,
@@ -705,6 +709,8 @@
     }, opts || {});
     let _title = paras.title;
     let _content = paras.content;
+    let _showTitle = paras.showTitle;
+    let _showButton = paras.showButton;
     let _width = paras.width;
     console.log($.strFormat('弹窗宽度: {}', _width));
     let _titleAlign = paras.titleAlign;
@@ -725,20 +731,26 @@
       <div class="mdc-dialog__container">
       <div class="mdc-dialog__surface">
         <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-        <h2 class="mdc-dialog__title" id="${myDialogTitleId}" 
+        ${_showTitle ? (`<h2 class="mdc-dialog__title" id="${myDialogTitleId}" 
             ${_titleAlign !== 'left'
         ? `style="text-align: ${_titleAlign}"`
-        : ``}>${_title}</h2>
+        : ``}>${_title}</h2>`) : ''}
         <div class="mdc-dialog__content" id="${myDialogContentId}" tabindex="0"></div>
-        ${_type === 3 ? '<footer style="height: 4px;"></footer>' :
-        `<footer class="mdc-dialog__actions">
-          ${_type !== 1 ? `<button type="button" class="mdc-button mdc-dialog__button button-cancel" data-mdc-dialog-action="no">
-            <span class="mdc-button__label">取消</span>
-          </button>` : ``}
-        <button type="button" class="mdc-button mdc-dialog__button button-confirm" data-mdc-dialog-action="yes">
-          <span class="mdc-button__label">确定</span>
-        </button>
-        </footer>`}
+        ${_type === 4
+        ? '<footer style="height: 4px;"></footer>'
+        : `${_showButton
+            ? `<footer class="mdc-dialog__actions">
+            ${_type !== 1
+                ? `<button type="button" class="mdc-button mdc-dialog__button button-cancel" 
+                      data-mdc-dialog-action="no">
+                    <span class="mdc-button__label">取消</span>
+                   </button>`
+                : ``}
+              <button type="button" class="mdc-button mdc-dialog__button button-confirm" data-mdc-dialog-action="yes">
+                <span class="mdc-button__label">确定</span>
+              </button>
+              </footer>`
+            : ``}`}
         </div>
       </div>
       <div class="mdc-dialog__scrim"></div>
@@ -806,8 +818,11 @@
       }();
       return false;
     });
-  };
+  }
 
+  ;
+
+  // 提示框,默认无按钮,接受showButton
   $.alert = function(msg, callback) {
     $.dialog({
       type: 1,
@@ -818,6 +833,7 @@
     });
   };
 
+  // 确认框,默认两个按钮,接受showButton
   $.confirm = function(msg, confirmCallback, cancelCallback) {
     $.dialog($.extend({}, {
       type: 2,
@@ -827,15 +843,17 @@
     }));
   };
 
+  // 询问输入框,一个按钮,不接受showButton
   $.prompt = function(opts) {
     throw Error('暂未实现');
     // opts = opts || {};
     // $.dialog($.extend(opts, {type: 3}));
   };
 
+  // 模态框,默认两个按钮,接受showButton
   $.modal = function(msg, confirmCallback, cancelCallback) {
     let param = {
-      type: 2,
+      type: 3,
       confirmCallback: confirmCallback,
       cancelCallback: cancelCallback,
     };
@@ -845,6 +863,18 @@
       $.extend(param, msg);
     }
     $.dialog(param);
+  };
+
+  // 消息框,无按钮
+  $.msg = function(msg, callback) {
+    $.dialog({
+      type: 4,
+      showTitle: false,
+      showButton: false,
+      content: msg.content || msg,
+      shadeClose: true,
+      confirmCallback: callback,
+    });
   };
 
   function ajaxReq(url, data, success, error) {
@@ -1041,12 +1071,27 @@
     roots.forEach(function(val) {
       let divNode = $('<div class="mdc-tree-heading-container"></div>');
       const checkNodeStr =
+
           `<div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" value="${val[_id]}"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>`;
       let h3Node = $(
-          `<h3 class="mdc-tree-heading mdc-tree-link" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
-      let ulNode = $(`<ul class="mdc-tree-list${_expandAll
-          ? ''
-          : ' mdc-non-display'}"></ul>`);
+          `
+
+<h3 class="mdc-tree-heading mdc-tree-link" data-id="$
+  {val[_id]}
+">$
+  {val[_label]}
+</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>
+  
+  `);
+      let ulNode = $(`
+
+<ul class="mdc-tree-list$
+  {
+    _expandAll
+        ? ''
+        : ' mdc-non-display'
+  }
+"></ul>`);
       retrieveTree(val, ulNode);
       _checkbox && divNode.append(checkNodeStr);
       divNode.append(h3Node);
@@ -1134,6 +1179,8 @@
     }
 
     return new MDCTable();
-  };
+  }
+  ;
 
-}));
+}))
+;

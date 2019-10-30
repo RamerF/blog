@@ -1,8 +1,7 @@
 package org.ramer.admin.system.entity.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.*;
@@ -53,11 +52,11 @@ public class Post extends AbstractEntity {
 
   /** 数据访问权限 */
   public enum DataAccess {
-    OWN("仅自己"),
-    OWN_CHILD_ORGANIZE("自己以及下属岗位"),
-    OWN_EQUAL_CHILD_ORGANIZE("相同岗位以及下属岗位"),
+    ALL_ORGANIZE("所有"),
     BELONG_ORGANIZE_RETRIEVE("当前组织"),
-    ALL_ORGANIZE("所有");
+    OWN_EQUAL_CHILD_ORGANIZE("相同岗位以及下属岗位"),
+    OWN_CHILD_ORGANIZE("自己以及下属岗位"),
+    OWN("仅自己");
 
     private static Map<Integer, String> map =
         Stream.of(DataAccess.values()).collect(Collectors.toMap(Enum::ordinal, o -> o.desc));
@@ -83,12 +82,7 @@ public class Post extends AbstractEntity {
     }
 
     public static String desc(int index) {
-      for (DataAccess dataAccess : values()) {
-        if (dataAccess.ordinal() == index) {
-          return dataAccess.desc;
-        }
-      }
-      return "无";
+      return Optional.ofNullable(map().get(index)).orElse("无");
     }
   }
 }

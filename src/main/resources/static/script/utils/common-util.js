@@ -818,9 +818,7 @@
       }();
       return false;
     });
-  }
-
-  ;
+  };
 
   // 提示框,默认无按钮,接受showButton
   $.alert = function(msg, callback) {
@@ -1071,27 +1069,12 @@
     roots.forEach(function(val) {
       let divNode = $('<div class="mdc-tree-heading-container"></div>');
       const checkNodeStr =
-
           `<div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" value="${val[_id]}"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>`;
       let h3Node = $(
-          `
-
-<h3 class="mdc-tree-heading mdc-tree-link" data-id="$
-  {val[_id]}
-">$
-  {val[_label]}
-</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>
-  
-  `);
-      let ulNode = $(`
-
-<ul class="mdc-tree-list$
-  {
-    _expandAll
-        ? ''
-        : ' mdc-non-display'
-  }
-"></ul>`);
+          `<h3 class="mdc-tree-heading mdc-tree-link" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
+      let ulNode = $(`<ul class="mdc-tree-list${_expandAll
+          ? ''
+          : ' mdc-non-display'}"></ul>`);
       retrieveTree(val, ulNode);
       _checkbox && divNode.append(checkNodeStr);
       divNode.append(h3Node);

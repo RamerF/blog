@@ -1039,21 +1039,33 @@
   $.fn.mdcTree = function(opts) {
     let paras = $.extend({
       data: [],
-      id: 'id', // value
-      parentId: 'pId', // 上级
-      label: 'name', // 显示文本
-      icon: 'icon', // 显示图标
-      expandAll: true, //  默认展开所有
-      checkbox: true, // 显示复选框
+      // 主键
+      id: 'id',
+      // 上级属性
+      parentId: 'parentId',
+      // 是否有子元素属性
+      hasChild: 'hasChild',
+      // 显示文本
+      label: 'name',
+      // 显示图标
+      icon: 'icon',
+      // 默认展开所有
+      expandAll: true,
+      // 显示复选框,
+      checkbox: true,
+      // 添加自定义属性到节点,{属性名: 属性},如; {'data-value': 'value'}
+      externalProp: {},
       toggleEvt: function() {
       }, // 切换触发事件
     }, opts || {});
     let _data = paras.data;
     let _parentId = paras.parentId;
+    let _hasChild = paras.hasChild;
     let _id = paras.id;
     let _label = paras.label;
     let _expandAll = paras.expandAll;
     let _checkbox = paras.checkbox;
+    let _externalProp = paras.externalProp;
     let _toggleEvt = paras.toggleEvt;
     let containNode = $(this);
     console.debug(_data);
@@ -1074,7 +1086,14 @@
           `<h3 class="mdc-tree-heading mdc-tree-link" 
                 data-ratio="1"
                 data-id="${val[_id]}">${val[_label]}</h3>
-          <i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
+          ${(_hasChild && val[_hasChild])
+              ? `<i class="material-icons toggle-cell">keyboard_arrow_left</i>`
+              : ''}`);
+      for (let key in _externalProp) {
+        $.trim(val[_externalProp[key + '']]) &&
+        h3Node.attr(key + '', val[_externalProp[key + '']]);
+      }
+
       let ulNode = $(`<ul class="mdc-tree-list${_expandAll
           ? ''
           : ' mdc-non-display'}"></ul>`);
@@ -1133,7 +1152,14 @@
               `<h3 class="mdc-tree-heading mdc-tree-link mdc-ripple-upgraded"
                     data-ratio="${depth}"
                     data-id="${val[_id]}">${val[_label]}</h3>
-               <i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
+               ${(_hasChild && val[_hasChild])
+                  ? `<i class="material-icons toggle-cell">keyboard_arrow_left</i>`
+                  : ''}`);
+          for (let key in _externalProp) {
+            $.trim(val[_externalProp[key + '']]) &&
+            h3Node.attr(key + '', val[_externalProp[key + '']]);
+          }
+
           let ulNode = $(`<ul class="mdc-tree-list${_expandAll
               ? ''
               : ' mdc-non-display'}"></ul>`);
@@ -1146,7 +1172,11 @@
     }
 
     class MDCTree {
-      constructor() {
+      constructor(data, id, parentId, container) {
+        this.data = data;
+        this.id = id;
+        this.parentId = parentId;
+        this.container = container;
       }
 
       /** 当checkbox为false时,返回[] */
@@ -1166,9 +1196,54 @@
         $(containNode).mdcTree($.extend(paras, opts || {}));
       };
 
+      /**
+       * 选中指定id节点.
+       * @param id 选中元素data-id
+       * @param isTriggerEvt 是否触发事件,默认不触发
+       */
+      check(id, isTriggerEvt) {
+        let _this = this;
+        // 所有父节点
+        let parentNodes = [];
+        parentNodes.push(_this.container.find('h3[data-id="' + id + '"]'));
+        let parents = _this.data.filter(
+            item => Number(item[_this.id]) === Number(id));
+        if (parents.length > 0) {
+          getParents(parents[0][_this.parentId]);
+        } else {
+          let item = parentNodes[0];
+          item.parent('div').addClass('active');
+          isTriggerEvt && item.trigger('click');
+        }
+
+        function getParents(parentId) {
+          // let parents = _this.data.filter(item => item[_this.id] === parentId);
+          // let parent = parents && parents[0];
+          let relativeParents = _this.data.filter(
+              item => item[_this.id] === parentId);
+          if (relativeParents.length > 0) {
+            parentNodes.push(
+                _this.container.find('h3[data-id="' + parentId + '"]'));
+            getParents(relativeParents[0][_this.parentId]);
+          }
+        }
+
+        // 级联展开
+        while (parentNodes.length > 0) {
+          let item = parentNodes.pop();
+          parentNodes.length === 0 ? function() {
+            item.parent('div').addClass('active');
+            isTriggerEvt && item.trigger('click');
+          }() : function() {
+            item.trigger('click');
+            item.parent().removeClass('active');
+          }();
+        }
+      };
+
     }
 
-    return new MDCTree();
+    return new MDCTree(_data, _id, _parentId, containNode);
   };
 
 }));

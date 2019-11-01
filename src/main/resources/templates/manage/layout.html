@@ -64,6 +64,9 @@
           icon: 'icon',
           expandAll: false,
           checkbox: false,
+          externalProp: {
+            'data-href': 'url',
+          },
           toggleEvt: function(cell) {
             let selectItemId = cell.dataset.id;
             console.log($.strFormat(' 点击元素: {}', selectItemId));
@@ -100,24 +103,27 @@
         $.fixSelectWidth();
 
         // 添加ripple效果
-        new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
-            (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
+        // new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
+        //     (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
+
         // 链接跳转
-        $('aside li[data-href],aside h3[data-href]').on('click', function() {
-          $.trim(window.location.href) && (window.location.href = this.dataset.href);
+        $('aside').on('click', 'h3[data-href]', function() {
+          $.trim(this.dataset.href) && (window.location.href = this.dataset.href);
         });
         // 菜单高亮
         let url = location.pathname;
-        $('aside.mdc-drawer').find('li[data-href="' + url + '"]').addClass('mdc-list-item--activated');
+        // $('aside.mdc-drawer').find('h3[data-href="' + url + '"]').parent('div').addClass('active');
+        mdcTree.check($('aside.mdc-drawer').find('h3[data-href="' + url + '"]').get(0).dataset.id, false);
+
         // 元素回车事件绑定
-        $('[data-enter-trigger]').keypress(function(e) {
+        $('[data-enter-trigger]').on('keypress', function(e) {
           if (e.key === 'Enter') {
             eval($(this).attr('data-enter-trigger') + '()');
           }
         });
         // 包含该class属性的元素,注册点击跳转
-        $('.data-href__auto[data-href]').on('click', function() {
-          window.location.href = this.dataset.href;
+        $('body').on('click', '.data-href__auto[data-href]', function() {
+          $.trim(this.dataset.href) && (window.location.href = this.dataset.href);
         });
       });
     </script>

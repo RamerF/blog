@@ -1,4 +1,4 @@
-package org.ramer.admin.controller;
+package org.ramer.admin.controller.manage;
 
 import io.swagger.annotations.*;
 import java.util.List;
@@ -90,7 +90,7 @@ public class ArticleController {
         service,
         ArticlePoJo.class,
         idStr,
-        "article/edit",
+        "manage/article/edit",
         map,
         "article",
         id -> commonService.writeMenuAndSiteInfo(session, map));

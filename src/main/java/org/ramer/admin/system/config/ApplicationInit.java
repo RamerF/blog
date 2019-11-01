@@ -1,6 +1,5 @@
 package org.ramer.admin.system.config;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -62,8 +61,8 @@ public class ApplicationInit implements ApplicationRunner {
         manager.setPhone("18990029043");
         manager.setGender(Gender.MALE.ordinal());
         manager.setState(State.STATE_ON);
-        manager.setCreateTime(LocalDateTime.now());
-        manager.setUpdateTime(LocalDateTime.now());
+        manager.setCreateTime(new Date());
+        manager.setUpdateTime(new Date());
         manager.setPassword(EncryptUtil.execEncrypt("admin"));
         manager.setName("admin");
         manager.setRoles(Collections.singletonList(role));

@@ -1,7 +1,7 @@
 package org.ramer.admin.system.entity.response;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import javax.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class AbstractEntityResponse implements Serializable {
   private Long id;
-  private LocalDateTime createTime;
-  private LocalDateTime updateTime;
+  private Date createTime;
+  private Date updateTime;
 }

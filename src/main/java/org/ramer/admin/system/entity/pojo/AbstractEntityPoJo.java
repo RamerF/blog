@@ -1,7 +1,7 @@
 package org.ramer.admin.system.entity.pojo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.MappedSuperclass;
 import lombok.Data;
@@ -15,8 +15,8 @@ import org.springframework.beans.BeanUtils;
 public abstract class AbstractEntityPoJo implements Serializable {
   private Long id;
   private Integer state;
-  private LocalDateTime createTime;
-  private LocalDateTime updateTime;
+  private Date createTime;
+  private Date updateTime;
 
   public <T extends AbstractEntity, E extends AbstractEntityPoJo> E of(T entity, Class<E> clazz) {
     if (Objects.isNull(entity)) {

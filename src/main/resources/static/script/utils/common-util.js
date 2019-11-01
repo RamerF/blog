@@ -1240,7 +1240,6 @@
           }();
         }
       };
-
     }
 
     return new MDCTree(_data, _id, _parentId, containNode);

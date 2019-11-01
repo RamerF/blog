@@ -2,14 +2,8 @@ package org.ramer.admin.entity.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.ramer.admin.entity.domain.Article;
-import org.ramer.admin.system.entity.request.AbstractEntityRequest;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.Date;
-import java.util.List;
 import lombok.*;
+import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 
 /**
  * 文章.
@@ -23,8 +17,10 @@ import lombok.*;
 @ApiModel("文章")
 public class ArticleRequest extends AbstractEntityRequest {
 
+  @ApiModelProperty(value = "Long")
+  private Long number;
+
   @ApiModelProperty(value = "String")
-  @NonNull
   private String title;
 
   @ApiModelProperty(value = "String")
@@ -32,5 +28,4 @@ public class ArticleRequest extends AbstractEntityRequest {
 
   @ApiModelProperty(value = "Long")
   private Long authorId;
-
 }

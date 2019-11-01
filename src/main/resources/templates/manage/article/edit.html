@@ -35,7 +35,7 @@
         <!--            </h2>-->
         <!-- markdown内容 -->
         <div class="" id="test-editor">
-    <textarea style="display:none;">### 关于 Editor.md
+        <textarea id="content" style="display:none;">### 关于 Editor.md
 # Editor.md
 
 ![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
@@ -85,7 +85,7 @@ This is an H2
 > 即更长的单词或短语的缩写形式，前提是开启识别HTML标签时，已默认开启
 
 The <abbr title="Hyper Text Markup Language">HTML</abbr> specification is maintained by the <abbr
-                title="World Wide Web Consortium">W3C</abbr>.
+                    title="World Wide Web Consortium">W3C</abbr>.
 
 ### 引用 Blockquotes
 
@@ -123,11 +123,11 @@ GFM a-tail link @pandao  邮箱地址自动链接 test.test@gmail.com  www@vip.q
 
 即缩进四个空格，也做为实现类似 ` ` 预格式化文本 ( Preformatted Text ) 的功能。
 
-        <?php
+            <?php
         echo "Hello world!";
     ?>
 
-        预格式化文本：
+            预格式化文本：
 
     | First Header  | Second Header |
     | ------------- | ------------- |
@@ -390,6 +390,9 @@ Andrew->>China: I am good thanks!
                class="mdc-button mdc-layout-grid__cell mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop  mdc-card__action mdc-button--raised mdc-ripple-upgraded">
                 返回
             </a>
+            <button id="getContent">获取内容</button>
+            <button id="setContent">设置内容</button>
+            <button id="empty">清空</button>
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4"></div>
             <button id="editBtn"
                     class="mdc-button mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded"
@@ -408,6 +411,7 @@ Andrew->>China: I am good thanks!
           height: 'calc(100% - 24px)',
           // autoHeight : true,
           path: '/libs/editormd/lib/',
+          saveHTMLToTextarea: true,
           codeFold: true,
           htmlDecode: 'style,script,iframe|on*',
           sequenceDiagram: true,
@@ -428,30 +432,15 @@ Andrew->>China: I am good thanks!
         });
 
         let id = [[${article ne null ? article.id:''}]];
-        // 初始化input计数器
-        new mdc.textField.MDCTextFieldCharacterCounter(document.querySelector('.mdc-text-field-character-counter'));
         // 提交表单
         $('#editBtn').on('click', function() {
-          let $form = $('#form');
           let data = {};
-          $form.serializeArray().forEach(function(item) {
-            data[item.name] = item.value;
-          });
-          let textFields = document.querySelectorAll('.mdc-text-field');
-          for (let i = 0; i < textFields.length; i++) {
-            console.log(i, textFields[i]);
-            let $input = $(new mdc.textField.MDCTextField(textFields[i]).input_);
-            let value = $input.val();
-            let required = Boolean($input.prop('required'));
-            let minLength = $input.attr('minlength');
-            let maxLength = $input.attr('maxlength');
-            let validTip = $input.attr('data-validtip');
-            let pattern = $input.attr('data-pattern');
-            if (!$.valid(value, !required, minLength, maxLength, validTip || '参数校验失败', pattern)) {
-              $input.focus();
-              return false;
-            }
+          let content = $('#content').val();
+          if (!$.trim(content)) {
+            $.alert('文章内容不能为空');
+            return false;
           }
+          data.content = content;
           console.log(JSON.stringify(data));
           id > 0 ?
               $.put('/manage/article/' + id, data, function(res) {

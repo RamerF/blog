@@ -22,6 +22,9 @@ import org.ramer.admin.system.entity.domain.common.Manager;
 public class Article extends AbstractEntity {
   public static final String TABLE_NAME = "article";
 
+  @Column(columnDefinition = "int(100) NOT NULL COMMENT '编号'")
+  private Long number;
+
   @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '标题'")
   private String title;
 

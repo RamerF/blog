@@ -5,4 +5,6 @@ import org.ramer.admin.entity.pojo.ArticlePoJo;
 import org.ramer.admin.system.service.BaseService;
 
 /** @author ramer */
-public interface ArticleService extends BaseService<Article, ArticlePoJo> {}
+public interface ArticleService extends BaseService<Article, ArticlePoJo> {
+  String generateNumber();
+}

@@ -1,16 +1,11 @@
 package org.ramer.admin.entity.pojo;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.entity.domain.Article;
-import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.*;
-import org.springframework.beans.BeanUtils;
+import org.ramer.admin.entity.domain.Article;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
+import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 
 /**
  * 文章.
@@ -22,6 +17,9 @@ import org.springframework.beans.BeanUtils;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ArticlePoJo extends AbstractEntityPoJo {
+
+  @ApiModelProperty(value = "Long")
+  private Long number;
 
   @ApiModelProperty(value = "String")
   private String title;

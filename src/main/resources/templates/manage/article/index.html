@@ -35,7 +35,7 @@
                 <div class="mdc-text-field text-field mdc-text-field--fullwidth mdc-text-field--no-label mdc-ripple-upgraded mdc-text-field--with-trailing-icon"
                      data-mdc-auto-init="MDCTextField">
                     <input type="text" id="criteria" class="mdc-text-field__input"
-                           placeholder="请输入CODE/名称" autocomplete="off" data-enter-trigger="refreshTable">
+                           placeholder="请输入标题" autocomplete="off" data-enter-trigger="refreshTable">
                     <i class="material-icons mdc-text-field__icon" tabindex="0" role="button" id="searchBtn">search</i>
                     <div class="mdc-line-ripple"></div>
                 </div>
@@ -57,38 +57,47 @@
           container: '#mdc-data-table',
           columns: [
             {
-              data: 'code',
+              data: 'number',
             },
             {
-              data: 'name',
+              data: 'title',
             },
             {
-              data: 'value',
+              data: 'authorName',
             },
             {
-              data: 'remark',
+              data: 'createTime',
+              render: function(data) {
+                return $.dateFormat(data, 'yyyy-MM-dd HH:mm');
+              },
+            },
+            {
+              data: 'updateTime',
+              render: function(data) {
+                return $.dateFormat(data, 'yyyy-MM-dd HH:mm');
+              },
             },
           ],
           thead: [
             {
-              data: 'CODE',
-              style: 'mdc-data-table__cell--non-numeric',
-              // width: '60px'
+              data: '编号',
+              // style: 'mdc-data-table__cell--non-numeric',
             },
             {
-              data: '名称',
+              data: '标题',
               style: 'mdc-data-table__cell--non-numeric',
-              // width: '60px'
             },
             {
-              data: '参数值',
+              data: '作者',
               style: 'mdc-data-table__cell--non-numeric',
-              // width: '60px'
             },
             {
-              data: '备注',
+              data: '创建时间',
               style: 'mdc-data-table__cell--non-numeric',
-              // width: '60px'
+            },
+            {
+              data: '更新时间',
+              style: 'mdc-data-table__cell--non-numeric',
             },
           ],
           // 是否分页

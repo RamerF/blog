@@ -12,7 +12,8 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 /**
  * 组织.
  *
- * @author Ramer @Date 4/19/2019
+ * @author Ramer
+ * @version 4/19/2019
  */
 @Entity(name = Organize.TABLE_NAME)
 @Table(appliesTo = Organize.TABLE_NAME, comment = "组织")

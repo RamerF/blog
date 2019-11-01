@@ -9,7 +9,8 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 /**
  * 组织关系.
  *
- * @author Ramer @Date 6/30/2019
+ * @author Ramer
+ * @version 6/30/2019
  */
 @Entity(name = OrganizeRelation.TABLE_NAME)
 @Table(appliesTo = OrganizeRelation.TABLE_NAME, comment = "组织关系")

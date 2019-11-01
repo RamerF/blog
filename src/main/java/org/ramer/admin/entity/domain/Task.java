@@ -13,7 +13,7 @@ import org.ramer.admin.system.entity.domain.common.Organize;
 
 /**
  * @author Tang Xiaofeng<br>
- * @date 2019/10/29
+ * @version 2019/10/29
  */
 @Entity(name = Task.TABLE_NAME)
 @Table(appliesTo = Task.TABLE_NAME, comment = "任务")

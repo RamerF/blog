@@ -1071,11 +1071,14 @@
       const checkNodeStr =
           `<div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" value="${val[_id]}"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>`;
       let h3Node = $(
-          `<h3 class="mdc-tree-heading mdc-tree-link" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
+          `<h3 class="mdc-tree-heading mdc-tree-link" 
+                data-ratio="1"
+                data-id="${val[_id]}">${val[_label]}</h3>
+          <i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
       let ulNode = $(`<ul class="mdc-tree-list${_expandAll
           ? ''
           : ' mdc-non-display'}"></ul>`);
-      retrieveTree(val, ulNode);
+      retrieveTree(val, ulNode, 2);
       _checkbox && divNode.append(checkNodeStr);
       divNode.append(h3Node);
       $(containNode).append(divNode).append(ulNode);
@@ -1116,7 +1119,7 @@
                   }
                 });
 
-    function retrieveTree(root, dom) {
+    function retrieveTree(root, dom, depth = 1) {
       // 当前元素子元素
       let cs = children.filter(o => o[_parentId] === root[_id]);
       if (cs.length > 0) {
@@ -1127,11 +1130,14 @@
           const checkNodeStr =
               `<div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" value="${val[_id]}"/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg><div class="mdc-checkbox__mixedmark"></div></div></div>`;
           let h3Node = $(
-              `<h3 class="mdc-tree-heading mdc-tree-link mdc-ripple-upgraded" data-id="${val[_id]}">${val[_label]}</h3><i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
+              `<h3 class="mdc-tree-heading mdc-tree-link mdc-ripple-upgraded"
+                    data-ratio="${depth}"
+                    data-id="${val[_id]}">${val[_label]}</h3>
+               <i class="material-icons toggle-cell">keyboard_arrow_left</i>`);
           let ulNode = $(`<ul class="mdc-tree-list${_expandAll
               ? ''
               : ' mdc-non-display'}"></ul>`);
-          retrieveTree(val, ulNode);
+          retrieveTree(val, ulNode, depth + 1);
           _checkbox && divNode.append(checkNodeStr);
           divNode.append(h3Node);
           liNode.append(divNode).append(ulNode);
@@ -1139,7 +1145,7 @@
       }
     }
 
-    class MDCTable {
+    class MDCTree {
       constructor() {
       }
 
@@ -1154,6 +1160,7 @@
         return selectItems;
       };
 
+      // TODO-POST: 刷新提供策略,刷新当前节点,和刷新全部节点
       refresh = function(opts) {
         $(containNode).empty();
         $(containNode).mdcTree($.extend(paras, opts || {}));
@@ -1161,9 +1168,7 @@
 
     }
 
-    return new MDCTable();
-  }
-  ;
+    return new MDCTree();
+  };
 
-}))
-;
+}));

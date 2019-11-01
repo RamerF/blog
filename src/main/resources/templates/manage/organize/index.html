@@ -18,15 +18,6 @@
     </style>
 </head>
 <body>
-<th:block th:fragment="retrieveChild(children)">
-    <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
-            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
-            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
-                th:include="this::retrieveChild(${c.children})"></ul>
-        </li>
-    </th:block>
-</th:block>
 <div layout:fragment="main-container" class="main-container">
     <div class="organize-tree">
         <div class="organize-operator-container">
@@ -101,20 +92,20 @@
               container: '#mdc-data-table',
               columns: [
                 {
-                  data: 'name'
+                  data: 'name',
                 },
                 {
-                  data: 'remark'
-                }
+                  data: 'remark',
+                },
               ],
               thead: [
                 {
                   data: '姓名',
-                  style: 'mdc-data-table__cell--non-numeric'
+                  style: 'mdc-data-table__cell--non-numeric',
                 },
                 {
                   data: '备注',
-                  style: 'mdc-data-table__cell--non-numeric'
+                  style: 'mdc-data-table__cell--non-numeric',
                 },
               ],
               // 是否分页,暂不支持
@@ -148,10 +139,10 @@
                 $('#roleBtn').prop('disabled', true);
                 $('#menuBtn').prop('disabled', true);
                 $('#privilegeBtn').prop('disabled', true);
-              }
+              },
             });
             window.mdcDataTable.refresh({id: organizeId, criteria: $('#criteria').val()});
-          }
+          },
         });
 
         window.refreshTable = function() {

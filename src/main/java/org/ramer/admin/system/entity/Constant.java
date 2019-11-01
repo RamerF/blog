@@ -40,25 +40,15 @@ public class Constant {
       return Arrays.asList(Config.values());
     }
   }
-  /**
-   * <pre>
-   * @Author ruihao.zhai@gmail.com
-   * @Description 系统操做存储的ID 不真实存在
-   * @Date 10:08 2019/2/19
-   * @Param
-   * @return
-   * </pre>
-   **/
-  public static final Long SYSTEM_ID = 0L;
 
   /** 接口路径 */
-  public class AccessPath {
+  public static class AccessPath {
     public static final String USER = "/user";
     public static final String MANAGE = "/manage";
   }
 
   // 静态资源路径
-  public class ResourcePath {
+  public static class ResourcePath {
     // 管理端
     public static final String MANAGER = "/manager";
     // 用户端

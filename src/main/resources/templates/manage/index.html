@@ -7,15 +7,6 @@
     <title>[[${site.title}]]</title>
 </head>
 <body>
-<th:block th:fragment="retrieveChild(children)">
-    <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':'mdc-list-item-fix'}" th:attr="data-href=${c.url}">
-            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
-            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
-                th:include="this::retrieveChild(${c.children})"></ul>
-        </li>
-    </th:block>
-</th:block>
 <div layout:fragment="main-container" class="main-container">
     首页
 </div>
@@ -40,7 +31,7 @@
           checkbox: true,
           toggleEvt: function() {
             console.log('已选择项', mdcTree.getSelectItems());
-          }
+          },
         });
         console.log(' log: ', mdcTree);
       });

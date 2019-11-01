@@ -32,31 +32,17 @@
     </div>
 </header>
 <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust mdc-drawer--open">
-    <div class="mdc-drawer__content">
-        <th:block th:each="m,stat:${menus}" th:inline="text">
-            <div th:if="${stat.index ne 0}" class="mdc-list-divider mdc-list-divider--padded"></div>
-            <h3 class="mdc-list-group__subheader" th:attr="data-href=${m.url}">[[${m.name}]]</h3>
-            <ul class="mdc-list" th:if="not ${#lists.isEmpty(m.children)}"
-                th:include="this::retrieveChild(${m.children})">
-            </ul>
-        </th:block>
+    <div class="mdc-drawer__content mdc-tree" id="menuContainer">
+
     </div>
 </aside>
 <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust">
     <main class="main-content" id="main-content" layout:fragment="main-container"></main>
 </div>
-<th:block th:fragment="retrieveChild(children)">
-    <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
-            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
-            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
-                th:include="this::retrieveChild(${c.children})"></ul>
-        </li>
-    </th:block>
-</th:block>
+
 </body>
 <th:block layout:fragment="common-script">
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
       $(function() {
         // 自动注册 data-mdc-auto-init 元素
         mdc.autoInit();
@@ -67,6 +53,23 @@
         topAppBar.listen('MDCTopAppBar:nav', () => {
           drawer.open = !drawer.open;
         });
+
+        console.log(' menus: ', [[${menus}]]);
+
+        let mdcTree = $('#menuContainer').mdcTree({
+          data: [[${menuLists}]],
+          id: 'id',
+          parentId: 'parentId',
+          label: 'name',
+          icon: 'icon',
+          expandAll: false,
+          checkbox: false,
+          toggleEvt: function(cell) {
+            let selectItemId = cell.dataset.id;
+            console.log($.strFormat(' 点击元素: {}', selectItemId));
+          },
+        });
+
         // 菜单折叠
         $('aside.mdc-drawer').collapse();
 
@@ -100,8 +103,8 @@
         new mdc.list.MDCList(document.querySelector('.mdc-list')).listElements.map(
             (listItemEl) => new mdc.ripple.MDCRipple(listItemEl));
         // 链接跳转
-        $('aside li[data-href]').on('click', function() {
-          window.location.href = this.dataset.href;
+        $('aside li[data-href],aside h3[data-href]').on('click', function() {
+          $.trim(window.location.href) && (window.location.href = this.dataset.href);
         });
         // 菜单高亮
         let url = location.pathname;

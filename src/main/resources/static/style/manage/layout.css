@@ -98,6 +98,10 @@ aside.mdc-drawer .mdc-list-group__subheader {
     line-height: 48px;
 }
 
+aside.mdc-drawer .mdc-drawer__content li h3 {
+    padding-left: 16px;
+}
+
 /*TODO-WARN: 替换最新 mdc table 样式,目前官方还未实现该组件 */
 
 /* material component web table */
@@ -306,11 +310,52 @@ a[disabled] {
 i.material-icons {
     outline: none;
     user-select: none;
+    padding-right: 8px;
 }
 
 /* 修复弹框被遮盖 */
 .mdc-dialog {
     z-index: 10000;
+}
+
+[data-ratio="1"] {
+    --ratio: 1;
+}
+
+[data-ratio="2"] {
+    --ratio: 2;
+}
+
+[data-ratio="3"] {
+    --ratio: 3;
+}
+
+[data-ratio="4"] {
+    --ratio: 4;
+}
+
+[data-ratio="5"] {
+    --ratio: 5;
+}
+
+[data-ratio="6"] {
+    --ratio: 6;
+}
+
+[data-ratio="7"] {
+    --ratio: 7;
+}
+
+[data-ratio="8"] {
+    --ratio: 8;
+}
+
+[data-ratio="9"] {
+    --ratio: 9;
+}
+
+[data-ratio="10"] {
+    --ratio: 10;
 }
 
 /*  mdc-tree  官方暂时没有该组件*/
@@ -338,6 +383,7 @@ i.material-icons {
     display: flex;
     align-items: center;
     border-radius: 4px;
+    justify-content: space-between;
 }
 
 .mdc-tree-heading-container:hover {
@@ -392,8 +438,12 @@ i.material-icons {
 .mdc-tree-list__item {
     position: relative;
     /*min-height: 42px;*/
-    padding-left: 24px;
+    /*padding-left: 24px;*/
     padding-bottom: 0;
+}
+
+.mdc-tree-link[data-ratio] {
+    padding-left: calc(16px * var(--ratio));
 }
 
 

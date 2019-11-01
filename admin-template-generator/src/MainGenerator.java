@@ -14,7 +14,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
-/** @author Ramer @Date 02/13/2018 */
+/**
+ * @author Ramer
+ * @version 02/13/2018
+ */
 public class MainGenerator extends AnAction {
   private static String lineSeparator = System.getProperty("line.separator");
   private static String pathSeparator = File.separator;

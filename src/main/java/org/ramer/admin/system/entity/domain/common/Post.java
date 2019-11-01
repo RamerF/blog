@@ -14,7 +14,8 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 /**
  * 岗位/职位.
  *
- * @author Ramer @Date 2019/8/17
+ * @author Ramer
+ * @version 2019/8/17
  */
 @Entity(name = Post.TABLE_NAME)
 @Table(appliesTo = Post.TABLE_NAME, comment = "岗位")

@@ -13,6 +13,7 @@
 hs_err_pid*
 logs
 src/main/java/org/ramer/admin/controller/TestController.java
+src/main/resources/templates/manage/test.html
 src/main/resources/config
 admin-generator/src/main/resources/config
 admin-template.iml

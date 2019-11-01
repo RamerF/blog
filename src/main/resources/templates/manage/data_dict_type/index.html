@@ -8,15 +8,6 @@
     <title>数据字典分类</title>
 </head>
 <body>
-<th:block th:fragment="retrieveChild(children)">
-    <th:block th:each="c:${children}">
-        <li th:class="${#lists.isEmpty(c.children) ? 'mdc-list-item':''}" th:attr="data-href=${c.url}">
-            <h3 class="mdc-list-group__subheader">[[${c.name}]]</h3>
-            <ul class="mdc-list" th:if="not ${#lists.isEmpty(c.children)}"
-                th:include="this::retrieveChild(${c.children})"></ul>
-        </li>
-    </th:block>
-</th:block>
 <div layout:fragment="main-container" class="main-container">
     <div id="mdc-data-table" class="mdc-data-table__container">
         <!--扩展搜索条件-->
@@ -62,31 +53,31 @@
           container: '#mdc-data-table',
           columns: [
             {
-              data: 'code'
+              data: 'code',
             },
             {
-              data: 'name'
+              data: 'name',
             },
             {
-              data: 'remark'
-            }
+              data: 'remark',
+            },
           ],
           thead: [
             {
               data: '标识',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
               // width: '60px'
             },
             {
               data: '名称',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
               // width: '60px'
             },
             {
               data: '备注',
-              style: 'mdc-data-table__cell--non-numeric'
+              style: 'mdc-data-table__cell--non-numeric',
               // width: '60px'
-            }
+            },
           ],
           // 是否分页
           pagination: true,
@@ -110,7 +101,7 @@
           multipleSelect: function() {
             $('#editBtn').prop('disabled', true);
             $('#delBtn').prop('disabled', false);
-          }
+          },
         });
         window.mdcDataTable = mdcDataTable;
         window.refreshTable = function() {

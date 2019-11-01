@@ -5,7 +5,8 @@ import org.ramer.admin.system.repository.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author ramer @Date 6/29/2018
+ * @author ramer
+ * @version 6/29/2018
  * @see
  */
 @Repository

@@ -61,11 +61,14 @@ public class CommonServiceImpl implements CommonService {
               .filter(menuResponse -> menuResponse.getParentId().equals(menu.getId()))
               .collect(Collectors.toList());
       // 子节点具有叶子节点,入栈
-      children.stream().filter(menuResponse -> !menuResponse.getHasChild()).forEach(retain::push);
+      children.stream().filter(MenuResponse::getHasChild).forEach(retain::push);
       menu.setChildren(children);
       menus.removeAll(children);
     }
     map.put("menus", responses);
+    map.put(
+        "menuLists",
+        CollectionUtils.list(menuService.listByManager(managerId), MenuResponse::of, null, null));
     JSONObject siteJson = new JSONObject();
     siteJson.put("title", configService.getSiteInfo(ConfigCode.SITE_TITLE));
     siteJson.put("name", configService.getSiteInfo(ConfigCode.SITE_NAME));

@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author ramer @Date 7/1/2018
+ * @author ramer
+ * @version 7/1/2018
  * @see
  */
 @Repository

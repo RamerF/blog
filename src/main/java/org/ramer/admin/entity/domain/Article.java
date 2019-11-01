@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.domain.common.Manager;
 
 /**
  * @author Tang Xiaofeng<br>
- * @date 2019/10/29
+ * @version 2019/10/29
  */
 @Entity(name = Article.TABLE_NAME)
 @Table(appliesTo = Article.TABLE_NAME, comment = "文章")

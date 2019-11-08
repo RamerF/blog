@@ -43,7 +43,7 @@ public class ArticleResponse extends AbstractEntityResponse {
     }
     ArticleResponse poJo = new ArticleResponse();
     BeanUtils.copyProperties(article, poJo);
-    poJo.setAuthorName(Optional.ofNullable(article.getAuthor()).map(Manager::getName).orElse(""));
+    poJo.setAuthorName(Optional.ofNullable(article.getAuthor()).map(Manager::getName).orElse(null));
     return poJo;
   }
 }

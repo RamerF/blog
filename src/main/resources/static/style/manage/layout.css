@@ -318,7 +318,7 @@ i.material-icons {
 
 /* 修复弹框被遮盖 */
 .mdc-dialog {
-    z-index: 10000;
+    /*z-index: 10000;*/
 }
 
 [data-ratio="1"] {

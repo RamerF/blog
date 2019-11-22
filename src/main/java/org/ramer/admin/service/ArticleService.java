@@ -6,5 +6,5 @@ import org.ramer.admin.system.service.BaseService;
 
 /** @author ramer */
 public interface ArticleService extends BaseService<Article, ArticlePoJo> {
-  String generateNumber();
+  Long generateNumber();
 }

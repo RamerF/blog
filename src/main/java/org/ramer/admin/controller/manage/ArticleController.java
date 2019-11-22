@@ -1,8 +1,7 @@
 package org.ramer.admin.controller.manage;
 
 import io.swagger.annotations.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -11,15 +10,17 @@ import org.ramer.admin.entity.domain.Article;
 import org.ramer.admin.entity.pojo.ArticlePoJo;
 import org.ramer.admin.entity.request.ArticleRequest;
 import org.ramer.admin.entity.response.ArticleResponse;
+import org.ramer.admin.service.ArticleService;
 import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.service.ArticleService;
+import org.ramer.admin.system.service.common.ManagerService;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.validator.ArticleValidator;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -33,6 +34,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "管理端: 文章接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ArticleController {
+  @Resource private ManagerService managerService;
   @Resource private ArticleService service;
   @Resource private CommonService commonService;
   @Resource private ArticleValidator validator;
@@ -75,7 +77,14 @@ public class ArticleController {
   @PreAuthorize("hasAnyAuthority('global:create','article:create')")
   @ApiOperation("添加文章")
   public ResponseEntity<CommonResponse<Object>> create(
-      @Valid ArticleRequest articleRequest, @ApiIgnore BindingResult bindingResult) {
+      @Valid ArticleRequest articleRequest,
+      @ApiIgnore BindingResult bindingResult,
+      Authentication authentication) {
+    final String authName = authentication.getName();
+    log.info("create:[authentication:{}]", authName);
+    articleRequest.setNumber(service.generateNumber());
+    articleRequest.setAuthorId(
+        Objects.requireNonNull(managerService.getByEmpNo(authName), "认证对象不能为空").getId());
     log.info(" ArticleController.create : [{}]", articleRequest);
     return commonService.create(service, Article.class, articleRequest, bindingResult);
   }

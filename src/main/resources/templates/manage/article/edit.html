@@ -25,31 +25,66 @@
         .mdc-card__action-buttons > a, .mdc-card__action-buttons > button {
             max-width: 64px;
         }
+
+        .mdc-card__action-buttons > button {
+            right: 0;
+        }
+
+        #markdown-editor {
+            z-index: 6;
+        }
     </style>
 </head>
 <body>
 <div layout:fragment="main-container" class="main-container">
-    <form id="form" class="mdc-card" onsubmit="void(0);">
+    <form id="form" class="mdc-card mdc-card__non-shadow" onsubmit="void(0);">
         <input th:if="${_csrf!=null}" type="hidden"
                th:name="${_csrf.parameterName}"
                id="_csrf"
                th:value="${_csrf.token}"/>
-        <!--            <h2 class="mdc-typography mdc-typography&#45;&#45;headline5 mdc-text__align-center">-->
-        <!--                [[${article ne null?'修改':'添加'}]]文章-->
-        <!--            </h2>-->
+        <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">
+            [[${article ne null?'修改':'添加'}]]文章
+        </h2>
+        <!--标题-->
+        <div class="text-field-container mdc-panel__margin-16">
+            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
+                 data-mdc-auto-init="MDCTextField">
+                <input type="text" id="titleInput" name="code"
+                       class="mdc-text-field__input"
+                       maxlength="50"
+                       required
+                       data-validtip="CODE不能为空,且小于20个字符"
+                       autocomplete="off"
+                       placeholder="请输入文章标题"
+                       th:value="${article ne null?article.title:''}">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label for="titleInput" class="mdc-floating-label">标题</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div class="mdc-text-field-helper-line">
+                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+                    *必填</p>
+                <div class="mdc-text-field-character-counter">0 / 50</div>
+            </div>
+        </div>
         <!-- markdown内容 -->
-        <div class="" id="test-editor">
-            <textarea id="content" style="display:none;" th:text="${article ne null ? article.content : ''}"></textarea>
+        <div class="" id="markdown-editor">
+            <textarea id="content" style="display:none;"
+                      th:text="${article ne null ? article.content : ''}"></textarea>
         </div>
         <!--操作-->
-        <div class="mdc-layout-grid__inner mdc-card__action-buttons">
+        <div class="mdc-layout-grid__inner mdc-card__action-buttons mdc-layout-grid--align-right mdc-container__relative">
+            <div class="mdc-layout-grid__cell "></div>
             <a href="/manage/article/index"
-               class="mdc-button mdc-layout-grid__cell mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop  mdc-card__action mdc-button--raised mdc-ripple-upgraded">
+               class="mdc-button mdc-layout-grid__cell mdc-card__action mdc-button--raised mdc-ripple-upgraded">
                 返回
             </a>
-            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4"></div>
             <button id="editBtn"
-                    class="mdc-button mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded"
+                    class="mdc-button mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded mdc-container__absolute"
                     th:inline="text">
                 [[${article eq null ? '添加':'更新'}]]
             </button>
@@ -59,7 +94,7 @@
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
       $(function() {
-        let editor = editormd('test-editor', {
+        editormd('markdown-editor', {
           width: '100%',
           // markdown: '这里是显示的内容',
           height: 'calc(100% - 24px)',
@@ -90,10 +125,16 @@
         $('#editBtn').on('click', function() {
           let data = {};
           let content = $('#content').val();
+          let title = $('#titleInput').val();
           if (!$.trim(content)) {
             $.alert('文章内容不能为空');
             return false;
           }
+          if (!$.trim(title)) {
+            $.alert('文章标题不能为空');
+            return false;
+          }
+          data.title = title;
           data.content = content;
           console.log(JSON.stringify(data));
           id > 0 ?

@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 @RestController
@@ -55,6 +56,12 @@ public class GlobalExceptionHandler {
     }
     if (exception instanceof HttpRequestMethodNotSupportedException) {
       return CommonResponse.fail("请求方式不支持");
+    }
+    if (exception instanceof MethodArgumentTypeMismatchException) {
+      log.error(exception.getMessage(), exception);
+      final String fieldName = ((MethodArgumentTypeMismatchException) exception).getName();
+      request.setAttribute("error", exception.getMessage());
+      return CommonResponse.fail(String.format("参数[%s]格式不正确", fieldName));
     }
     log.error(exception.getMessage(), exception);
     return CommonResponse.fail("系统繁忙,请稍后再试");

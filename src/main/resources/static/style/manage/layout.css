@@ -261,6 +261,18 @@ aside.mdc-drawer .mdc-drawer__content li h3 {
     text-align: right;
 }
 
+.mdc-card__non-shadow {
+    box-shadow: none;
+}
+
+.mdc-container__relative {
+    position: relative;
+}
+
+.mdc-container__absolute {
+    position: absolute;
+}
+
 .form-container {
     width: 85%;
     margin: 72px auto 0;

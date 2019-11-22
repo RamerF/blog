@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
-      layout:decorate="~{manage/layout}" lang="zh">
+      layout:decorate="~{base_layout}" lang="zh">
 <head>
     <title>${article.title}</title>
     <link rel="stylesheet" href="/libs/editormd/css/editormd.css"/>
@@ -36,7 +36,7 @@
     </style>
 </head>
 <body>
-<div layout:fragment="main-container" class="main-container">
+<div layout:fragment="container" class="main-container">
     <form id="form" class="mdc-card mdc-card__non-shadow" onsubmit="void(0);">
         <input th:if="${_csrf!=null}" type="hidden"
                th:name="${_csrf.parameterName}"

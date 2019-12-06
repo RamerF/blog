@@ -31,7 +31,7 @@ ${fieldList}
       return null;
     }
     ${name}Response poJo = new ${name}Response();
-    // TODO-WARN:  将 Domain 对象转换成 Response 对象
+    // TODO-WARN: 将 Domain 对象转换成 Response 对象
     BeanUtils.copyProperties(${alia}, poJo);
     return poJo;
   }

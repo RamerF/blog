@@ -109,4 +109,9 @@ public class CommonResponse<T> {
     return ResponseEntity.ok(
         new CommonResponse<>(false, (T) null, String.format("数据不存在: [%s]", arg)));
   }
+
+  public static <T> ResponseEntity<CommonResponse<T>> notPresent(String arg) {
+    return ResponseEntity.ok(
+        new CommonResponse<>(false, (T) null, String.format("参数未传递: [%s]", arg)));
+  }
 }

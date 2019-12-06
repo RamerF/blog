@@ -38,43 +38,10 @@
 <body>
 <div layout:fragment="container" class="main-container">
     <form id="form" class="mdc-card mdc-card__non-shadow" onsubmit="void(0);">
-        <input th:if="${_csrf!=null}" type="hidden"
-               th:name="${_csrf.parameterName}"
-               id="_csrf"
-               th:value="${_csrf.token}"/>
-        <h2 class="mdc-typography mdc-typography--headline5 mdc-text__align-center">
-            [[${article ne null?'修改':'添加'}]]文章
-        </h2>
-        <!--标题-->
-        <div class="text-field-container mdc-panel__margin-16">
-            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                 data-mdc-auto-init="MDCTextField">
-                <input type="text" id="titleInput" name="code"
-                       class="mdc-text-field__input"
-                       maxlength="50"
-                       required
-                       data-validtip="CODE不能为空,且小于20个字符"
-                       autocomplete="off"
-                       placeholder="请输入文章标题"
-                       th:value="${article ne null?article.title:''}">
-                <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                        <label for="titleInput" class="mdc-floating-label">标题</label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                </div>
-            </div>
-            <div class="mdc-text-field-helper-line">
-                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                    *必填</p>
-                <div class="mdc-text-field-character-counter">0 / 50</div>
-            </div>
-        </div>
         <!-- markdown内容 -->
         <div class="" id="markdown-editor">
             <textarea id="content" style="display:none;"
-                      th:text="${article ne null ? article.content : ''}"></textarea>
+                      th:text="${article ne null ? article.content : ''}">${article.content}</textarea>
         </div>
         <!--操作-->
         <div class="mdc-layout-grid__inner mdc-card__action-buttons mdc-layout-grid--align-right mdc-container__relative">
@@ -83,15 +50,10 @@
                class="mdc-button mdc-layout-grid__cell mdc-card__action mdc-button--raised mdc-ripple-upgraded">
                 返回
             </a>
-            <button id="editBtn"
-                    class="mdc-button mdc-layout-grid__cell mdc-button--raised mdc-ripple-upgraded mdc-container__absolute"
-                    th:inline="text">
-                [[${article eq null ? '添加':'更新'}]]
-            </button>
         </div>
     </form>
 </div>
-<div layout:fragment="script">
+<div layout:fragment="common-script">
     <script type="text/javascript" th:inline="javascript">
       $(function() {
         editormd('markdown-editor', {
@@ -118,36 +80,6 @@
           // onload : function() {
           //   console.log("onload =>", this, this.id, this.settings);
           // }
-        });
-
-        let id = [[${article ne null ? article.id:''}]];
-        // 提交表单
-        $('#editBtn').on('click', function() {
-          let data = {};
-          let content = $('#content').val();
-          let title = $('#titleInput').val();
-          if (!$.trim(content)) {
-            $.alert('文章内容不能为空');
-            return false;
-          }
-          if (!$.trim(title)) {
-            $.alert('文章标题不能为空');
-            return false;
-          }
-          data.title = title;
-          data.content = content;
-          console.log(JSON.stringify(data));
-          id > 0 ?
-              $.put('/manage/article/' + id, data, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/article/index';
-                }) : $.alert(res.msg);
-              }) : $.post('/manage/article', data, function(res) {
-                res.result === true ? $.alert(res.msg, function() {
-                  window.location.href = '/manage/article/index';
-                }) : $.alert(res.msg);
-              });
-          return false;
         });
       });
     </script>

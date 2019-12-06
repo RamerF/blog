@@ -3,6 +3,7 @@ package org.ramer.admin.system.config;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.admin.system.entity.Constant.Txt;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.exception.CommonException;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -29,10 +31,9 @@ public class GlobalExceptionHandler {
       HttpServletRequest request, Exception exception, Authentication authentication) {
     log.error(request.getRequestURL().toString());
     if (request instanceof StandardMultipartHttpServletRequest) {
-      log.warn("上传文件过大");
-      return CommonResponse.fail("上传文件过大");
-    }
-    if (exception instanceof AccessDeniedException) {
+      log.warn(Txt.TOO_LARGE_FILE);
+      return CommonResponse.fail(Txt.TOO_LARGE_FILE);
+    } else if (exception instanceof AccessDeniedException) {
       log.warn(exception.getMessage());
       ManageLog manageLogs = new ManageLog();
       manageLogs.setIp(IpUtils.getRealIP(request));
@@ -47,23 +48,26 @@ public class GlobalExceptionHandler {
         log.error("记录操作日志失败");
         log.error(e.getMessage(), e);
       }
-      return CommonResponse.fail("拒绝访问");
-    }
-    if (exception instanceof CommonException) {
+      return CommonResponse.fail(Txt.FORBIDDEN);
+    } else if (exception instanceof CommonException) {
       log.error(exception.getMessage(), exception);
       request.setAttribute("error", exception.getMessage());
       return CommonResponse.fail(exception.getMessage());
-    }
-    if (exception instanceof HttpRequestMethodNotSupportedException) {
-      return CommonResponse.fail("请求方式不支持");
-    }
-    if (exception instanceof MethodArgumentTypeMismatchException) {
+    } else if (exception instanceof HttpRequestMethodNotSupportedException) {
+      return CommonResponse.fail(Txt.NOT_SUPPORT);
+    } else if (exception instanceof MethodArgumentTypeMismatchException) {
       log.error(exception.getMessage(), exception);
       final String fieldName = ((MethodArgumentTypeMismatchException) exception).getName();
       request.setAttribute("error", exception.getMessage());
-      return CommonResponse.fail(String.format("参数[%s]格式不正确", fieldName));
+      return CommonResponse.wrongFormat(fieldName);
+    } else if (exception instanceof MissingServletRequestParameterException) {
+      log.error(exception.getMessage(), exception);
+      final String fieldName =
+          ((MissingServletRequestParameterException) exception).getParameterName();
+      request.setAttribute("error", exception.getMessage());
+      return CommonResponse.notPresent(fieldName);
     }
     log.error(exception.getMessage(), exception);
-    return CommonResponse.fail("系统繁忙,请稍后再试");
+    return CommonResponse.fail(Txt.ERROR_SYSTEM);
   }
 }

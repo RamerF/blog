@@ -1,9 +1,7 @@
 package org.ramer.admin.system.entity;
 
-import lombok.AllArgsConstructor;
-
 import java.util.*;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 
 /**
  * 系统常量定义.
@@ -12,34 +10,13 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings({"unused"})
 public class Constant {
-
   public static final String DEFAULT_CSRF_TOKEN = "X-CSRF-TOKEN";
   // 分页每页默认条数
   public static final int DEFAULT_PAGE_SIZE = 10;
-  // 默认list字符串分隔符
+  // 默认字符串分隔符
   public static final String DEFAULT_STRING_SPLIT = ",";
   public static final String DEFAULT_CHARSET_ENCODE = "UTF-8";
   public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
-
-  public enum Config {
-    /** APP版本号 */
-    APP_VERSION("APP_VERSION", "1", "APP版本号"),
-    /** 电表检查一致性的属性 */
-    DIAN_BIAO_CHECK_PROP("DIAN_BIAO_CHECK_PROP", "biaohao,huhao,huming", "电表检查一致性的属性");
-    public String code;
-    public String value;
-    public String name;
-
-    Config(String code, String value, String name) {
-      this.code = code;
-      this.value = value;
-      this.name = name;
-    }
-
-    public List<Config> list() {
-      return Arrays.asList(Config.values());
-    }
-  }
 
   /** 接口路径 */
   public static class AccessPath {
@@ -93,8 +70,11 @@ public class Constant {
     public static final String FAIL_EXEC_DELETE_NOT_EXIST = "删除失败";
     // 系统异常提示文本
     public static final String ERROR_PARAM = "参数错误";
-    public static final String ERROR_SYSTEM = "系统繁忙，请稍后再试 ！";
+    public static final String ERROR_SYSTEM = "系统繁忙，请稍后再试！";
     public static final String NOT_IMPLEMENT = "方法未实现";
+    public static final String FORBIDDEN = "拒绝访问";
+    public static final String NOT_SUPPORT = "请求方式不支持";
+    public static final String TOO_LARGE_FILE = "上传文件过大";
   }
 
   public static class State {
@@ -102,12 +82,6 @@ public class Constant {
     public static final int STATE_ON = 1;
     /** 不可用状态 */
     public static final int STATE_OFF = -1;
-  }
-
-  /** 数据字典CODE */
-  public class DataDictCode {
-    /** 电表状态 */
-    public static final String DIAN_BIAO_STATUS_CODE = "DIAN_BIAO_STATUS_CODE";
   }
 
   /**
@@ -193,41 +167,6 @@ public class Constant {
     }
   }
 
-  /** 任务状态 */
-  public class CTaskStatus {
-    public static final int UNFINISHED = 0;
-    public static final int FINISHED = 1;
-  }
-
-  /** 电表勘查状态 */
-  public static class DianBiaoProspectingStatus {
-    /** 未开始 */
-    public static final int NOT_START = 0;
-    /** 进行中 */
-    public static final int EXECUTING = 1;
-    /** 已完成 */
-    public static final int FINISHED = 2;
-    /** 所有 */
-    public static final int ALL = -1;
-
-    public static List<Integer> ordinalList() {
-      return Arrays.asList(NOT_START, EXECUTING, FINISHED, ALL);
-    }
-
-    public static String desc(int status) {
-      switch (status) {
-        case 0:
-          return "未勘查";
-        case 1:
-          return "勘查中";
-        case 2:
-          return "已勘查";
-        default:
-          return "所有";
-      }
-    }
-  }
-
   /** 存储在session中的key */
   public class SessionKey {
     // 前端登录对象
@@ -240,26 +179,6 @@ public class Constant {
   public static class DataDictTypeCode {
     // 用于演示CODE
     public static final String DEMO_CODE = "DEMO_CODE";
-  }
-
-  /** 资源文件CODE. */
-  public class CommonMediaCode {}
-
-  /** 前端绑定操作: 0: 删除,1: 添加 */
-  public enum BindingOperate {
-    DELETE,
-    ADD;
-
-    public static Map<Integer, BindingOperate> map() {
-      return Arrays.stream(BindingOperate.values())
-          .collect(Collectors.toMap(Enum::ordinal, val -> val));
-    }
-
-    public static List<Integer> list() {
-      List<Integer> list = new ArrayList<>();
-      Arrays.asList(BindingOperate.values()).forEach(val -> list.add(val.ordinal()));
-      return list;
-    }
   }
 
   /** 系统配置CODE */

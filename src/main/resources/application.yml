@@ -24,7 +24,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      name: admin-springdata
+      name: blog
       url: jdbc:log4jdbc:mysql:///blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false
       driver-class-name: net.sf.log4jdbc.DriverSpy
       username: root

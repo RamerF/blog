@@ -22,7 +22,7 @@ public class MainGenerator {
     System.out.println(
         "===================================================================================");
     System.out.println(
-        "=======================    admin-springdata代码生成器 v1.0.0    ====================");
+        "=======================    blog代码生成器 v1.0.0    ====================");
     System.out.println(
         "=======================    Author Ramer                        ====================");
     System.out.println(
@@ -85,7 +85,7 @@ public class MainGenerator {
       System.out.println(
           " 请输入domain对象的包路径: 例如: org.ramer.demo.entity.domain.manage.system.Manager");
       domainPath = scanner.next();
-      System.out.println(" 请输入domain对象的class目录: 例如: D:/workspace/admin-springdata/target/classes");
+      System.out.println(" 请输入domain对象的class目录: 例如: D:/workspace/blog/target/classes");
       classPath = scanner.next();
       System.out.println(" 请输入对象的别名: 例如: manager");
       aliaName = scanner.next();
@@ -99,29 +99,29 @@ public class MainGenerator {
       }
       if (isCopy.equalsIgnoreCase("y")) {
         System.out.println(
-            " 请输入repository保存路径: 例如: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/repository");
+            " 请输入repository保存路径: 例如: D:/workspace/blog/src/main/java/org/ramer/admin/repository");
         savingPathRepository = scanner.next();
         System.out.println(
-            " 请输入service保存路径: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/service");
+            " 请输入service保存路径: D:/workspace/blog/src/main/java/org/ramer/admin/service");
         savingPathService = scanner.next();
         savingPathServiceImpl =
             Objects.isNull(savingPathService)
                 ? null
                 : savingPathService.concat(pathSeparator).concat("impl");
         System.out.println(
-            " 请输入controller保存路径: 例如: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/controller");
+            " 请输入controller保存路径: 例如: D:/workspace/blog/src/main/java/org/ramer/admin/controller");
         savingPathController = scanner.next();
         System.out.println(
-            " 请输入validator保存路径: 例如: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/validator");
+            " 请输入validator保存路径: 例如: D:/workspace/blog/src/main/java/org/ramer/admin/validator");
         savingPathValidator = scanner.next();
         System.out.println(
-            " 请输入pojo保存路径: 例如: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/entity/pojo");
+            " 请输入pojo保存路径: 例如: D:/workspace/blog/src/main/java/org/ramer/admin/entity/pojo");
         savingPathPoJo = scanner.next();
         System.out.println(
-            " 请输入request保存路径: 例如: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/entity/request");
+            " 请输入request保存路径: 例如: D:/workspace/blog/src/main/java/org/ramer/admin/entity/request");
         savingPathRequest = scanner.next();
         System.out.println(
-            " 请输入response保存路径: 例如: D:/workspace/admin-springdata/src/main/java/org/ramer/admin/entity/response");
+            " 请输入response保存路径: 例如: D:/workspace/blog/src/main/java/org/ramer/admin/entity/response");
         savingPathResponse = scanner.next();
       }
     }

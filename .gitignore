@@ -12,13 +12,11 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 logs
-src/main/java/org/ramer/admin/controller/TestController.java
+/**/TestController.java
 src/main/resources/templates/manage/test.html
 src/main/resources/config
-admin-generator/src/main/resources/config
-admin-template.iml
-admin-generator.iml
-admin-template-generator.iml
+/**/config
+*.iml
 classes/
 target
 .idea

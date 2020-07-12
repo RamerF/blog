@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ramerf</groupId>
-    <artifactId>spring-boot-starter-admintemplate</artifactId>
+    <artifactId>blog</artifactId>
     <version>1.0.0-RELEASE</version>
     <packaging>jar</packaging>
-    <name>admintemplate</name>
+    <name>blog</name>
     <url>http://maven.apache.org</url>
     <description>springboot web at once.</description>
     <distributionManagement>
@@ -178,7 +178,7 @@
             <version>1.2</version>
         </dependency>
     </dependencies>
-    <!-- // mvn admin-template clean deploy -Psonatype -Darguments="gpg.passphrase=gpg密码" -->
+    <!-- // mvn blog clean deploy -Psonatype -Darguments="gpg.passphrase=gpg密码" -->
     <profiles>
         <profile>
             <id>sonatype</id>

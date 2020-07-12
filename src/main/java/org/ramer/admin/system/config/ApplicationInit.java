@@ -172,7 +172,7 @@ public class ApplicationInit implements ApplicationRunner {
       dataDict.setCode("演示字典CODE");
       dataDict.setName("演示字典");
       dataDict.setRemark("演示字典备注");
-      dataDict.setDataDictType(dataDictType);
+      dataDict.setDataDictTypeId(dataDictType.getId());
       dataDictService.create(dataDict);
     }
   }

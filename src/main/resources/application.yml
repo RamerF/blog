@@ -25,7 +25,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       name: admin-springdata
-      url: jdbc:log4jdbc:mysql:///admin_springdata?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      url: jdbc:log4jdbc:mysql:///blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false
       driver-class-name: net.sf.log4jdbc.DriverSpy
       username: root
       password: root

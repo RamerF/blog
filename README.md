@@ -35,7 +35,7 @@
     tip: n: 生成代码文件到当前(项目|jar同级)目录下,y: 指定每个文件的目录
 ```
 
-### [系统功能开发清单](https://github.com/RamerF/admin-template/tree/master/doc)
+### [系统功能开发清单](https://github.com/RamerF/blog/tree/master/doc)
 
 ### 相关链接
 [material-components-web](https://github.com/material-components/material-components-web) 

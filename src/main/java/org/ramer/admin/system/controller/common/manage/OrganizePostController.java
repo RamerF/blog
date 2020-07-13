@@ -1,8 +1,11 @@
 package org.ramer.admin.system.controller.common.manage;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Post;
@@ -12,9 +15,7 @@ import org.ramer.admin.system.entity.request.common.PostRequest;
 import org.ramer.admin.system.entity.response.CommonResponse;
 import org.ramer.admin.system.entity.response.common.PostResponse;
 import org.ramer.admin.system.exception.CommonException;
-import org.ramer.admin.system.service.common.CommonService;
-import org.ramer.admin.system.service.common.OrganizeService;
-import org.ramer.admin.system.service.common.PostService;
+import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.TextUtil;
 import org.ramer.admin.system.validator.common.PostValidator;
 import org.springframework.data.domain.PageImpl;
@@ -25,12 +26,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller("postcm")

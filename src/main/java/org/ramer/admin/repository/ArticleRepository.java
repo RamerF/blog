@@ -1,6 +1,5 @@
 package org.ramer.admin.repository;
 
-import java.util.List;
 import org.ramer.admin.entity.domain.Article;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.springframework.stereotype.Repository;

@@ -1,13 +1,8 @@
 package org.ramer.admin.system.entity.response.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.Role;
-import org.ramer.admin.system.entity.pojo.common.RolePoJo;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 

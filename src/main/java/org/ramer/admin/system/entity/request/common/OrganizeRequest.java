@@ -1,9 +1,9 @@
 package org.ramer.admin.system.entity.request.common;
 
-import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.ramer.admin.system.entity.request.AbstractEntityRequest;
 
 /**
  * 组织.

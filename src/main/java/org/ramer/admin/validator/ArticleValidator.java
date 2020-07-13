@@ -5,7 +5,6 @@ import org.ramer.admin.entity.domain.Article;
 import org.ramer.admin.entity.pojo.ArticlePoJo;
 import org.ramer.admin.entity.request.ArticleRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

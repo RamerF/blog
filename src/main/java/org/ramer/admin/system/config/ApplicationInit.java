@@ -4,7 +4,6 @@ import java.util.*;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.*;
-import org.ramer.admin.system.entity.domain.common.Config;
 import org.ramer.admin.system.entity.domain.common.*;
 import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.EncryptUtil;

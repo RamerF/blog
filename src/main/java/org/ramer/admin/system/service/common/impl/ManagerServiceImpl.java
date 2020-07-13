@@ -2,7 +2,6 @@ package org.ramer.admin.system.service.common.impl;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import javafx.scene.transform.Rotate;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
@@ -15,7 +14,6 @@ import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.repository.BaseRepository;
 import org.ramer.admin.system.repository.common.ManagerRepository;
 import org.ramer.admin.system.service.common.ManagerService;
-import org.ramer.admin.system.service.common.OrganizeService;
 import org.ramer.admin.system.util.EncryptUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;

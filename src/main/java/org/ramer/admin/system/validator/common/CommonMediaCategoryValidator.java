@@ -4,7 +4,6 @@ import org.ramer.admin.system.entity.domain.common.CommonMediaCategory;
 import org.ramer.admin.system.entity.pojo.common.CommonMediaCategoryPoJo;
 import org.ramer.admin.system.entity.request.common.CommonMediaCategoryRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

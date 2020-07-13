@@ -1,10 +1,10 @@
 package org.ramer.admin.system.entity.request;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
 import java.io.Serializable;
 import javax.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 @Data
 @MappedSuperclass

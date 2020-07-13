@@ -1,7 +1,8 @@
 package org.ramer.admin.system.controller.common.manage;
 
 import io.swagger.annotations.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;

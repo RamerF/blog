@@ -2,15 +2,10 @@ package org.ramer.admin.system.entity.response.common;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
-import org.ramer.admin.system.entity.domain.common.DataDictType;
-import org.ramer.admin.system.entity.pojo.common.DataDictTypePoJo;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.*;
+import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.entity.response.AbstractEntityResponse;
 import org.springframework.beans.BeanUtils;
 

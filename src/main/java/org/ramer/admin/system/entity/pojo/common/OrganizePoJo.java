@@ -1,10 +1,10 @@
 package org.ramer.admin.system.entity.pojo.common;
 
+import java.util.Objects;
+import lombok.*;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Organize;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
-import java.util.Objects;
-import lombok.*;
 
 /**
  * 组织.

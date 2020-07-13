@@ -1,10 +1,10 @@
 package org.ramer.admin.system.entity.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
-import org.ramer.admin.system.entity.domain.AbstractEntity;
 import javax.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.Table;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 @Entity(name = ManageLog.TABLE_NAME)
 @Table(appliesTo = ManageLog.TABLE_NAME, comment = "管理端日志")

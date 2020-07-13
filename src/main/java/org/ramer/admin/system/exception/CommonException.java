@@ -1,7 +1,7 @@
 package org.ramer.admin.system.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.Txt;
-import lombok.extern.slf4j.*;
 
 /** @author ramer created on 11/15/18 */
 @Slf4j

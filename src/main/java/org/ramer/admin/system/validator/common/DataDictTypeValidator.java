@@ -5,7 +5,6 @@ import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.entity.pojo.common.DataDictTypePoJo;
 import org.ramer.admin.system.entity.request.common.DataDictTypeRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

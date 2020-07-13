@@ -1,10 +1,10 @@
 package org.ramer.admin.system.entity.domain.common;
 
-import org.ramer.admin.system.entity.domain.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.*;
 import org.hibernate.annotations.Table;
+import org.ramer.admin.system.entity.domain.AbstractEntity;
 
 @Entity(name = Config.TABLE_NAME)
 @Table(appliesTo = Config.TABLE_NAME, comment = "系统配置")

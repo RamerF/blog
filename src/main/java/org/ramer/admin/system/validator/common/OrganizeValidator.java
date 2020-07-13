@@ -1,12 +1,12 @@
 package org.ramer.admin.system.validator.common;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Resource;
 import org.ramer.admin.system.entity.domain.common.Organize;
 import org.ramer.admin.system.entity.pojo.common.OrganizePoJo;
 import org.ramer.admin.system.entity.request.common.OrganizeRequest;
 import org.ramer.admin.system.service.common.OrganizeService;
-import java.util.Objects;
-import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;

@@ -34,7 +34,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @Controller("MCCM")
 @RequestMapping(AccessPath.MANAGE + "/manager")
-@PreAuthorize("hasAnyAuthority('global:read','manager:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','manager:read')")
 @Api(tags = "管理端: 管理员接口")
 @SuppressWarnings("UnusedDeclaration")
 public class ManagerController {

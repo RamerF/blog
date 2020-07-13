@@ -131,6 +131,7 @@ public class Constant {
 
   /** 权限. */
   public enum PrivilegeEnum {
+    /** 权限. */
     READ("read", "读"),
     CREATE("create", "增"),
     WRITE("write", "写"),

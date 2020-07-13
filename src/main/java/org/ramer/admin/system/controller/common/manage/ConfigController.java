@@ -28,7 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("configcm")
-@PreAuthorize("hasAnyAuthority('global:read','config:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','config:read')")
 @RequestMapping(AccessPath.MANAGE + "/config")
 @Api(tags = "管理端: 系统配置接口")
 @SuppressWarnings("UnusedDeclaration")

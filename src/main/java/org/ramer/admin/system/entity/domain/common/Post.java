@@ -42,7 +42,11 @@ public class Post extends AbstractEntity {
   private Long organizeId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "organize_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "organize_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   private Organize organize;
 

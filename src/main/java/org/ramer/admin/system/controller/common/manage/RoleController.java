@@ -31,7 +31,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("rolemc")
-@PreAuthorize("hasAnyAuthority('global:read','role:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','role:read')")
 @RequestMapping(AccessPath.MANAGE + "/role")
 @Api(tags = "管理端: 角色接口")
 @SuppressWarnings("UnusedDeclaration")
@@ -79,7 +79,8 @@ public class RoleController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','role:create')")
   @ApiOperation("添加角色")
-  public ResponseEntity<Rs<Object>> create(@Valid RoleRequest roleRequest, BindingResult bindingResult) {
+  public ResponseEntity<Rs<Object>> create(
+      @Valid RoleRequest roleRequest, BindingResult bindingResult) {
     log.info(" RoleController.create : [{}]", roleRequest);
     return commonService.create(service, Role.class, roleRequest, bindingResult);
   }

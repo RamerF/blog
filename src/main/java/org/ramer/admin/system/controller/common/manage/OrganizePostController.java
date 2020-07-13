@@ -29,7 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("postcm")
-@PreAuthorize("hasAnyAuthority('global:read','post:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','post:read')")
 @RequestMapping(AccessPath.MANAGE + "/post")
 @Api(tags = "管理端: 岗位接口")
 @SuppressWarnings("UnusedDeclaration")

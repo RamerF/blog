@@ -28,7 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @Controller
 @RequestMapping(AccessPath.MANAGE + "/dataDict")
-@PreAuthorize("hasAnyAuthority('global:read','dataDict:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','dataDict:read')")
 @Api(tags = "管理端: 数据字典接口")
 @SuppressWarnings("UnusedDeclaration")
 public class DataDictController {

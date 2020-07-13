@@ -49,7 +49,7 @@ public class Manager extends AbstractEntity {
   private Boolean isActive = false;
 
   @ManyToMany
-  @JoinTable
+  @JoinTable(foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
   private List<Role> roles;
@@ -58,7 +58,11 @@ public class Manager extends AbstractEntity {
   private Long postId;
 
   @ManyToOne
-  @JoinColumn(name = "post_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "post_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @Where(clause = "state = " + State.STATE_ON)
   @JsonBackReference
   private Post post;
@@ -68,7 +72,11 @@ public class Manager extends AbstractEntity {
 
   /** 当前只允许一个人处于一个组织 */
   @ManyToOne
-  @JoinColumn(name = "organize_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "organize_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @Where(clause = "state = " + State.STATE_ON)
   @JsonBackReference
   private Organize organize;

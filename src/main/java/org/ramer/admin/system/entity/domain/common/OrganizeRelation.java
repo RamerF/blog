@@ -26,7 +26,11 @@ public class OrganizeRelation extends AbstractEntity {
   private Long prevId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "prev_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "prev_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   private Organize prev;
 
@@ -34,7 +38,11 @@ public class OrganizeRelation extends AbstractEntity {
   private Long nextId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "next_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "next_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   private Organize next;
 

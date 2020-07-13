@@ -28,7 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("dataDictTypec")
-@PreAuthorize("hasAnyAuthority('global:read','dataDictType:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','dataDictType:read')")
 @RequestMapping(AccessPath.MANAGE + "/dataDictType")
 @Api(tags = "管理端: 数据字典类型接口")
 @SuppressWarnings("UnusedDeclaration")

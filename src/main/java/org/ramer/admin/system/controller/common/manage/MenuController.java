@@ -28,7 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("menucm")
-@PreAuthorize("hasAnyAuthority('global:read','menu:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','menu:read')")
 @RequestMapping(AccessPath.MANAGE + "/menu")
 @Api(tags = "管理端: 菜单接口")
 @SuppressWarnings("UnusedDeclaration")

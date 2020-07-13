@@ -29,9 +29,10 @@
                th:name="${_csrf.parameterName}"
                id="_csrf"
                th:value="${_csrf.token}"/>
-        <input name="username" placeholder="用户名" type="text" value="admin" lay-verify="required" class="layui-input">
+        <input name="username" placeholder="用户名" type="text" value="visitor" lay-verify="required" class="layui-input">
         <hr class="hr15">
-        <input name="password" lay-verify="required" placeholder="密码" value="admin" type="password" class="layui-input">
+        <input name="password" lay-verify="required" placeholder="密码" value="visitor" type="password"
+               class="layui-input">
         <hr class="hr15">
         <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
         <hr class="hr20">
@@ -57,12 +58,23 @@
           data: {
             username: data.field.username,
             password: data.field.password,
-            '_csrf': $('#_csrf').val()
+            '_csrf': $('#_csrf').val(),
           },
           success: function(result) {
             if (result.result === true) {
-              var url = [[${session.SPRING_SECURITY_SAVED_REQUEST == null ? null:session.SPRING_SECURITY_SAVED_REQUEST.redirectUrl}]];
-              window.location.href = url && String(url) !== '/manage' ? url : '/manage/index';
+              let url = [[${session.SPRING_SECURITY_SAVED_REQUEST == null ? null:session.SPRING_SECURITY_SAVED_REQUEST.redirectUrl}]];
+              let redirectUrl;
+              if (!url) {
+                redirectUrl = '/manage/index';
+              } else {
+                let moreString = String(url).substr(url.indexOf('/manage') + 7);
+                if (moreString.length > 1 && moreString.indexOf('/') !== -1) {
+                  redirectUrl = url;
+                } else {
+                  redirectUrl = '/manage/index';
+                }
+              }
+              window.location.href = redirectUrl;
             } else {
               layer.msg(result.msg);
             }
@@ -74,7 +86,7 @@
               window.location.reload();
             }
             $($('form>input')[3]).removeAttr('disabled');
-          }
+          },
         });
         return false;
       });

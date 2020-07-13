@@ -37,7 +37,11 @@ public class Organize extends AbstractEntity {
   private Long prevId;
 
   @ManyToOne
-  @JoinColumn(name = "prev_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "prev_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   private Organize prev;
 
@@ -46,7 +50,11 @@ public class Organize extends AbstractEntity {
   private Long rootId;
 
   @ManyToOne
-  @JoinColumn(name = "root_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "root_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   private Organize root;
 

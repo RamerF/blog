@@ -34,7 +34,11 @@ public class DataDict extends AbstractEntity {
 
   @Where(clause = "state = " + State.STATE_ON)
   @ManyToOne
-  @JoinColumn(name = "data_dict_type_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "data_dict_type_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   private DataDictType dataDictType;
 }

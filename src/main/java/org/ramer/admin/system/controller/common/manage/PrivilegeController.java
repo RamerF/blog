@@ -28,7 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("privilegecm")
-@PreAuthorize("hasAnyAuthority('global:read','privilege:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','privilege:read')")
 @RequestMapping(AccessPath.MANAGE + "/privilege")
 @Api(tags = "管理端: 权限接口")
 @SuppressWarnings("UnusedDeclaration")

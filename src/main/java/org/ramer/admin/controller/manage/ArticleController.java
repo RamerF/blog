@@ -29,7 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("articlecm")
-@PreAuthorize("hasAnyAuthority('global:read','article:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','article:read')")
 @RequestMapping(AccessPath.MANAGE + "/article")
 @Api(tags = "管理端: 文章接口")
 @SuppressWarnings("UnusedDeclaration")
@@ -38,8 +38,6 @@ public class ArticleController {
   @Resource private ArticleService service;
   @Resource private CommonService commonService;
   @Resource private ArticleValidator validator;
-
-  private static final String alia = "article";
 
   @InitBinder
   void initBinder(WebDataBinder binder) {
@@ -50,7 +48,7 @@ public class ArticleController {
   @ApiOperation("文章页面")
   public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
-    return "manage/" + alia + "/index";
+    return "manage/article/index";
   }
 
   @GetMapping("/page")
@@ -71,12 +69,12 @@ public class ArticleController {
   @ApiOperation("添加文章页面")
   public String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
-    return "manage/" + alia + "/edit";
+    return "manage/article/edit";
   }
 
   @PostMapping
   @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:create','" + alia + ":create')")
+  @PreAuthorize("hasAnyAuthority('global:create','article:create')")
   @ApiOperation("添加文章")
   public ResponseEntity<Rs<Object>> create(
       @Valid ArticleRequest articleRequest,
@@ -101,15 +99,15 @@ public class ArticleController {
         service,
         ArticlePoJo.class,
         idStr,
-        "manage/" + alia + "/edit",
+        "manage/article/edit",
         map,
-        alia,
+        "article",
         id -> commonService.writeMenuAndSiteInfo(session, map));
   }
 
   @PutMapping("/{id}")
   @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:write','" + alia + ":write')")
+  @PreAuthorize("hasAnyAuthority('global:write','article:write')")
   @ApiOperation("更新文章")
   public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
@@ -126,7 +124,7 @@ public class ArticleController {
 
   @DeleteMapping("/{id}")
   @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:delete','" + alia + ":delete')")
+  @PreAuthorize("hasAnyAuthority('global:delete','article:delete')")
   @ApiOperation("删除文章")
   public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ArticleController.delete : [{}]", idStr);
@@ -135,7 +133,7 @@ public class ArticleController {
 
   @DeleteMapping("/deleteBatch")
   @ResponseBody
-  @PreAuthorize("hasAnyAuthority('global:delete','" + alia + ":delete')")
+  @PreAuthorize("hasAnyAuthority('global:delete','article:delete')")
   @ApiOperation("删除文章批量")
   public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ArticleController.deleteBatch : [{}]", ids);
@@ -152,9 +150,9 @@ public class ArticleController {
         service,
         ArticlePoJo.class,
         idStr,
-        "manage/" + alia + "/view",
+        "manage/article/view",
         map,
-        alia,
+        "article",
         id -> commonService.writeMenuAndSiteInfo(session, map));
   }
 }

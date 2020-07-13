@@ -31,7 +31,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @Controller("organizecm")
-@PreAuthorize("hasAnyAuthority('global:read','organize:read')")
+@PreAuthorize("hasAnyAuthority('global:read','manage:read','organize:read')")
 @RequestMapping(AccessPath.MANAGE + "/organize")
 @Api(tags = "管理端: 组织接口")
 @SuppressWarnings("UnusedDeclaration")

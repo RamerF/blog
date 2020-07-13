@@ -51,7 +51,11 @@ public class Menu extends AbstractEntity {
   private Long parentId;
 
   @ManyToOne
-  @JoinColumn(name = "parent_id", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "parent_id",
+      insertable = false,
+      updatable = false,
+      foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
   private Menu parent;

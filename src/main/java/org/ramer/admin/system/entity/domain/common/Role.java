@@ -27,7 +27,7 @@ public class Role extends AbstractEntity {
   private String remark;
 
   @ManyToMany
-  @JoinTable
+  @JoinTable(foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @OrderBy(value = "sort_weight DESC")
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
@@ -35,7 +35,7 @@ public class Role extends AbstractEntity {
 
   @Column
   @ManyToMany
-  @JoinTable
+  @JoinTable(foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   @JsonBackReference
   @Where(clause = "state = " + State.STATE_ON)
   private List<Privilege> privileges;

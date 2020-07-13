@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.entity.request.common.OrganizeMemberRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.ManagerResponse;
 import org.ramer.admin.system.entity.response.common.OrganizeMemberResponse;
 import org.ramer.admin.system.exception.CommonException;
@@ -56,7 +56,7 @@ public class OrganizeMemberController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取组织成员列表")
-  public ResponseEntity<CommonResponse<PageImpl<OrganizeMemberResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<OrganizeMemberResponse>>> page(
       @ApiParam("组织id") @RequestParam(value = "organizeId", required = false) String organizeIdStr,
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
@@ -65,7 +65,7 @@ public class OrganizeMemberController {
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
     final long organizeId = TextUtil.validLong(organizeIdStr, -1);
     if (TextUtil.nonValidId(organizeId)) {
-      return CommonResponse.canNotBlank("组织");
+      return Rs.canNotBlank("组织");
     }
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
     return commonService.page(
@@ -81,7 +81,7 @@ public class OrganizeMemberController {
       @ApiIgnore Map<String, Object> map) {
     final long organizeId = TextUtil.validLong(organizeIdStr, -1);
     if (TextUtil.nonValidId(organizeId)) {
-      throw new CommonException("参数值无效 [组织]");
+      throw CommonException.of("参数值无效 [组织]");
     }
     map.put("organize", organizeService.getById(organizeId));
     //    map.put("posts", postService.page(organizeId, null, -1, -1));
@@ -93,15 +93,15 @@ public class OrganizeMemberController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','organize:create')")
   @ApiOperation("添加组织人员")
-  public ResponseEntity<CommonResponse<String>> create(
+  public ResponseEntity<Rs<String>> create(
       @Valid OrganizeMemberRequest organizeMemberRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" OrganizeMemberController.create : [{}]", organizeMemberRequest);
     return service.updatePost(
             organizeMemberRequest.getMemberIds(),
             organizeMemberRequest.getOrganizeId(),
             organizeMemberRequest.getPostId())
-        ? CommonResponse.ok()
-        : CommonResponse.fail("成员不存在");
+        ? Rs.ok()
+        : Rs.fail("成员不存在");
   }
 
   @GetMapping("/{id}")
@@ -128,7 +128,7 @@ public class OrganizeMemberController {
   @GetMapping("/pageDetach")
   @ResponseBody
   @ApiOperation("获取未分配岗位的成员(管理员)列表")
-  public ResponseEntity<CommonResponse<PageImpl<ManagerResponse>>> pageDetach(
+  public ResponseEntity<Rs<PageImpl<ManagerResponse>>> pageDetach(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -143,21 +143,21 @@ public class OrganizeMemberController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','organize:write')")
   @ApiOperation("更新岗位成员")
-  public ResponseEntity<CommonResponse<String>> update(
+  public ResponseEntity<Rs<String>> update(
       @PathVariable("memberId") final String memberIdStr,
       @Valid OrganizeMemberRequest organizeMemberRequest,
       @ApiIgnore BindingResult bindingResult) {
     log.info(" OrganizeMemberController.create : [{}]", organizeMemberRequest);
     final Long memberId = TextUtil.validLong(memberIdStr, 0);
     if (TextUtil.nonValidId(memberId)) {
-      return CommonResponse.fail("成员不存在");
+      return Rs.fail("成员不存在");
     }
     return service.updatePost(
             Collections.singletonList(memberId),
             organizeMemberRequest.getOrganizeId(),
             organizeMemberRequest.getPostId())
-        ? CommonResponse.ok()
-        : CommonResponse.fail("成员不存在");
+        ? Rs.ok()
+        : Rs.fail("成员不存在");
   }
 
   //

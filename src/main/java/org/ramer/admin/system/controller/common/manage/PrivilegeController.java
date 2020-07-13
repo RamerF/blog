@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.Constant.PrivilegeEnum;
 import org.ramer.admin.system.entity.domain.common.Privilege;
 import org.ramer.admin.system.entity.pojo.common.PrivilegePoJo;
 import org.ramer.admin.system.entity.request.common.PrivilegeRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.PrivilegeResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.PrivilegeService;
@@ -52,7 +52,7 @@ public class PrivilegeController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取权限列表")
-  public ResponseEntity<CommonResponse<PageImpl<PrivilegeResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<PrivilegeResponse>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -74,7 +74,7 @@ public class PrivilegeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','privilege:create')")
   @ApiOperation("添加权限")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid PrivilegeRequest privilegeRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" PrivilegeController.create : [{}]", privilegeRequest);
     // 新增时,只需传递name属性,根据name自动生成五个对应的记录
@@ -90,7 +90,7 @@ public class PrivilegeController {
               privileges.add(p);
             });
     service.createBatch(privileges);
-    return CommonResponse.ok();
+    return Rs.ok();
   }
 
   @GetMapping("/{id}")
@@ -108,7 +108,7 @@ public class PrivilegeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','privilege:write')")
   @ApiOperation("更新权限")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid PrivilegeRequest privilegeRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -120,7 +120,7 @@ public class PrivilegeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','privilege:delete')")
   @ApiOperation("删除权限")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" PrivilegeController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -129,7 +129,7 @@ public class PrivilegeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','privilege:delete')")
   @ApiOperation("删除权限批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" PrivilegeController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

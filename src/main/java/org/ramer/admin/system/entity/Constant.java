@@ -11,10 +11,11 @@ import lombok.AllArgsConstructor;
 @SuppressWarnings({"unused"})
 public class Constant {
   public static final String DEFAULT_CSRF_TOKEN = "X-CSRF-TOKEN";
-  // 分页每页默认条数
+  /** 分页每页默认条数 */
   public static final int DEFAULT_PAGE_SIZE = 10;
-  // 默认字符串分隔符
+  /** 默认字符串分隔符 */
   public static final String DEFAULT_STRING_SPLIT = ",";
+
   public static final String DEFAULT_CHARSET_ENCODE = "UTF-8";
   public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
 
@@ -168,7 +169,7 @@ public class Constant {
   }
 
   /** 存储在session中的key */
-  public class SessionKey {
+  public static class SessionKey {
     // 前端登录对象
     public static final String LOGIN_USER = "user";
     // 管理端

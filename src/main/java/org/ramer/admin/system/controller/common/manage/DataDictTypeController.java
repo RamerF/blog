@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.DataDictType;
 import org.ramer.admin.system.entity.pojo.common.DataDictTypePoJo;
 import org.ramer.admin.system.entity.request.common.DataDictTypeRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.DataDictTypeResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.DataDictTypeService;
@@ -52,7 +52,7 @@ public class DataDictTypeController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取数据字典类型列表")
-  public ResponseEntity<CommonResponse<PageImpl<DataDictTypeResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<DataDictTypeResponse>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -74,7 +74,7 @@ public class DataDictTypeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','dataDictType:create')")
   @ApiOperation("添加数据字典类型")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid DataDictTypeRequest dataDictTypeRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" DataDictTypeController.create : [{}]", dataDictTypeRequest);
     return commonService.create(service, DataDictType.class, dataDictTypeRequest, bindingResult);
@@ -100,14 +100,14 @@ public class DataDictTypeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','dataDictType:write')")
   @ApiOperation("更新数据字典类型")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid DataDictTypeRequest dataDictTypeRequest,
       @ApiIgnore BindingResult bindingResult) {
     log.info(" DataDictTypeController.update : [{}]", dataDictTypeRequest);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     dataDictTypeRequest.setId(id);
     return commonService.update(
@@ -118,7 +118,7 @@ public class DataDictTypeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','dataDictType:delete')")
   @ApiOperation("删除数据字典类型")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" DataDictTypeController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -127,7 +127,7 @@ public class DataDictTypeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','dataDictType:delete')")
   @ApiOperation("删除数据字典类型批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" DataDictTypeController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.ImageUtil;
 import org.ramer.admin.system.util.IpUtils;
@@ -80,7 +80,7 @@ public class CommonController {
     } catch (Exception e1) {
       log.warn("记录操作日志失败");
     }
-    return new ResponseEntity<>(CommonResponse.fail("拒绝访问"), HttpStatus.FORBIDDEN);
+    return new ResponseEntity<>(Rs.fail("拒绝访问"), HttpStatus.FORBIDDEN);
   }
 
   @PostMapping("/upload/uploadFile")
@@ -91,6 +91,6 @@ public class CommonController {
       @ApiParam("文件后缀") @RequestParam(value = "fileSuffix", required = false) String fileSuffix,
       @ApiParam("文件名") @RequestParam(value = "name", required = false) String name) {
     String path = ImageUtil.save(file, name, SavingFolder.PUBLIC, fileSuffix);
-    return path != null ? CommonResponse.ok(path) : CommonResponse.fail("上传失败");
+    return path != null ? Rs.ok(path) : Rs.fail("上传失败");
   }
 }

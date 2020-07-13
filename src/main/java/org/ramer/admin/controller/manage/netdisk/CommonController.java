@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -44,10 +44,10 @@ public class CommonController {
     path = StringUtils.isEmpty(path) ? basePath : basePath.concat(fileSeparator).concat(path);
     File file = new File(path);
     if (!file.exists()) {
-      return CommonResponse.ok(new ArrayList<>());
+      return Rs.ok(new ArrayList<>());
     }
     basePath = new File(basePath).getAbsolutePath();
-    return CommonResponse.ok(
+    return Rs.ok(
         Stream.of(Objects.requireNonNull(file.listFiles()))
             .map(
                 f -> {
@@ -68,11 +68,11 @@ public class CommonController {
   public ResponseEntity downloadFile(@RequestParam(value = "path", required = false) String path)
       throws Exception {
     if (StringUtils.isEmpty(path)) {
-      return CommonResponse.fail("文件不存在");
+      return Rs.fail("文件不存在");
     }
     FileSystemResource file = new FileSystemResource(basePath.concat(fileSeparator).concat(path));
     if (!file.exists()) {
-      return CommonResponse.fail("文件不存在");
+      return Rs.fail("文件不存在");
     }
     final String filename = file.getFilename();
     log.info(" CommonController.downloadFile : [{}]", filename);
@@ -118,9 +118,9 @@ public class CommonController {
       } catch (IOException e) {
         log.error(e.getMessage(), e);
       }
-      return CommonResponse.ok();
+      return Rs.ok();
     }
-    return CommonResponse.fail("目录不存在");
+    return Rs.fail("目录不存在");
   }
 
   @PostMapping("/createFolder")
@@ -129,26 +129,26 @@ public class CommonController {
       @RequestParam(value = "name", required = false) String name) {
     log.info(" TestController.createFolder : [{},{}]", path, name);
     if (StringUtils.isEmpty(name)) {
-      return CommonResponse.ok("请指定文件夹名称");
+      return Rs.ok("请指定文件夹名称");
     }
     path = StringUtils.isEmpty(path) ? basePath : basePath.concat(fileSeparator).concat(path);
     File file;
     if ((file = new File(path)).exists()
         && file.isDirectory()
         && new File(path.concat(fileSeparator).concat(name)).mkdir()) {
-      return CommonResponse.ok("创建成功");
+      return Rs.ok("创建成功");
     }
-    return CommonResponse.fail("目录不存在");
+    return Rs.fail("目录不存在");
   }
 
   @PostMapping("/deleteFile")
   public ResponseEntity deleteFile(@RequestParam(value = "path", required = false) String path) {
     if (StringUtils.isEmpty(path)) {
-      return CommonResponse.fail("文件不存在");
+      return Rs.fail("文件不存在");
     }
     File file = new File(basePath.concat(fileSeparator).concat(path));
     if (!file.exists()) {
-      return CommonResponse.fail("文件不存在");
+      return Rs.fail("文件不存在");
     }
     // 目录需要级联删除
     Stack<File> stack = new Stack<>();
@@ -160,10 +160,10 @@ public class CommonController {
         stack.push(toDel);
         Arrays.stream(Objects.requireNonNull(children)).forEach(stack::push);
       } else if (!toDel.delete()) {
-        return CommonResponse.fail("删除失败");
+        return Rs.fail("删除失败");
       }
     }
-    return CommonResponse.ok("删除成功");
+    return Rs.ok("删除成功");
   }
 
   @Data

@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.common.CommonMediaCategory;
 import org.ramer.admin.system.entity.pojo.common.CommonMediaCategoryPoJo;
 import org.ramer.admin.system.entity.request.common.CommonMediaCategoryRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.CommonMediaCategoryResponse;
 import org.ramer.admin.system.service.common.CommonMediaCategoryService;
 import org.ramer.admin.system.service.common.CommonService;
@@ -98,7 +98,7 @@ public class CommonMediaCategoryController {
     log.info(" CommonMediaCategoryController.update : [{}]", mediaCategoryRequest);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     mediaCategoryRequest.setId(id);
     return commonService.update(

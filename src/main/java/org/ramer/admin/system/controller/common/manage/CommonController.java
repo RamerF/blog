@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.Constant.ConfigCode;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
 import org.ramer.admin.system.entity.domain.common.Manager;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.ImageUtil;
 import org.ramer.admin.system.util.IpUtils;
@@ -40,7 +40,7 @@ public class CommonController {
       @RequestParam(value = "fileSuffix", required = false) String fileSuffix,
       @RequestParam(value = "name", required = false) String name) {
     String path = ImageUtil.save(file, name, SavingFolder.MANAGER, fileSuffix);
-    return path != null ? CommonResponse.ok(path) : CommonResponse.fail("上传失败");
+    return path != null ? Rs.ok(path) : Rs.fail("上传失败");
   }
 
   @GetMapping("/welcome")
@@ -80,10 +80,10 @@ public class CommonController {
       manageLogs.setResult("login success");
       manageLogService.create(manageLogs);
       session.setAttribute("manager", manager);
-      return CommonResponse.ok(null, "登录成功");
+      return Rs.ok(null, "登录成功");
     }
     manageLogs.setResult("login fail");
     manageLogService.create(manageLogs);
-    return CommonResponse.fail("用户名或密码错误");
+    return Rs.fail("用户名或密码错误");
   }
 }

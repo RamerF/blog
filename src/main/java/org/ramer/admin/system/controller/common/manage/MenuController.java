@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Menu;
 import org.ramer.admin.system.entity.pojo.common.MenuPoJo;
 import org.ramer.admin.system.entity.request.common.MenuRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.MenuResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.MenuService;
@@ -52,7 +52,7 @@ public class MenuController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取菜单列表")
-  public ResponseEntity<CommonResponse<PageImpl<MenuResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<MenuResponse>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -75,7 +75,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','menu:create')")
   @ApiOperation("添加菜单")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid MenuRequest menuRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" MenuController.create : [{}]", menuRequest);
     return commonService.create(service, Menu.class, menuRequest, bindingResult);
@@ -110,7 +110,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','menu:write')")
   @ApiOperation("更新菜单")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid MenuRequest menuRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -122,7 +122,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','menu:delete')")
   @ApiOperation("删除菜单")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" MenuController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -131,7 +131,7 @@ public class MenuController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','menu:delete')")
   @ApiOperation("删除菜单批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" MenuController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

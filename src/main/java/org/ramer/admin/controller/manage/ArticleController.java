@@ -12,7 +12,7 @@ import org.ramer.admin.entity.request.ArticleRequest;
 import org.ramer.admin.entity.response.ArticleResponse;
 import org.ramer.admin.service.ArticleService;
 import org.ramer.admin.system.entity.Constant.AccessPath;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.ManagerService;
 import org.ramer.admin.system.util.TextUtil;
@@ -56,7 +56,7 @@ public class ArticleController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取文章列表")
-  public ResponseEntity<CommonResponse<PageImpl<ArticleResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<ArticleResponse>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -78,7 +78,7 @@ public class ArticleController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','" + alia + ":create')")
   @ApiOperation("添加文章")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid ArticleRequest articleRequest,
       @ApiIgnore BindingResult bindingResult,
       Authentication authentication) {
@@ -111,14 +111,14 @@ public class ArticleController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','" + alia + ":write')")
   @ApiOperation("更新文章")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid ArticleRequest articleRequest,
       @ApiIgnore BindingResult bindingResult) {
     log.info(" ArticleController.update : [{}]", articleRequest);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     articleRequest.setId(id);
     return commonService.update(service, Article.class, articleRequest, idStr, bindingResult);
@@ -128,7 +128,7 @@ public class ArticleController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','" + alia + ":delete')")
   @ApiOperation("删除文章")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ArticleController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -137,7 +137,7 @@ public class ArticleController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','" + alia + ":delete')")
   @ApiOperation("删除文章批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ArticleController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

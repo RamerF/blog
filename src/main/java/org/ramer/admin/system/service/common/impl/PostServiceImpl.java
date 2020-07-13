@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
   @Override
   public void delete(final long id) throws RuntimeException {
     if (!CollectionUtils.isEmpty(managerService.listByPost(id))) {
-      throw new CommonException("无法删除岗位,人员不为空");
+      throw CommonException.of("无法删除岗位,人员不为空");
     }
     getRepository().deleteById(id);
   }
@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService {
       ids.forEach(
           id -> {
             if (!CollectionUtils.isEmpty(managerService.listByPost(id))) {
-              throw new CommonException(
+              throw CommonException.of(
                   String.format(
                       "无法删除岗位[%s],人员不为空",
                       Optional.ofNullable(getById(id)).map(Post::getName).orElse("")));

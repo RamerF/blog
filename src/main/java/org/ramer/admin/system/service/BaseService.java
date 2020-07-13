@@ -21,16 +21,32 @@ import org.springframework.util.StringUtils;
 /**
  * 通用业务方法.
  *
+ * @param <T> the type parameter
+ * @param <E> the type parameter
  * @author ramer
  */
 public interface BaseService<T extends AbstractEntity, E extends AbstractEntityPoJo> {
 
+  /**
+   * Create t.
+   *
+   * @param t the t
+   * @return the t
+   * @throws RuntimeException the runtime exception
+   */
   @Transactional
   default T create(T t) throws RuntimeException {
     textFilter(t, t);
     return getRepository().saveAndFlush(t);
   }
 
+  /**
+   * Create batch list.
+   *
+   * @param ts the ts
+   * @return the list
+   * @throws RuntimeException the runtime exception
+   */
   @Transactional
   default List<T> createBatch(List<T> ts) throws RuntimeException {
     if (CollectionUtils.isEmpty(ts)) {
@@ -43,13 +59,18 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
   /**
    * 条件state={@link State#STATE_ON}的总记录数
    *
-   * @return long
+   * @return long long
    */
   default long count() {
     return getRepository().count();
   }
 
-  /** 获取当前对象的POJO对象. */
+  /**
+   * 获取当前对象的POJO对象. @param id the id
+   *
+   * @param clazz the clazz
+   * @return the po jo by id
+   */
   default E getPoJoById(final long id, Class<E> clazz) {
     final E instance;
     try {
@@ -60,10 +81,22 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
     return Optional.ofNullable(getById(id)).map(e -> instance.of(e, clazz)).orElse(null);
   }
 
+  /**
+   * Gets by id.
+   *
+   * @param id the id
+   * @return the by id
+   */
   default T getById(final long id) {
     return getRepository().findById(id).orElse(null);
   }
 
+  /**
+   * List by ids list.
+   *
+   * @param ids the ids
+   * @return the list
+   */
   default List<T> listByIds(final List<Long> ids) {
     return getRepository().findAllById(ids);
   }
@@ -95,7 +128,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
 
   /**
    * 保存/更新{@link U}对应的Domain对象.默认不会覆盖{@link U}中为null的字段,包含{@code
-   * includeNullProperties}中的属性,即使值为null.
+   * includeNullProperties}*中的属性,即使值为null.
    *
    * @param <U> Request 实体.
    * @param clazz Domain class.
@@ -103,7 +136,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
    * @param includeNullProperties 覆写这些属性值,即使值为null.
    * @return T <br>
    *     null,如果保存/更新失败,或者更新时记录不存在.
-   * @throws CommonException the {@link SQLException}
+   * @throws RuntimeException the runtime exception
    * @see SQLException
    */
   default <U extends AbstractEntityRequest> T createOrUpdate(
@@ -134,6 +167,13 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
     return Objects.isNull(id) ? create(domain) : update(domain);
   }
 
+  /**
+   * Update t.
+   *
+   * @param t the t
+   * @return the t
+   * @throws RuntimeException the runtime exception
+   */
   @Transactional
   default T update(T t) throws RuntimeException {
     return Optional.ofNullable(getById(t.getId()))
@@ -145,11 +185,23 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
         .orElse(null);
   }
 
+  /**
+   * Delete.
+   *
+   * @param id the id
+   * @throws RuntimeException the runtime exception
+   */
   @Transactional
   default void delete(final long id) throws RuntimeException {
     getRepository().deleteById(id);
   }
 
+  /**
+   * Delete batch.
+   *
+   * @param ids the ids
+   * @throws RuntimeException the runtime exception
+   */
   @Transactional
   default void deleteBatch(final List<Long> ids) throws RuntimeException {
     getRepository().deleteByIds(ids);
@@ -163,7 +215,11 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
    */
   default void textFilter(T trans, T filtered) {}
 
-  /** 获取模糊查询条件,子类应该根据需要覆写该方法. */
+  /**
+   * 获取模糊查询条件,子类应该根据需要覆写该方法. @param criteria the criteria
+   *
+   * @return the spec
+   */
   default Specification<T> getSpec(String criteria) {
     return StringUtils.isEmpty(criteria)
         ? (root, query, builder) -> builder.and(builder.equal(root.get("state"), State.STATE_ON))
@@ -178,6 +234,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
    *
    * @param page 当前页,从1开始
    * @param size 每页大小
+   * @return the page request
    */
   default PageRequest pageRequest(final int page, final int size) {
     return pageRequest(page, size, Sort.unsorted());
@@ -188,6 +245,7 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
    * @param page 当前页,从1开始
    * @param size 每页大小
    * @param sort 排序规则
+   * @return the page request
    */
   default PageRequest pageRequest(final int page, final int size, Sort sort) {
     if ((page < 1 || size < 0) && page != size) {
@@ -198,7 +256,14 @@ public interface BaseService<T extends AbstractEntity, E extends AbstractEntityP
         : PageRequest.of(page - 1, size > 0 ? size : Constant.DEFAULT_PAGE_SIZE, sort);
   }
 
+  /**
+   * Gets repository.
+   *
+   * @param <U> the type parameter
+   * @return the repository
+   * @throws RuntimeException the runtime exception
+   */
   default <U extends BaseRepository<T, Long>> U getRepository() throws RuntimeException {
-    throw new CommonException(Txt.NOT_IMPLEMENT);
+    throw CommonException.of(Txt.NOT_IMPLEMENT);
   }
 }

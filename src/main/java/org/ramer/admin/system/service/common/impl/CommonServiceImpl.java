@@ -13,7 +13,7 @@ import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 import org.ramer.admin.system.entity.request.AbstractEntityRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.MenuResponse;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.BaseService;
@@ -80,18 +80,18 @@ public class CommonServiceImpl implements CommonService {
   public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
       ResponseEntity create(S invoke, T entity, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
-      return CommonResponse.fail(collectBindingResult(bindingResult));
+      return Rs.fail(collectBindingResult(bindingResult));
     }
     try {
       entity = invoke.create(entity);
       return entity == null
-          ? CommonResponse.fail(Txt.FAIL_EXEC_ADD_EXIST)
+          ? Rs.fail(Txt.FAIL_EXEC_ADD_EXIST)
           : entity.getId() > 0
-              ? CommonResponse.ok(entity.getId())
-              : CommonResponse.fail(Txt.FAIL_EXEC_ADD);
+              ? Rs.ok(entity.getId())
+              : Rs.fail(Txt.FAIL_EXEC_ADD);
     } catch (Exception e) {
       log.warn(" CommonServiceImpl.create : [{}]", e.getMessage());
-      return CommonResponse.fail(
+      return Rs.fail(
           !StringUtils.isEmpty(e.getMessage())
                   && (e instanceof CommonException || e instanceof NullPointerException)
               ? e.getMessage()
@@ -137,7 +137,7 @@ public class CommonServiceImpl implements CommonService {
           boolean mapPoJo) {
     final long id = TextUtil.validLong(idStr, 0);
     if (id < 1) {
-      throw new CommonException("id 格式不正确");
+      throw CommonException.of("id 格式不正确");
     }
     if (Objects.nonNull(consumer)) {
       consumer.accept(id);
@@ -150,26 +150,26 @@ public class CommonServiceImpl implements CommonService {
 
   @Override
   public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> update(
+      ResponseEntity<Rs<Object>> update(
           S invoke, T entity, String idStr, BindingResult bindingResult) {
     final long id = TextUtil.validLong(idStr, 0);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     if (bindingResult.hasErrors()) {
-      return CommonResponse.fail(collectBindingResult(bindingResult));
+      return Rs.fail(collectBindingResult(bindingResult));
     }
     entity.setId(id);
     try {
       entity = invoke.update(entity);
       return entity == null
-          ? CommonResponse.fail(Txt.FAIL_EXEC_UPDATE_NOT_EXIST)
+          ? Rs.fail(Txt.FAIL_EXEC_UPDATE_NOT_EXIST)
           : entity.getId() > 0
-              ? CommonResponse.ok(entity.getId(), Txt.SUCCESS_EXEC_UPDATE)
-              : CommonResponse.fail(Txt.FAIL_EXEC_UPDATE);
+              ? Rs.ok(entity.getId(), Txt.SUCCESS_EXEC_UPDATE)
+              : Rs.fail(Txt.FAIL_EXEC_UPDATE);
     } catch (Exception e) {
       log.warn(" CommonServiceImpl.update : [{}]", e.getMessage());
-      return CommonResponse.fail(
+      return Rs.fail(
           !StringUtils.isEmpty(e.getMessage())
                   && (e instanceof CommonException || e instanceof NullPointerException)
               ? e.getMessage()
@@ -183,7 +183,7 @@ public class CommonServiceImpl implements CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity<CommonResponse<Object>> create(
+      ResponseEntity<Rs<Object>> create(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -198,7 +198,7 @@ public class CommonServiceImpl implements CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity<CommonResponse<Object>> update(
+      ResponseEntity<Rs<Object>> update(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -207,61 +207,61 @@ public class CommonServiceImpl implements CommonService {
           String... includeNullProperties) {
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     try {
       Objects.requireNonNull(BeanUtils.findDeclaredMethod(entity.getClass(), "setId", Long.class))
           .invoke(entity, id);
     } catch (IllegalAccessException | InvocationTargetException e) {
       log.warn(" CommonServiceImpl.update : [{}]", e.getMessage());
-      return CommonResponse.fail(Txt.ERROR_SYSTEM);
+      return Rs.fail(Txt.ERROR_SYSTEM);
     }
     return createOrUpdate(invoke, clazz, entity, bindingResult, false, includeNullProperties);
   }
 
   @Override
   public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> delete(final S invoke, final String idStr) {
+      ResponseEntity<Rs<Object>> delete(final S invoke, final String idStr) {
     long id = TextUtil.validLong(idStr, 0);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     try {
       invoke.delete(id);
     } catch (Exception e) {
       log.warn(" CommonServiceImpl.delete : [{}]", e.getMessage());
-      return CommonResponse.fail(
+      return Rs.fail(
           StringUtils.isEmpty(e.getMessage()) ? Txt.FAIL_EXEC : e.getMessage());
     }
-    return CommonResponse.ok(null, Txt.SUCCESS_EXEC_DELETE);
+    return Rs.ok(null, Txt.SUCCESS_EXEC_DELETE);
   }
 
   @Override
   public <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> deleteBatch(final S invoke, final List<Long> ids) {
+      ResponseEntity<Rs<Object>> deleteBatch(final S invoke, final List<Long> ids) {
     try {
       invoke.deleteBatch(ids);
     } catch (Exception e) {
       log.warn(" CommonServiceImpl.deleteBatch : [{}]", e.getMessage());
-      return CommonResponse.fail(
+      return Rs.fail(
           StringUtils.isEmpty(e.getMessage()) ? Txt.FAIL_EXEC : e.getMessage());
     }
-    return CommonResponse.ok(null, Txt.SUCCESS_EXEC_DELETE);
+    return Rs.ok(null, Txt.SUCCESS_EXEC_DELETE);
   }
 
   @Override
-  public <T extends AbstractEntity, E> ResponseEntity<CommonResponse<List<E>>> list(
+  public <T extends AbstractEntity, E> ResponseEntity<Rs<List<E>>> list(
       final List<T> lists, final Function<T, E> function, final Predicate<E> filterFunction) {
-    return CommonResponse.ok(
+    return Rs.ok(
         Objects.isNull(filterFunction)
             ? lists.stream().map(function).collect(Collectors.toList())
             : lists.stream().map(function).filter(filterFunction).collect(Collectors.toList()));
   }
 
   @Override
-  public <T extends AbstractEntity, R> ResponseEntity<CommonResponse<PageImpl<R>>> page(
+  public <T extends AbstractEntity, R> ResponseEntity<Rs<PageImpl<R>>> page(
       final Page<T> page, final Function<T, R> function) {
-    return CommonResponse.ok(
+    return Rs.ok(
         new PageImpl<>(
             page.getContent().stream().map(function).collect(Collectors.toList()),
             page.getPageable(),
@@ -306,7 +306,7 @@ public class CommonServiceImpl implements CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity<CommonResponse<Object>> createOrUpdate(
+      ResponseEntity<Rs<Object>> createOrUpdate(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -314,7 +314,7 @@ public class CommonServiceImpl implements CommonService {
           boolean create,
           String... includeNullProperties) {
     if (bindingResult.hasErrors()) {
-      return CommonResponse.fail(collectBindingResult(bindingResult));
+      return Rs.fail(collectBindingResult(bindingResult));
     }
     try {
       if (create) {
@@ -323,8 +323,8 @@ public class CommonServiceImpl implements CommonService {
       }
       final T obj = invoke.createOrUpdate(clazz, entity, includeNullProperties);
       return Objects.isNull(obj)
-          ? CommonResponse.fail(create ? Txt.FAIL_EXEC_ADD : Txt.FAIL_EXEC_UPDATE_NOT_EXIST)
-          : CommonResponse.ok(obj.getId(), create ? Txt.SUCCESS_EXEC_ADD : Txt.SUCCESS_EXEC_UPDATE);
+          ? Rs.fail(create ? Txt.FAIL_EXEC_ADD : Txt.FAIL_EXEC_UPDATE_NOT_EXIST)
+          : Rs.ok(obj.getId(), create ? Txt.SUCCESS_EXEC_ADD : Txt.SUCCESS_EXEC_UPDATE);
     } catch (Exception e) {
       log.warn(
           " CommonServiceImpl.update : [{}]",
@@ -332,7 +332,7 @@ public class CommonServiceImpl implements CommonService {
               ? e.getMessage()
               : Txt.ERROR_SYSTEM);
       log.error(e.getMessage(), e);
-      return CommonResponse.fail(
+      return Rs.fail(
           !StringUtils.isEmpty(e.getMessage())
                   && (e instanceof CommonException || e instanceof NullPointerException)
               ? e.getMessage()

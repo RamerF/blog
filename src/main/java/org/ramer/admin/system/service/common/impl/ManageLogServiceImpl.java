@@ -23,14 +23,14 @@ public class ManageLogServiceImpl implements ManageLogService {
   @Override
   public synchronized ManageLog update(ManageLog manageLogs) {
     log.warn(" ManageLogsServiceImpl.update : not allowed");
-    throw new CommonException("ManageLogsServiceImpl.update : not allowed");
+    throw CommonException.of("ManageLogsServiceImpl.update : not allowed");
   }
 
   @Transactional
   @Override
   public synchronized void delete(long id) {
     log.error(" ManageLogsServiceImpl.delete : not allowed");
-    throw new CommonException("ManageLogsServiceImpl.delete : not allowed");
+    throw CommonException.of("ManageLogsServiceImpl.delete : not allowed");
   }
 
   @Override

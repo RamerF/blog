@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.ramer.admin.system.entity.domain.AbstractEntity;
 import org.ramer.admin.system.entity.pojo.AbstractEntityPoJo;
 import org.ramer.admin.system.entity.request.AbstractEntityRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.service.BaseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,7 +33,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> create(
+      ResponseEntity<Rs<Object>> create(
           S invoke, T entity, BindingResult bindingResult);
 
   /**
@@ -113,7 +113,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> update(
+      ResponseEntity<Rs<Object>> update(
           S invoke, T entity, String idStr, BindingResult bindingResult);
 
   /**
@@ -131,7 +131,7 @@ public interface CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity<CommonResponse<Object>> create(
+      ResponseEntity<Rs<Object>> create(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -154,7 +154,7 @@ public interface CommonService {
           T extends AbstractEntity,
           E extends AbstractEntityPoJo,
           R extends AbstractEntityRequest>
-      ResponseEntity<CommonResponse<Object>> update(
+      ResponseEntity<Rs<Object>> update(
           final S invoke,
           Class<T> clazz,
           final R entity,
@@ -172,7 +172,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> delete(S invoke, String idStr);
+      ResponseEntity<Rs<Object>> delete(S invoke, String idStr);
 
   /**
    * 逻辑删除批量.
@@ -184,7 +184,7 @@ public interface CommonService {
    * @return {@link ResponseEntity}
    */
   <S extends BaseService<T, E>, T extends AbstractEntity, E extends AbstractEntityPoJo>
-      ResponseEntity<CommonResponse<Object>> deleteBatch(S invoke, List<Long> ids);
+      ResponseEntity<Rs<Object>> deleteBatch(S invoke, List<Long> ids);
 
   /**
    * 转换集合对象.将List domain对象转换为 List 任意对象,并封装为页面响应对象.
@@ -196,7 +196,7 @@ public interface CommonService {
    * @param <E> 任意对象(通常是response|poJo对象)
    * @return {@link ResponseEntity}
    */
-  <T extends AbstractEntity, E> ResponseEntity<CommonResponse<List<E>>> list(
+  <T extends AbstractEntity, E> ResponseEntity<Rs<List<E>>> list(
       List<T> lists, final Function<T, E> function, final Predicate<E> filterFunction);
 
   /**
@@ -207,7 +207,7 @@ public interface CommonService {
    * @param <T> domain对象
    * @return {@link ResponseEntity}
    */
-  <T extends AbstractEntity, R> ResponseEntity<CommonResponse<PageImpl<R>>> page(
+  <T extends AbstractEntity, R> ResponseEntity<Rs<PageImpl<R>>> page(
       final Page<T> page, final Function<T, R> function);
 
   /**

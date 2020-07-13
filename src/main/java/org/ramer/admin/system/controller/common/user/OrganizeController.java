@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.AccessPath;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.OrganizeMemberResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.OrganizeService;
@@ -29,9 +29,9 @@ public class OrganizeController {
   public ResponseEntity list(@PathVariable("id") String idStr) {
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat(idStr);
+      return Rs.wrongFormat(idStr);
     }
-    return CommonResponse.ok(
+    return Rs.ok(
         service.listMembers(id).stream()
             .map(OrganizeMemberResponse::of)
             .collect(Collectors.toList()));

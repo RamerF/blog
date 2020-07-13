@@ -12,7 +12,7 @@ import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Organize;
 import org.ramer.admin.system.entity.pojo.common.OrganizePoJo;
 import org.ramer.admin.system.entity.request.common.OrganizeRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.OrganizeJsonTreeResponse;
 import org.ramer.admin.system.entity.response.common.OrganizeResponse;
 import org.ramer.admin.system.service.common.*;
@@ -58,7 +58,7 @@ public class OrganizeController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取组织列表")
-  public ResponseEntity<CommonResponse<PageImpl<OrganizeResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<OrganizeResponse>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -220,7 +220,7 @@ public class OrganizeController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','organize:delete')")
   @ApiOperation("删除岗位批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" OrganizeController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }
@@ -255,7 +255,7 @@ public class OrganizeController {
       organize.setChildren(child);
       organizesAll.removeAll(child);
     }
-    return CommonResponse.ok(organizesRes);
+    return Rs.ok(organizesRes);
   }
 
   //  @GetMapping("/listMembers/{id}")
@@ -307,9 +307,9 @@ public class OrganizeController {
   public ResponseEntity listByMember(@RequestParam("memberId") String memberIdStr) {
     final long memberId = TextUtil.validLong(memberIdStr, -1);
     if (memberId < 1) {
-      return CommonResponse.wrongValue("成员");
+      return Rs.wrongValue("成员");
     }
-    return CommonResponse.ok(service.listRelation(memberId));
+    return Rs.ok(service.listRelation(memberId));
   }
 
   /** 校验成员和负责人的正确性: 1. 负责人为空 2. 都为空. 3. 成员不为空,且负责人全都属于成员 */

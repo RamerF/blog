@@ -12,7 +12,7 @@ import org.ramer.admin.system.entity.domain.common.Post;
 import org.ramer.admin.system.entity.domain.common.Post.DataAccess;
 import org.ramer.admin.system.entity.pojo.common.PostPoJo;
 import org.ramer.admin.system.entity.request.common.PostRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.PostResponse;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.common.*;
@@ -55,7 +55,7 @@ public class OrganizePostController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取岗位列表")
-  public ResponseEntity<CommonResponse<PageImpl<PostResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<PostResponse>>> page(
       @ApiParam("组织id") @RequestParam(value = "organizeId", required = false) String organizeIdStr,
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
@@ -64,7 +64,7 @@ public class OrganizePostController {
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
     final long organizeId = TextUtil.validLong(organizeIdStr, -1);
     if (TextUtil.nonValidId(organizeId)) {
-      return CommonResponse.canNotBlank("组织");
+      return Rs.canNotBlank("组织");
     }
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
     return commonService.page(
@@ -79,7 +79,7 @@ public class OrganizePostController {
       @ApiIgnore Map<String, Object> map) {
     final long organizeId = TextUtil.validLong(organizeIdStr, -1);
     if (TextUtil.nonValidId(organizeId)) {
-      throw new CommonException("参数值无效 [组织]");
+      throw CommonException.of("参数值无效 [组织]");
     }
     map.put("organize", organizeService.getById(organizeId));
     map.put("dataAccesses", DataAccess.map());
@@ -91,7 +91,7 @@ public class OrganizePostController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','post:create')")
   @ApiOperation("添加岗位")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid PostRequest postRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" PostController.create : [{}]", postRequest);
     return commonService.create(service, Post.class, postRequest, bindingResult);
@@ -124,14 +124,14 @@ public class OrganizePostController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','post:write')")
   @ApiOperation("更新岗位")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid PostRequest postRequest,
       @ApiIgnore BindingResult bindingResult) {
     log.info(" PostController.update : [{}]", postRequest);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     postRequest.setId(id);
     return commonService.update(service, Post.class, postRequest, idStr, bindingResult);
@@ -141,7 +141,7 @@ public class OrganizePostController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','post:delete')")
   @ApiOperation("删除岗位")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" PostController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -150,7 +150,7 @@ public class OrganizePostController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','post:delete')")
   @ApiOperation("删除岗位批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" PostController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

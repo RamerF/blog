@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
 import org.ramer.admin.system.entity.pojo.common.ManageLogPoJo;
 import org.ramer.admin.system.entity.request.common.ManageLogRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.ManageLogResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.ManageLogService;
@@ -90,7 +90,7 @@ public class ManageLogController {
     log.info(" ManageLogController.update : [{}]", manageLogRequest);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     manageLogRequest.setId(id);
     return commonService.update(service, ManageLog.class, manageLogRequest, idStr, bindingResult);

@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.Config;
 import org.ramer.admin.system.entity.pojo.common.ConfigPoJo;
 import org.ramer.admin.system.entity.request.common.ConfigRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.ConfigResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.ConfigService;
@@ -52,7 +52,7 @@ public class ConfigController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取系统配置列表")
-  public ResponseEntity<CommonResponse<PageImpl<ConfigResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<ConfigResponse>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -74,7 +74,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','config:create')")
   @ApiOperation("添加系统配置")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid ConfigRequest configRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" ConfigController.create : [{}]", configRequest);
     return commonService.create(service, Config.class, configRequest, bindingResult);
@@ -100,7 +100,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','config:write')")
   @ApiOperation("更新系统配置")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid ConfigRequest configRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -112,7 +112,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
   @ApiOperation("删除系统配置")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ConfigController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -121,7 +121,7 @@ public class ConfigController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
   @ApiOperation("删除系统配置批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ConfigController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

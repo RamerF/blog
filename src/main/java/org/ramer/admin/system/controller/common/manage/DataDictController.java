@@ -11,7 +11,7 @@ import org.ramer.admin.system.entity.Constant.AccessPath;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
 import org.ramer.admin.system.entity.request.common.DataDictRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.DataDictResponse;
 import org.ramer.admin.system.service.common.*;
 import org.ramer.admin.system.util.TextUtil;
@@ -53,7 +53,7 @@ public class DataDictController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("根据数据字典类型获取数据字典列表")
-  public ResponseEntity<CommonResponse<PageImpl<DataDictResponse>>> list(
+  public ResponseEntity<Rs<PageImpl<DataDictResponse>>> list(
       @RequestParam(value = "typeId", required = false) String typeIdStr,
       @RequestParam(value = "page", required = false) String pageStr,
       @RequestParam(value = "size", required = false) String sizeStr,
@@ -76,7 +76,7 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','dataDict:create')")
   @ApiOperation("添加数据字典")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid DataDictRequest dataDictRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" DataDictController.create : [{}]", dataDictRequest);
     return commonService.create(service, DataDict.class, dataDictRequest, bindingResult);
@@ -108,7 +108,7 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','dataDict:write')")
   @ApiOperation("更新数据字典")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable(value = "id") String idStr,
       @Valid DataDictRequest dataDictRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -120,7 +120,7 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','dataDict:delete')")
   @ApiOperation("删除数据字典")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" DataDictController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -129,7 +129,7 @@ public class DataDictController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','dataDict:delete')")
   @ApiOperation("删除数据字典批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" DataDictController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

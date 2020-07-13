@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.Constant.Txt;
 import org.ramer.admin.system.entity.domain.common.ManageLog;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.exception.CommonException;
 import org.ramer.admin.system.service.common.ManageLogService;
 import org.ramer.admin.system.service.common.ManagerService;
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     log.error(request.getRequestURL().toString());
     if (request instanceof StandardMultipartHttpServletRequest) {
       log.warn(Txt.TOO_LARGE_FILE);
-      return CommonResponse.fail(Txt.TOO_LARGE_FILE);
+      return Rs.fail(Txt.TOO_LARGE_FILE);
     } else if (exception instanceof AccessDeniedException) {
       log.warn(exception.getMessage());
       ManageLog manageLogs = new ManageLog();
@@ -48,26 +48,26 @@ public class GlobalExceptionHandler {
         log.error("记录操作日志失败");
         log.error(e.getMessage(), e);
       }
-      return CommonResponse.fail(Txt.FORBIDDEN);
+      return Rs.fail(Txt.FORBIDDEN);
     } else if (exception instanceof CommonException) {
       log.error(exception.getMessage(), exception);
       request.setAttribute("error", exception.getMessage());
-      return CommonResponse.fail(exception.getMessage());
+      return Rs.fail(exception.getMessage());
     } else if (exception instanceof HttpRequestMethodNotSupportedException) {
-      return CommonResponse.fail(Txt.NOT_SUPPORT);
+      return Rs.fail(Txt.NOT_SUPPORT);
     } else if (exception instanceof MethodArgumentTypeMismatchException) {
       log.error(exception.getMessage(), exception);
       final String fieldName = ((MethodArgumentTypeMismatchException) exception).getName();
       request.setAttribute("error", exception.getMessage());
-      return CommonResponse.wrongFormat(fieldName);
+      return Rs.wrongFormat(fieldName);
     } else if (exception instanceof MissingServletRequestParameterException) {
       log.error(exception.getMessage(), exception);
       final String fieldName =
           ((MissingServletRequestParameterException) exception).getParameterName();
       request.setAttribute("error", exception.getMessage());
-      return CommonResponse.notPresent(fieldName);
+      return Rs.notPresent(fieldName);
     }
     log.error(exception.getMessage(), exception);
-    return CommonResponse.fail(Txt.ERROR_SYSTEM);
+    return Rs.fail(Txt.ERROR_SYSTEM);
   }
 }

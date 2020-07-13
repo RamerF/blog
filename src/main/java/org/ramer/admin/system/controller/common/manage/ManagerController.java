@@ -14,7 +14,7 @@ import org.ramer.admin.system.entity.domain.common.Manager;
 import org.ramer.admin.system.entity.domain.common.Role;
 import org.ramer.admin.system.entity.pojo.common.ManagerPoJo;
 import org.ramer.admin.system.entity.request.common.ManagerRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.ManagerResponse;
 import org.ramer.admin.system.entity.response.common.RoleResponse;
 import org.ramer.admin.system.exception.CommonException;
@@ -59,7 +59,7 @@ public class ManagerController {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取管理员列表")
-  public ResponseEntity<CommonResponse<PageImpl<ManagerResponse>>> page(
+  public ResponseEntity<Rs<PageImpl<ManagerResponse>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -81,7 +81,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','manager:create')")
   @ApiOperation("添加管理员")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid ManagerRequest managerRequest, @ApiIgnore BindingResult bindingResult) {
     log.info(" ManagerController.create : [{}]", managerRequest);
     managerRequest.setPassword(
@@ -111,7 +111,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','manager:write')")
   @ApiOperation("更新管理员")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid ManagerRequest managerRequest,
       @ApiIgnore BindingResult bindingResult) {
@@ -127,7 +127,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','manager:delete')")
   @ApiOperation("删除管理员")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ManagerController.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -136,7 +136,7 @@ public class ManagerController {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','config:delete')")
   @ApiOperation("删除管理员批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ManagerController.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }
@@ -146,11 +146,11 @@ public class ManagerController {
   public String getRoles(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
     final long id = TextUtil.validLong(idStr, -1);
     if (TextUtil.nonValidId(id)) {
-      throw new CommonException("id 无效");
+      throw CommonException.of("id 无效");
     }
     final Manager manager = service.getById(id);
     if (Objects.isNull(manager)) {
-      throw new CommonException("id 无效");
+      throw CommonException.of("id 无效");
     }
     map.put("roles", CollectionUtils.list(rolesService.list(null), RoleResponse::of, null, null));
     map.put(
@@ -160,23 +160,23 @@ public class ManagerController {
 
   @PutMapping("/{id}/roles")
   @ApiOperation("更新管理员角色")
-  public ResponseEntity<CommonResponse<Object>> updateRoles(
+  public ResponseEntity<Rs<Object>> updateRoles(
       @PathVariable("id") String idStr,
       @RequestParam("roleIds") List<Long> roleIds,
       @ApiIgnore Map<String, Object> map) {
     log.info(" ManagerController.updateRoles : [{},{}]", idStr, roleIds);
     final long id = TextUtil.validLong(idStr, -1);
     if (TextUtil.nonValidId(id)) {
-      throw new CommonException("id 无效");
+      throw CommonException.of("id 无效");
     }
     final Manager manager = service.getById(id);
     if (Objects.isNull(manager)) {
-      throw new CommonException("id 无效");
+      throw CommonException.of("id 无效");
     }
     manager.setRoles(roleIds.stream().map(Role::of).collect(Collectors.toList()));
     service.update(manager);
     return manager.getId() > 0
-        ? CommonResponse.ok(manager.getId(), Txt.SUCCESS_EXEC_UPDATE)
-        : CommonResponse.fail(Txt.FAIL_EXEC_UPDATE);
+        ? Rs.ok(manager.getId(), Txt.SUCCESS_EXEC_UPDATE)
+        : Rs.fail(Txt.FAIL_EXEC_UPDATE);
   }
 }

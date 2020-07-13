@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.admin.system.entity.domain.common.DataDict;
 import org.ramer.admin.system.entity.pojo.common.DataDictPoJo;
 import org.ramer.admin.system.entity.request.common.DataDictRequest;
-import org.ramer.admin.system.entity.response.CommonResponse;
+import org.ramer.admin.system.entity.response.Rs;
 import org.ramer.admin.system.entity.response.common.DataDictResponse;
 import org.ramer.admin.system.service.common.CommonService;
 import org.ramer.admin.system.service.common.DataDictService;
@@ -90,7 +90,7 @@ public class DataDictController {
     log.info(" DataDictController.update : [{}]", dataDictRequest);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     dataDictRequest.setId(id);
     return commonService.update(service, DataDict.class, dataDictRequest, idStr, bindingResult);

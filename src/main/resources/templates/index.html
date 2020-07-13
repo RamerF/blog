@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org">
 <head>
     <title>Welcome to Ramer's Blog</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -9,6 +11,10 @@
 <div class="wrap">
     <div class="logo">
         <p>Welcome to Ramer's Blog, 😉😉😉</p>
+        <div th:each="article:${articles}">
+            <h3 th:text="${article.title}"></h3>
+            <p th:text="${article.content}"></p>
+        </div>
     </div>
 </div>
 </body>

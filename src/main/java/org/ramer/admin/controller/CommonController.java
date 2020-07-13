@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * The type Common controller.
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 @Controller("common_controller")
 @Api(tags = "全局")
+@RequestMapping("/")
 public class CommonController {
 
   @GetMapping

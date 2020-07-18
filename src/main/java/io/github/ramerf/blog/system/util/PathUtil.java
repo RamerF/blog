@@ -14,7 +14,7 @@ public class PathUtil {
 
   private static String FILE_SEPARATOR = System.getProperty("file.separator");
 
-  @Value("${org.ramer.resource.prefix}")
+  @Value("${io.github.ramerf.blog.resource-path}")
   public void setWinBasePath(String resourceBasePath) {
     PathUtil.resourceBasePath = resourceBasePath;
   }

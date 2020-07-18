@@ -78,11 +78,11 @@ public class MainGenerator {
         savingPathResponse = properties.getProperty("savingPathResponse");
       }
     } else {
-      System.out.println(" 请输入项目包路径: 例如: org.ramer.demo");
+      System.out.println(" 请输入项目包路径: 例如: io.github.ramerf");
       Scanner scanner = new Scanner(System.in);
       basePath = scanner.next();
       System.out.println(
-          " 请输入domain对象的包路径: 例如: org.ramer.demo.entity.domain.manage.system.Manager");
+          " 请输入domain对象的包路径: 例如: io.github.ramerf.demo.entity.domain.manage.system.Manager");
       domainPath = scanner.next();
       System.out.println(" 请输入domain对象的class目录: 例如: D:/workspace/blog/target/classes");
       classPath = scanner.next();

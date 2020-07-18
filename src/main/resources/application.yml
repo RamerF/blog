@@ -43,14 +43,10 @@ spring:
       testWhileIdle: true
       validationQuery: select 1
       maxOpenPreparedStatements: 50
-  redis:
-    port: 63790
-    host: 192.168.0.138
-    password: A554D0C9AC415DCB406D82F0028AA984
 logging:
   level:
     root: info
-    org.ramer.admin: debug
+    io.github.ramerf.blog: debug
     jdbc.resultset: off
     jdbc.audit: off
     jdbc.sqlonly: off
@@ -64,13 +60,11 @@ server:
       tracking-modes: cookie,url
       cookie:
         http-only: true
-org:
-  ramer:
-    resource:
-      netdisk: /home/ramer/Desktop/
-      prefix: /home/ramer/Desktop/
+io:
+  github:
+    ramerf:
+      blog:
+        resource-path: C:/Users/ramer/Desktop/
+        netdisk: C:/Users/ramer/Desktop/
 wind:
-  entity-package: org.ramer.admin.entity.pojo
-  redis-cache:
-    enable: true
-  enable-web-mvc-configurer: false
+  entity-package: io.github.ramerf.blog.entity.pojo

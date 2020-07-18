@@ -21,7 +21,7 @@
 # 生成增删改查功能代码
 运行 `MainGenerator.java`,现在支持配置文件,参考config.ini
 ```
-1. 请输入domain对象的包路径: 例如: org.ramer.admin.entity.domain.manage.Manager
+1. 请输入domain对象的包路径: 例如: io.github.ramerf.blog.entity.domain.manage.Manager
 2. 请输入domain对象的class目录: 例如: D:\workspace\blog\target\classes
     tip: 该路径是指编译输出路径,不包括包目录
     (上述Manager.java文件编译后目录为:D:\workspace\blog\target\classes\org\ramer\admin\entity\domain\manage\Manager.class)

@@ -5,6 +5,16 @@
       "type": "java.lang.Boolean",
       "description": "当spring.profiles.active不为prod或pre时,该值决定是否开启swagger.",
       "defaultValue": true
+    },
+    {
+      "name": "io.github.ramerf.blog.netdisk",
+      "type": "java.lang.String",
+      "description": "netdisk 上传路径."
+    },
+    {
+      "name": "io.github.ramerf.blog.resource-path",
+      "type": "java.lang.String",
+      "description": "文件上传路径."
     }
   ]
 }

@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   servlet:
     multipart:
       max-file-size: 1024MB
@@ -11,6 +13,7 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL55Dialect
+    open-in-view: true
   thymeleaf:
     encoding: UTF-8
     cache: false
@@ -40,8 +43,10 @@ spring:
       testWhileIdle: true
       validationQuery: select 1
       maxOpenPreparedStatements: 50
-  swagger:
-    enable: true
+  redis:
+    port: 63790
+    host: 192.168.0.138
+    password: A554D0C9AC415DCB406D82F0028AA984
 logging:
   level:
     root: info
@@ -64,3 +69,8 @@ org:
     resource:
       netdisk: /home/ramer/Desktop/
       prefix: /home/ramer/Desktop/
+wind:
+  entity-package: org.ramer.admin.entity.pojo
+  redis-cache:
+    enable: true
+  enable-web-mvc-configurer: false

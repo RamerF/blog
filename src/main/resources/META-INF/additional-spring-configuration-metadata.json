@@ -1,0 +1,10 @@
+{
+  "properties": [
+    {
+      "name": "spring.swagger.enable",
+      "type": "java.lang.Boolean",
+      "description": "当spring.profiles.active不为prod或pre时,该值决定是否开启swagger.",
+      "defaultValue": true
+    }
+  ]
+}

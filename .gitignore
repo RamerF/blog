@@ -15,7 +15,7 @@ logs
 /**/TestController.java
 src/main/resources/templates/manage/test.html
 src/main/resources/config
-/**/config
+/**/resources/config
 *.iml
 classes/
 target

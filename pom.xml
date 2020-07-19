@@ -264,6 +264,7 @@
                         commons-collections,
                         commons-lang,
                         dom4j,
+                        io.github.ramerf,
                         io.lettuce,
                         io.micrometer,
                         io.netty,

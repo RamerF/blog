@@ -15,6 +15,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class TagPoJo extends AbstractEntityPoJo {
   @Column(columnDefinition = "VARCHAR(100) NOT NULL COMMENT '名称'")

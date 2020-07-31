@@ -10,9 +10,9 @@ import ${basePath}${moduleName}.entity.domain${subDir}.${name};
 import ${basePath}${moduleName}.entity.pojo${subDir}.${name}PoJo;
 import ${basePath}${moduleName}.entity.request${subDir}.${name}Request;
 import ${basePath}${moduleName}.entity.response${subDir}.${name}Response;
-import ${basePath}.system.entity.response.CommonResponse;
 import ${basePath}.system.service.common.CommonService;
 import ${basePath}${moduleName}.service${subDir}.${name}Service;
+import io.github.ramerf.wind.core.entity.response.Rs;
 import ${basePath}.system.util.TextUtil;
 import ${basePath}${moduleName}.validator${subDir}.${name}Validator;
 import org.springframework.data.domain.PageImpl;
@@ -49,7 +49,7 @@ public class ${name}Controller {
   @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取${description}列表")
-  public ResponseEntity<CommonResponse<PageImpl<${name}Response>>> page(
+  public ResponseEntity<Rs<PageImpl<${name}Response>>> page(
       @ApiParam("页号,从1开始,当page=size=-1时,表示不分页")
           @RequestParam(value = "page", required = false, defaultValue = "1")
           String pageStr,
@@ -70,7 +70,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','${alia}:create')")
   @ApiOperation("添加${description}")
-  public ResponseEntity<CommonResponse<Object>> create(
+  public ResponseEntity<Rs<Object>> create(
       @Valid ${name}Request ${alia}Request, @ApiIgnore BindingResult bindingResult) {
     log.info(" ${name}Controller.create : [{}]", ${alia}Request);
     return commonService.create(
@@ -92,14 +92,14 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','${alia}:write')")
   @ApiOperation("更新${description}")
-  public ResponseEntity<CommonResponse<Object>> update(
+  public ResponseEntity<Rs<Object>> update(
       @PathVariable("id") String idStr,
       @Valid ${name}Request ${alia}Request,
       @ApiIgnore BindingResult bindingResult) {
     log.info(" ${name}Controller.update : [{}]", ${alia}Request);
     final long id = TextUtil.validLong(idStr, -1);
     if (id < 1) {
-      return CommonResponse.wrongFormat("id");
+      return Rs.wrongFormat("id");
     }
     ${alia}Request.setId(id);
     return commonService.update(
@@ -110,7 +110,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
   @ApiOperation("删除${description}")
-  public ResponseEntity<CommonResponse<Object>> delete(@PathVariable("id") String idStr) {
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
     log.info(" ${name}Controller.delete : [{}]", idStr);
     return commonService.delete(service, idStr);
   }
@@ -119,7 +119,7 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
   @ApiOperation("删除${description}批量")
-  public ResponseEntity<CommonResponse<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
+  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
     log.info(" ${name}Controller.deleteBatch : [{}]", ids);
     return commonService.deleteBatch(service, ids);
   }

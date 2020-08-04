@@ -41,7 +41,7 @@ li {
     border-color: rgba(0, 0, 0, .12);
     background-color: #fff;
     border-radius: 0 0 0 0;
-    z-index: 6;
+    z-index: 7;
     width: 256px;
     display: flex;
     flex-direction: column;
@@ -57,12 +57,16 @@ li {
     overflow-y: auto;
 }
 
+.container aside.mdc-drawer {
+    transition: .15s;
+}
+
 .mdc-drawer-app-content {
     flex: auto;
     overflow: auto;
     position: relative;
+    transition: .15s;
 }
-
 
 .main-container {
     padding: 0 16px;
@@ -75,8 +79,8 @@ li {
 }
 
 .mdc-top-app-bar {
-    z-index: 7;
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0,0,0,.12);
+    z-index: 8;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, .12);
 }
 
 .mdc-list-item-fix {

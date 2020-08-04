@@ -26,6 +26,6 @@ public class CommonController {
   @ApiOperation("首页")
   public String index(Map<String, Object> map) {
     map.put("articles", articleService.list(null));
-    return "index";
+    return "user/index";
   }
 }

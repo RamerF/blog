@@ -1,13 +1,20 @@
 <!DOCTYPE html>
+<!--suppress JSUnresolvedFunction -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org"
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>添加文章</title>
-    <link rel="stylesheet" href="/libs/editormd/editormd.min.css"/>
-    <script src="/libs/editormd/editormd.min.js"></script>
-    <script src="/libs/editormd/lib/zepto.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/simplemde/1.11.2/simplemde.min.css"/>
+    <script type="text/javascript" src="/libs/simplemde/simplemde.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.12.1/jquery-ui.css"/>
+    <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+
+    <link rel="stylesheet" href="/libs/jquery-tagsinput/jquery.tagsinput.css"/>
+    <script type="text/javascript" src="/libs/jquery-tagsinput/jquery.tagsinput.js"></script>
+
     <style rel="stylesheet">
         .main-container {
             height: calc(100% - 16px);
@@ -49,11 +56,11 @@
         <div class="text-field-container mdc-panel__margin-16">
             <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
                  data-mdc-auto-init="MDCTextField">
-                <input type="text" id="titleInput" name="code"
+                <input type="text" id="titleInput" name="title"
                        class="mdc-text-field__input"
                        maxlength="50"
                        required
-                       data-validtip="CODE不能为空,且小于20个字符"
+                       data-validtip="标题不能为空,且小于20个字符"
                        autocomplete="off"
                        placeholder="请输入文章标题"
                        th:value="${article ne null?article.title:''}">
@@ -71,10 +78,61 @@
                 <div class="mdc-text-field-character-counter">0 / 50</div>
             </div>
         </div>
+        <!--概述-->
+        <div class="text-field-container mdc-panel__margin-16">
+            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
+                 data-mdc-auto-init="MDCTextField">
+                <input type="text" id="descInput" name="description"
+                       class="mdc-text-field__input"
+                       maxlength="250"
+                       required
+                       data-validtip="概述不能为空,且小于20个字符"
+                       autocomplete="off"
+                       placeholder="请输入文章标题"
+                       th:value="${article ne null?article.description:''}">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label for="descInput" class="mdc-floating-label">概述</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div class="mdc-text-field-helper-line">
+                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+                    *必填</p>
+                <div class="mdc-text-field-character-counter">0 / 250</div>
+            </div>
+        </div>
+        <!--标签-->
+        <div class="text-field-container mdc-panel__margin-16">
+            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
+                 data-mdc-auto-init="MDCTextField">
+                <input type="text" id="tagIdsInput" name="tagIds"
+                       class="mdc-text-field__input"
+                       maxlength="50"
+                       required
+                       data-validtip="标签不能为空,且小于20个字符"
+                       autocomplete="off"
+                       placeholder="请输入文章标签"
+                       th:value="${article ne null?article.title:''}">
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label for="tagIdsInput" class="mdc-floating-label"></label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
+                </div>
+            </div>
+            <div class="mdc-text-field-helper-line">
+                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+                    *必填</p>
+                <div class="mdc-text-field-character-counter">0 / 50</div>
+            </div>
+        </div>
         <!-- markdown内容 -->
         <div class="" id="markdown-editor">
-            <textarea id="content" style="display:none;"
-                      th:text="${article ne null ? article.content : ''}"></textarea>
+            <textarea id="content" th:text="${article ne null ? article.content : ''}"></textarea>
         </div>
         <!--操作-->
         <div class="mdc-layout-grid__inner mdc-card__action-buttons mdc-layout-grid--align-right mdc-container__relative">
@@ -94,48 +152,33 @@
 <div layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
       $(function() {
-        editormd('markdown-editor', {
-          width: '100%',
-          // markdown: '这里是显示的内容',
-          height: 'calc(100% - 24px)',
-          // autoHeight : true,
-          path: '/libs/editormd/lib/',
-          saveHTMLToTextarea: true,
-          codeFold: true,
-          htmlDecode: 'style,script,iframe|on*',
-          sequenceDiagram: true,
-          imageUpload: true,
-          imageUploadFieldName: 'file',
-          imageUploadMsgHandler: function(res) {
-            return {
-              success: res.result === true ? 1 : 0,
-              url: res.data,
-              message: res.msg,
-            };
-          },
-          imageFormats: ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'],
-          imageUploadURL: '/upload/uploadFile',
-          // onload : function() {
-          //   console.log("onload =>", this, this.id, this.settings);
-          // }
-        });
-
         let id = [[${article ne null ? article.id:''}]];
+        let simplemde = new SimpleMDE({element: $('#content')[0]});
+        // 标签输入
+        $('#tagIdsInput').tagsInput({
+          autocomplete_url: '/manage/tag/page?page=-1&size=-1',
+        });
         // 提交表单
         $('#editBtn').on('click', function() {
           let data = {};
-          let content = $('#content').val();
-          let title = $('#titleInput').val();
+          let content = simplemde.value();
           if (!$.trim(content)) {
             $.alert('文章内容不能为空');
             return false;
           }
+          let title = $('#titleInput').val();
           if (!$.trim(title)) {
             $.alert('文章标题不能为空');
             return false;
           }
+          let description = $('#descInput').val();
+          if (!$.trim(description)) {
+            $.alert('概述不能为空');
+            return false;
+          }
           data.title = title;
           data.content = content;
+          data.description = description;
           console.log(JSON.stringify(data));
           id > 0 ?
               $.put('/manage/article/' + id, data, function(res) {

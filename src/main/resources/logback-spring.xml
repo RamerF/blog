@@ -89,6 +89,9 @@
     <logger name="io.github.ramerf.blog.system.interceptor.OperateLogInterceptor">
         <appender-ref ref="operate"/>
     </logger>
+    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG">
+        <appender-ref ref="console"/>
+    </logger>
     <root>
         <appender-ref ref="common"/>
         <appender-ref ref="error"/>

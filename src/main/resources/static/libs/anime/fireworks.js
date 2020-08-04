@@ -34,6 +34,10 @@ $(function() {
     canvasEl.height = window.innerHeight;
     canvasEl.style.width = window.innerWidth + 'px';
     canvasEl.style.height = window.innerHeight + 'px';
+    canvasEl.style.position = 'absolute';
+    canvasEl.style.left = '0';
+    canvasEl.style.top = '0';
+    canvasEl.style.zIndex = '-1';
   }
 
   function updateCoords(e) {
@@ -99,8 +103,6 @@ $(function() {
   }
 
   function animateParticules(x, y) {
-    x = x - 8;
-    y = y - 8;
     let circle = createCircle(x, y);
     let particules = [];
     for (let i = 0; i < numberOfParticules; i++) {

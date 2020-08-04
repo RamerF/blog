@@ -36,7 +36,7 @@ public class ArticleValidator implements Validator {
           errors.rejectValue("title", "article.title.length", "标题 不能为空");
         }
         if (StringUtils.isEmpty(article.getDescription())) {
-          errors.rejectValue("description", "article.description.length", "简述 不能为空");
+          errors.rejectValue("description", "article.description.length", "概述 不能为空");
         }
         if (CollectionUtils.isEmpty(article.getTagIds())) {
           errors.rejectValue("tagIds", "article.tagIds.empty", "标签 不能为空");

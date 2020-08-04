@@ -1,10 +1,9 @@
 package io.github.ramerf.blog.entity.pojo;
 
+import io.github.ramerf.wind.core.annotation.TableInfo;
 import io.github.ramerf.wind.core.entity.pojo.AbstractEntityPoJo;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigInteger;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import lombok.*;
 
 /**
@@ -12,7 +11,7 @@ import lombok.*;
  *
  * @author ramer
  */
-@Entity(name = "article")
+@TableInfo(name = "article")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,11 +39,11 @@ public class ArticlePoJo extends AbstractEntityPoJo {
   private Long authorId;
 
   @ApiModelProperty(value = "被查看次数")
-  private BigInteger viewCount;
+  private Long viewCount;
 
   @ApiModelProperty(value = "被收藏次数")
-  private BigInteger favouriteCount;
+  private Long favouriteCount;
 
   @ApiModelProperty(value = "被加星/点赞次数")
-  private BigInteger starCount;
+  private Long starCount;
 }

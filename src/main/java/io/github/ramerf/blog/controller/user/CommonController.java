@@ -24,6 +24,6 @@ public class CommonController {
   @GetMapping
   @ApiOperation("首页")
   public String index() {
-    return "index";
+    return "user/index";
   }
 }

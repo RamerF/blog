@@ -3,6 +3,7 @@ package io.github.ramerf.blog.service.impl;
 import io.github.ramerf.wind.core.condition.SortColumn;
 import io.github.ramerf.wind.core.condition.SortColumn.Order;
 import io.github.ramerf.wind.core.function.IFunction;
+import io.github.ramerf.wind.core.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,10 +31,17 @@ public class ArticleServiceImpl implements ArticleService {
     return page(
         condition ->
             condition.and(
+                StringUtils.nonEmpty(keyword),
                 condition
                     .condition()
-                    .like(ArticlePoJo::setTitle, keyword + "%")
-                    .or(condition.condition().like(ArticlePoJo::setTagsStr, keyword + "%"))),
+                    .like(StringUtils.nonEmpty(keyword), ArticlePoJo::setTitle, keyword + "%")
+                    .or(
+                        condition
+                            .condition()
+                            .like(
+                                StringUtils.nonEmpty(keyword),
+                                ArticlePoJo::setTagsStr,
+                                keyword + "%"))),
         page,
         size,
         SortColumn.by(ArticlePoJo::getViewCount, Order.DESC)
@@ -85,12 +93,12 @@ public class ArticleServiceImpl implements ArticleService {
     // 18位编号递增: 191122170150(时间) + 000001(递增)
     long maxNumber = CollectionUtils.isEmpty(numbers) ? 0 : numbers.get(0);
     // 达到最大后重置为0
-    if (maxNumber == 99999) {
+    if (maxNumber >= 99999) {
       maxNumber = 0;
     }
     final long seq = maxNumber + 1;
     StringBuilder seqStr = new StringBuilder("" + seq);
-    while (seqStr.length() < 5) {
+    while (seqStr.length() < 4) {
       seqStr.insert(0, "0");
     }
     return Long.parseLong(

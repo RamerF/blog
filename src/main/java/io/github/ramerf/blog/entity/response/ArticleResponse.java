@@ -46,7 +46,7 @@ public class ArticleResponse extends AbstractEntityResponse {
     BeanUtils.copyProperties(article, poJo);
     poJo.setAuthorName(
         Optional.ofNullable(article.getAuthorId())
-            .map(id -> service.getById(id).getName())
+            .map(id -> service.getIdAndName(Collections.singletonList(id)).get(0).getName())
             .orElse(null));
     return poJo;
   }
@@ -68,7 +68,7 @@ public class ArticleResponse extends AbstractEntityResponse {
     final Map<Long, List<ArticleResponse>> authorMap =
         responses.stream().collect(Collectors.groupingBy(ArticleResponse::getAuthorId));
     service
-        .listByIds(articles.stream().map(ArticlePoJo::getId).collect(Collectors.toList()))
+        .getIdAndName(articles.stream().map(ArticlePoJo::getId).collect(Collectors.toList()))
         .forEach(
             manager ->
                 Optional.ofNullable(authorMap.get(manager.getId()))

@@ -129,7 +129,7 @@
           window.mdcDataTable.refresh({criteria: $('#criteria').val(), page: 1});
         };
         // 刷新,搜索
-        $('#refreshBtn,#searchBtn').click(refreshTable);
+        $('#refreshBtn,#searchBtn').on('click', refreshTable);
         // 编辑
         $('#editBtn').on('click', function() {
           let selectItems = mdcDataTable.getSelectItems();

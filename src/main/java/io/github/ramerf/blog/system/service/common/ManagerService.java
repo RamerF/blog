@@ -1,10 +1,11 @@
 package io.github.ramerf.blog.system.service.common;
 
-import java.util.List;
+import io.github.ramerf.blog.entity.response.IdNameResponse;
 import io.github.ramerf.blog.system.entity.domain.common.Manager;
 import io.github.ramerf.blog.system.entity.pojo.common.ManagerPoJo;
 import io.github.ramerf.blog.system.service.BaseService;
 import io.github.ramerf.blog.system.service.common.impl.ManagerServiceImpl.ManagerLogin;
+import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
@@ -13,6 +14,14 @@ import org.springframework.data.domain.Page;
  * @author ramer
  */
 public interface ManagerService extends BaseService<Manager, ManagerPoJo> {
+
+  /**
+   * Gets id and name.
+   *
+   * @param ids the ids
+   * @return the id and name
+   */
+  List<IdNameResponse> getIdAndName(List<Long> ids);
 
   /**
    * Gets by emp no.
@@ -25,6 +34,7 @@ public interface ManagerService extends BaseService<Manager, ManagerPoJo> {
   /**
    * 获取未分配岗位的管理员列表 @param criteria the criteria
    *
+   * @param criteria the criteria
    * @param page the page
    * @param size the size
    * @return the page

@@ -1,5 +1,13 @@
 package io.github.ramerf.blog.controller.manage;
 
+import io.github.ramerf.blog.entity.pojo.ArticlePoJo;
+import io.github.ramerf.blog.entity.request.ArticleRequest;
+import io.github.ramerf.blog.entity.response.ArticleResponse;
+import io.github.ramerf.blog.service.ArticleService;
+import io.github.ramerf.blog.system.entity.Constant.AccessPath;
+import io.github.ramerf.blog.system.service.common.CommonService;
+import io.github.ramerf.blog.system.service.common.ManagerService;
+import io.github.ramerf.blog.validator.ArticleValidator;
 import io.github.ramerf.wind.core.entity.response.Rs;
 import io.github.ramerf.wind.core.helper.ControllerHelper;
 import io.swagger.annotations.*;
@@ -8,14 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import io.github.ramerf.blog.entity.request.ArticleRequest;
-import io.github.ramerf.blog.entity.response.ArticleResponse;
-import io.github.ramerf.blog.service.ArticleService;
-import io.github.ramerf.blog.system.entity.Constant.AccessPath;
-import io.github.ramerf.blog.system.service.common.CommonService;
-import io.github.ramerf.blog.system.service.common.ManagerService;
-import io.github.ramerf.blog.validator.ArticleValidator;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -58,8 +60,12 @@ public class ArticleController {
           final int page,
       @RequestParam(value = "size", required = false, defaultValue = "10") final int size,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
-    return ControllerHelper.page(
-        service.page(criteria, page, size), article -> ArticleResponse.of(article, managerService));
+    final Page<ArticlePoJo> poJos = service.page(criteria, page, size);
+    return Rs.ok(
+        new PageImpl<>(
+            ArticleResponse.of(poJos.getContent(), managerService),
+            poJos.getPageable(),
+            poJos.getTotalElements()));
   }
 
   @GetMapping
@@ -82,7 +88,7 @@ public class ArticleController {
     articleRequest.setNumber(service.generateNumber());
     articleRequest.setAuthorId(
         Objects.requireNonNull(managerService.getByEmpNo(authName), "认证对象不能为空").getId());
-    log.info(" ArticleController.create : [{}]", articleRequest);
+    log.info("create : [{}]", articleRequest);
     return ControllerHelper.create(service, articleRequest, bindingResult);
   }
 

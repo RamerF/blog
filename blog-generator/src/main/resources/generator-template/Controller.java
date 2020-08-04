@@ -15,6 +15,8 @@ import ${basePath}${moduleName}.service${subDir}.${name}Service;
 import io.github.ramerf.wind.core.entity.response.Rs;
 import ${basePath}.system.util.TextUtil;
 import ${basePath}${moduleName}.validator${subDir}.${name}Validator;
+import io.github.ramerf.wind.core.entity.response.Rs;
+import io.github.ramerf.wind.core.helper.ControllerHelper;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +34,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @SuppressWarnings("UnusedDeclaration")
 public class ${name}Controller {
   @Resource private ${name}Service service;
-  @Resource private CommonService commonService;
   @Resource private ${name}Validator validator;
 
   @InitBinder
@@ -56,7 +57,7 @@ public class ${name}Controller {
       @RequestParam(value = "size", required = false, defaultValue = "10") String sizeStr,
       @ApiParam("查询条件") @RequestParam(value = "criteria", required = false) String criteria) {
     final int[] pageAndSize = TextUtil.validFixPageAndSize(pageStr, sizeStr);
-    return commonService.page(
+    return ControllerHelper.page(
         service.page(criteria, pageAndSize[0], pageAndSize[1]), ${name}Response::of);
   }
 
@@ -73,14 +74,14 @@ public class ${name}Controller {
   public ResponseEntity<Rs<Object>> create(
       @Valid ${name}Request ${alia}Request, @ApiIgnore BindingResult bindingResult) {
     log.info(" ${name}Controller.create : [{}]", ${alia}Request);
-    return commonService.create(
+    return ControllerHelper.create(
         service, ${name}.class, ${alia}Request, bindingResult);
   }
 
   @GetMapping("/{id}")
   @ApiOperation("更新${description}页面")
   public String update(@PathVariable("id") String idStr, @ApiIgnore Map<String, Object> map) {
-    return commonService.update(
+    return ControllerHelper.update(
         service,
         ${name}PoJo.class,
         idStr,
@@ -102,7 +103,7 @@ public class ${name}Controller {
       return Rs.wrongFormat("id");
     }
     ${alia}Request.setId(id);
-    return commonService.update(
+    return ControllerHelper.update(
         service, ${name}.class, ${alia}Request, idStr, bindingResult);
   }
 
@@ -110,17 +111,15 @@ public class ${name}Controller {
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
   @ApiOperation("删除${description}")
-  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") String idStr) {
-    log.info(" ${name}Controller.delete : [{}]", idStr);
-    return commonService.delete(service, idStr);
+  public ResponseEntity<Rs<Object>> delete(@PathVariable("id") long id) {
+    return ControllerHelper.delete(service, id);
   }
 
   @DeleteMapping("/deleteBatch")
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','${alia}:delete')")
   @ApiOperation("删除${description}批量")
-  public ResponseEntity<Rs<Object>> deleteBatch(@RequestParam("ids") List<Long> ids) {
-    log.info(" ${name}Controller.deleteBatch : [{}]", ids);
-    return commonService.deleteBatch(service, ids);
+  public ResponseEntity<Rs<Object>> deleteByIds(@RequestParam("ids") List<Long> ids) {
+    return ControllerHelper.deleteByIds(service, ids);
   }
 }

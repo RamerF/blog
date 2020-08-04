@@ -1,5 +1,16 @@
 package io.github.ramerf.blog.system.service.common.impl;
 
+import io.github.ramerf.blog.entity.response.IdNameResponse;
+import io.github.ramerf.blog.system.entity.domain.common.Manager;
+import io.github.ramerf.blog.system.exception.CommonException;
+import io.github.ramerf.blog.system.repository.BaseRepository;
+import io.github.ramerf.blog.system.repository.common.ManagerRepository;
+import io.github.ramerf.blog.system.service.common.ManagerService;
+import io.github.ramerf.blog.system.util.EncryptUtil;
+import io.github.ramerf.wind.core.condition.QueryColumn;
+import io.github.ramerf.wind.core.config.PrototypeBean;
+import io.github.ramerf.wind.core.factory.QueryColumnFactory;
+import io.github.ramerf.wind.core.util.CollectionUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -8,27 +19,35 @@ import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import io.github.ramerf.blog.system.entity.domain.common.Manager;
-import io.github.ramerf.blog.system.exception.CommonException;
-import io.github.ramerf.blog.system.repository.BaseRepository;
-import io.github.ramerf.blog.system.repository.common.ManagerRepository;
-import io.github.ramerf.blog.system.service.common.ManagerService;
-import io.github.ramerf.blog.system.util.EncryptUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /** @author ramer */
 @Slf4j
 @Service
 public class ManagerServiceImpl implements ManagerService {
+  @Resource private PrototypeBean prototypeBean;
   @Resource private ManagerRepository repository;
 
   private static Map<String, ManagerLogin> LOGIN_STATUS_MAP = new HashMap<>();
   /** 用户端登录信息.key: empNo,value: uuid */
   private static Map<String, String> USER_LOGIN_MAP = new HashMap<>();
+
+  @Override
+  public List<IdNameResponse> getIdAndName(final List<Long> ids) {
+    final QueryColumn<IdNameResponse> queryColumn =
+        QueryColumnFactory.getInstance(IdNameResponse.class, Manager.TABLE_NAME, "");
+    return prototypeBean
+        .query()
+        .select(queryColumn)
+        .where(
+            queryColumn
+                .getCondition()
+                .in(CollectionUtils.nonEmpty(ids), IdNameResponse::setId, ids))
+        .fetchAll(IdNameResponse.class);
+  }
 
   @Override
   public Manager getByEmpNo(final String empNo) {

@@ -1,9 +1,9 @@
-/*:root {*/
-/*    --mdc-theme-primary: #03a9f4;*/
-/*    --mdc-theme-secondary: #feeae6;*/
-/*    --mdc-theme-on-primary: #fff;*/
-/*    --mdc-theme-on-secondary: #fff;*/
-/*}*/
+:root {
+    --mdc-theme-primary: #03a9f4;
+    --mdc-theme-secondary: #26A69A;
+    --mdc-theme-on-primary: #fff;
+    --mdc-theme-on-secondary: #fff;
+}
 
 html, body, div {
     font-family: "Helvetica", "Arial", sans-serif;
@@ -76,6 +76,7 @@ li {
 
 .mdc-top-app-bar {
     z-index: 7;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0,0,0,.12);
 }
 
 .mdc-list-item-fix {

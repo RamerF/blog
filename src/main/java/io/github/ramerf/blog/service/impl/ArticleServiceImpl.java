@@ -53,10 +53,10 @@ public class ArticleServiceImpl implements ArticleService {
   public long create(
       @Nonnull final ArticlePoJo poJo,
       final List<Long> tagIds,
-      final IFunction<ArticlePoJo, ?>[] includeNullProps)
+      List<IFunction<ArticlePoJo, ?>> includeNullProps)
       throws RuntimeException {
     setTags(poJo, tagIds);
-    getUpdate(true).create(poJo, includeNullProps);
+    getUpdate(true).createWithNull(poJo, includeNullProps);
     return poJo.getId();
   }
 
@@ -64,10 +64,10 @@ public class ArticleServiceImpl implements ArticleService {
   public Optional<Integer> update(
       final ArticlePoJo poJo,
       final List<Long> tagIds,
-      final IFunction<ArticlePoJo, ?>[] includeNullProps)
+      List<IFunction<ArticlePoJo, ?>> includeNullProps)
       throws RuntimeException {
     setTags(poJo, tagIds);
-    final int affectRow = getUpdate().update(poJo, includeNullProps);
+    final int affectRow = getUpdate().updateWithNull(poJo, includeNullProps);
     return affectRow == 1 ? Optional.empty() : Optional.of(affectRow);
   }
 

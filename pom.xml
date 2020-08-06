@@ -20,6 +20,9 @@
     </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <wind-version>3.8.4-RELEASE</wind-version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -170,7 +173,7 @@
         <dependency>
             <groupId>io.github.ramerf</groupId>
             <artifactId>wind-core</artifactId>
-            <version>3.8.3-RELEASE</version>
+            <version>${wind-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

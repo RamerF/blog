@@ -150,35 +150,77 @@
     </form>
 </div>
 <div layout:fragment="script">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/tagify/3.17.1/tagify.min.css"/>
+    <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/tagify/3.17.0/tagify.min.js"></script>
     <script type="text/javascript" th:inline="javascript">
       $(function() {
         let id = [[${article ne null ? article.id:''}]];
         let simplemde = new SimpleMDE({element: $('#content')[0]});
         // 标签输入
-        $('#tagIdsInput').tagsInput({
-          autocomplete_url: '/manage/tag/page?page=-1&size=-1',
+        // 标签输入
+        var tagify = new Tagify($('input[name=tagIds]')[0]), controller;
+        tagify.on('input', function(e) {
+          var value = e.detail.value;
+          tagify.settings.whitelist.length = 0; // reset the whitelist
+          // https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
+          controller && controller.abort();
+          controller = new AbortController();
+
+          // show loading animation and hide the suggestions dropdown
+          tagify.loading(true).dropdown.hide.call(tagify);
+          fetch('http://localhost:8080/user/tag/page?criteria=' + value, {signal: controller.signal}).
+              then(RES => RES.json()).
+              then(function(res) {
+                let whitelist = res.data.content.map(o => {
+                  return {'value': o.name, 'id': o.id};
+                });
+                // update inwhitelist Array in-place
+                tagify.settings.whitelist.splice(0, whitelist.length, ...whitelist);
+                tagify.loading(false).dropdown.show.call(tagify, value); // render the suggestions dropdown
+              });
         });
         // 提交表单
         $('#editBtn').on('click', function() {
           let data = {};
           let content = simplemde.value();
           if (!$.trim(content)) {
-            $.alert('文章内容不能为空');
+            $.alert('文章内容 不能为空');
             return false;
           }
           let title = $('#titleInput').val();
           if (!$.trim(title)) {
-            $.alert('文章标题不能为空');
+            $.alert('文章标题 不能为空');
             return false;
           }
           let description = $('#descInput').val();
           if (!$.trim(description)) {
-            $.alert('概述不能为空');
+            $.alert('概述 不能为空');
             return false;
           }
           data.title = title;
           data.content = content;
           data.description = description;
+          // 新增标签
+          let tagIds = $('input[name=tagIds]').val();
+          if (tagIds && tagIds.length > 0) {
+            let existTags = tagIds.filter(o => !o.id);
+            let newTags = tagIds.filter(o => !o.id);
+            $.post('http://localhost:8080/user/tag/batch', {}, function(res) {
+              data.tagIds = tagIds.filter(o => o.id);
+              submitForm(data);
+            });
+            newTags.forEach(o => {
+              existTags.push(o);
+            });
+            submitForm(data);
+          } else {
+            $.alert('标签 不能为空');
+            return false;
+          }
+          return false;
+        });
+
+        function submitForm(data) {
           console.log(JSON.stringify(data));
           id > 0 ?
               $.put('/manage/article/' + id, data, function(res) {
@@ -190,8 +232,7 @@
                   window.location.href = '/manage/article/index';
                 }) : $.alert(res.msg);
               });
-          return false;
-        });
+        }
       });
     </script>
 </div>

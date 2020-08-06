@@ -7,18 +7,21 @@
     <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/animejs/2.2.0/anime.min.js"></script>
     <script type="text/javascript" th:src="@{/libs/anime/fireworks.js}"></script>
+
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/simplemde/1.11.2/simplemde.min.css"/>
     <script type="text/javascript" src="/libs/simplemde/simplemde.min.js"></script>
+
     <script type="text/javascript">
       $(function() {
-        let simplemde = new SimpleMDE({element: $('.content')[0]});
-        simplemde.togglePreview();
+        let simplemde = new SimpleMDE();
+        $('.content').html(simplemde.markdown($('.content').html()));
       });
     </script>
 </head>
 <body>
 <canvas id="fireworks"></canvas>
 <div class="wrap">
+    <textarea style="display: none"></textarea>
     <div class="scroll-bar" style="height: 100px;width: 100%;background-color: lightyellow">
         <div>轮播图</div>
     </div>
@@ -26,10 +29,11 @@
         <div class="left-article">
             <div class="article-content " th:each="article:${articles}">
                 <h3 th:text="${article.title}"></h3>
-                <textarea class="content" th:utext="${article.content}"></textarea>
+                <div class="content" th:utext="${article.content}"></div>
             </div>
         </div>
-        <div class="right-nav" style="position: absolute;width: 100px;background: transparent;overflow: hidden">导航2222</div>
+        <div class="right-nav" style="position: absolute;width: 100px;background: transparent;overflow: hidden">导航2222
+        </div>
     </div>
 </div>
 </body>

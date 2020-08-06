@@ -14,7 +14,6 @@ import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Slf4j
 @Controller("article_controller")
-@PreAuthorize("hasRole('user')")
+// @PreAuthorize("hasRole('user')")
 @RequestMapping(AccessPath.USER + "/article")
 @Api(tags = "用户端: 文章接口")
 public class ArticleController {

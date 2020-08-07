@@ -19,7 +19,7 @@ import org.hibernate.validator.constraints.Length;
 @ApiModel("文章标签")
 public class TagRequest extends AbstractEntityRequest<TagPoJo> {
 
-  @Length(min = 2, max = 10)
+  @Length(min = 2, max = 10, message = "名称 必须为2-10个字符")
   @ApiModelProperty(value = "名称", example = "name")
   private String name;
 }

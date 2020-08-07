@@ -22,6 +22,7 @@ import javax.validation.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -152,14 +153,19 @@ public class TagController {
     }
     final ViolationResult violationResult = new ViolationResult();
     for (T t : ts) {
-      violationResult.addError(validate(t).getViolationErrors());
+      final ViolationResult result = validate(t);
+      violationResult.addError(result.getViolationErrors());
+      // 第一个校验失败就停止
+      if (result.hasErrors()) {
+        break;
+      }
     }
     return violationResult;
   }
 
   private String collectViolationResult(ViolationResult result) {
     return "提交信息有误:\n"
-        + result.stream().map(ViolationErrors::getMessage).collect(Collectors.joining("\n"));
+        + result.stream().map(ViolationErrors::toString).collect(Collectors.joining("\n"));
   }
 
   private <T> ViolationResult validate(T t) {
@@ -167,7 +173,7 @@ public class TagController {
     ViolationResult result = new ViolationResult();
     violations.forEach(
         violation -> {
-          final String path = violation.getPropertyPath().toString();
+          final String path = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
           final String message = violation.getMessage();
           result.addError(ViolationErrors.of(path, message));
         });
@@ -208,7 +214,7 @@ public class TagController {
 
       @Override
       public final boolean hasNext() {
-        return index.get() >= violationErrors.size() - 1;
+        return index.get() < violationErrors.size();
       }
 
       @Override
@@ -230,6 +236,11 @@ public class TagController {
       error.property = property;
       error.message = message;
       return error;
+    }
+
+    @Override
+    public String toString() {
+      return message;
     }
   }
 

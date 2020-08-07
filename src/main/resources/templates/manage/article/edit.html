@@ -157,9 +157,8 @@
         let id = [[${article ne null ? article.id:''}]];
         let simplemde = new SimpleMDE({element: $('#content')[0]});
         // 标签输入
-        // 标签输入
         var tagify = new Tagify($('input[name=tagIds]')[0]), controller;
-        tagify.on('input', function(e) {
+        let autoCompleteTag = function(e) {
           var value = e.detail.value;
           tagify.settings.whitelist.length = 0; // reset the whitelist
           // https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
@@ -168,7 +167,7 @@
 
           // show loading animation and hide the suggestions dropdown
           tagify.loading(true).dropdown.hide.call(tagify);
-          fetch('http://localhost:8080/user/tag/page?criteria=' + value, {signal: controller.signal}).
+          fetch('/manage/tag/page?criteria=' + value, {signal: controller.signal}).
               then(RES => RES.json()).
               then(function(res) {
                 let whitelist = res.data.content.map(o => {
@@ -178,7 +177,8 @@
                 tagify.settings.whitelist.splice(0, whitelist.length, ...whitelist);
                 tagify.loading(false).dropdown.show.call(tagify, value); // render the suggestions dropdown
               });
-        });
+        };
+        tagify.on('input', autoCompleteTag);
         // 提交表单
         $('#editBtn').on('click', function() {
           let data = {};
@@ -201,23 +201,37 @@
           data.content = content;
           data.description = description;
           // 新增标签
-          let tagIds = $('input[name=tagIds]').val();
-          if (tagIds && tagIds.length > 0) {
-            let existTags = tagIds.filter(o => !o.id);
-            let newTags = tagIds.filter(o => !o.id);
-            $.post('http://localhost:8080/user/tag/batch', {}, function(res) {
-              data.tagIds = tagIds.filter(o => o.id);
+          let tags = $('input[name=tagIds]').val();
+          console.debug(tags);
+          if (tags && tags.length > 0) {
+            tags = JSON.parse(tags);
+            let tagIds = tags.map(o => o.id).filter(o => id);
+            data.tagIds = tagIds;
+            // 如果没有id,需要新增,处理成标准格式
+            let newTags = tags.filter(o => !(o.id)).map(o => {
+              return {'name': o.value};
+            });
+            if (!newTags || newTags.length === 0) {
               submitForm(data);
+              return false;
+            }
+            // 需要新增标签
+            $.ajax({
+              url: '/manage/tag/batch',
+              method: 'POST',
+              data: JSON.stringify(newTags),
+              contentType: 'application/json',
+              success: function(res) {
+                console.debug(res);
+                res.forEach(o => data.tagIds.add(o));
+                submitForm(data);
+              },
             });
-            newTags.forEach(o => {
-              existTags.push(o);
-            });
-            submitForm(data);
+            return false;
           } else {
             $.alert('标签 不能为空');
             return false;
           }
-          return false;
         });
 
         function submitForm(data) {

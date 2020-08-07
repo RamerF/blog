@@ -16,13 +16,40 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-/** @author ramer */
+/**
+ * The type Common bean.
+ *
+ * @author ramer
+ */
 @Configuration
 @EnableSwagger2
 public class CommonBean {
 
+  /**
+   * 支持Spring bean的自定义校验器,可直接注入Validator.
+   *
+   * <p>https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#validation-beanvalidation-spring.
+   *
+   * <pre>
+   *   {@code @Resource private Validator commonValidator;}
+   *    final Set<ConstraintViolation<TagRequest>> validate = commonValidator.validate(instance) }
+   * </pre>
+   *
+   * @return the local validator factory bean
+   */
+  @Bean
+  public LocalValidatorFactoryBean commonValidator() {
+    return new LocalValidatorFactoryBean();
+  }
+
+  /**
+   * Ok http client ok http client.
+   *
+   * @return the ok http client
+   */
   @Bean
   public OkHttpClient okHttpClient() {
     return new OkHttpClient.Builder()
@@ -33,6 +60,11 @@ public class CommonBean {
         .build();
   }
 
+  /**
+   * Message converter mapping jackson 2 http message converter.
+   *
+   * @return the mapping jackson 2 http message converter
+   */
   @Bean
   public MappingJackson2HttpMessageConverter messageConverter() {
     MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
@@ -40,16 +72,26 @@ public class CommonBean {
     return converter;
   }
 
+  /**
+   * Password encoder password encoder.
+   *
+   * @return the password encoder
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     String idForEncode = "bcrypt";
-    Map<String, PasswordEncoder> encoders = new HashMap<>();
+    Map<String, PasswordEncoder> encoders = new HashMap<>(4);
     encoders.put(idForEncode, new BCryptPasswordEncoder());
     encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
     encoders.put("scrypt", new SCryptPasswordEncoder());
     return new DelegatingPasswordEncoder(idForEncode, encoders);
   }
 
+  /**
+   * Web server factory customizer web server factory customizer.
+   *
+   * @return the web server factory customizer
+   */
   @Bean
   @SuppressWarnings("rawtypes")
   public WebServerFactoryCustomizer webServerFactoryCustomizer() {

@@ -72,8 +72,8 @@
             <div class="article-list-container">
                 <div class="prev-page"></div>
                 <div class="article-list" th:each="article:${articles}">
-                    <h3 th:text="${article.title}"></h3>
-                    <div class="content" th:utext="${article.description}"></div>
+<!--                    <h3 th:text="${article.title}"></h3>-->
+                    <div class="content" th:utext="${article.htmlContent}"></div>
                 </div>
                 <div class="next-page"></div>
             </div>

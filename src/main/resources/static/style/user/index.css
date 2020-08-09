@@ -168,7 +168,7 @@ li:hover {
     text-align: center;
     font-size: 30px;
     padding: 0 24px;
-    margin: 0 16px;
+    margin-bottom: 16px;
     color: #212121;
     height: 192px;
     box-shadow: 1px 3px 5px #3333334a;
@@ -194,7 +194,9 @@ li:hover {
 .article-list-container {
     position: relative;
     height: calc(100vh - 256px);
-    padding: 16px 16px 0;
+    /* padding: 16px 16px 0; */
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .prev-page, .next-page {
@@ -227,12 +229,39 @@ li:hover {
 }
 
 .article-list {
-    flex: 1;
     padding: 8px 8px 16px;
-    /* margin-bottom: 24px; */
     border-bottom: .15em solid #e1e4e8;
     box-sizing: border-box;
     background-color: #e1e4e814;
     float: left;
-    width: 100%;
+    width: calc(100% - 235px);
+    height: 100%;
+    overflow: auto;
+    margin-left: 235px;
+    text-decoration: none;
+}
+
+.article-list > .content > ul:first-of-type {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 230px;
+    padding: 16px 0 8px 0;
+    height: 100%;
+    overflow-y: auto;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.article-list > .content > ul:first-of-type > li {
+    padding: 4px 0;
+}
+
+.article-list > .content > ul:first-of-type > li > a {
+    text-decoration: none;
+    color: #212121;
+}
+
+.article-list > .content > ul:first-of-type > li > a:visited {
+    color: #616161;
 }

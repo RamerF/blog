@@ -33,7 +33,7 @@
           '#f05654', '#8c4356', '#c83c23', '#9d2933', '#ff4e20',
           '#f35336', '#cb3a56', '#a98175', '#b36d61', '#ef7a82',
           '#9d2933', '#60281e'];
-        $('.top').css('background-color', chinsesColor[Math.floor(Math.random() * 107)]);
+        // $('body').css('background-color', chinsesColor[Math.floor(Math.random() * 92)]);
         jinrishici.load(function(res) {
           $('#poem-sentence').html(res.data.content);
           $('#poem-info').html(res.data.origin.author + '「' + res.data.origin.title + '」');

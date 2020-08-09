@@ -1,7 +1,6 @@
 package io.github.ramerf.blog.entity.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import groovy.transform.EqualsAndHashCode;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.*;
@@ -16,11 +15,11 @@ import org.springframework.util.CollectionUtils;
  * @author Tang Xiaofeng<br>
  * @version 2019/10/29
  */
+@Data
 @Entity(name = Article.TABLE_NAME)
 @Table(appliesTo = Article.TABLE_NAME, comment = "文章")
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Article extends AbstractEntity {
   public static final String TABLE_NAME = "article";
@@ -42,6 +41,9 @@ public class Article extends AbstractEntity {
 
   @Column(columnDefinition = "TEXT NOT NULL COMMENT '内容'")
   private String content;
+
+  @Column(columnDefinition = "TEXT NOT NULL COMMENT 'html内容'")
+  private String htmlContent;
 
   /** 作者 */
   @Column(name = "author_id", columnDefinition = "BIGINT(20) NOT NULL COMMENT '作者'")

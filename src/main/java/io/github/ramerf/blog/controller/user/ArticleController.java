@@ -26,7 +26,6 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Slf4j
 @Controller("article_controller")
-// @PreAuthorize("hasRole('user')")
 @RequestMapping(AccessPath.USER + "/article")
 @Api(tags = "用户端: 文章接口")
 public class ArticleController {

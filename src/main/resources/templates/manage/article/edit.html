@@ -6,19 +6,16 @@
       layout:decorate="~{manage/layout}" lang="zh">
 <head>
     <title>添加文章</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/simplemde/1.11.2/simplemde.min.css"/>
-    <script type="text/javascript" src="/libs/simplemde/simplemde.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.12.1/jquery-ui.css"/>
     <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
 
-    <link rel="stylesheet" href="/libs/jquery-tagsinput/jquery.tagsinput.css"/>
-    <script type="text/javascript" src="/libs/jquery-tagsinput/jquery.tagsinput.js"></script>
-
     <style rel="stylesheet">
         .main-container {
             height: calc(100% - 16px);
-            overflow-y: hidden;
         }
 
         #form {
@@ -114,8 +111,7 @@
                        required
                        data-validtip="标签不能为空,且小于20个字符"
                        autocomplete="off"
-                       placeholder="请输入文章标签"
-                       th:value="${article ne null?article.title:''}">
+                       placeholder="请输入文章标签">
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
                     <div class="mdc-notched-outline__notch">
@@ -154,13 +150,26 @@
     <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/tagify/3.17.0/tagify.min.js"></script>
     <script type="text/javascript" th:inline="javascript">
       $(function() {
-        let id = [[${article ne null ? article.id:''}]];
-        let simplemde = new SimpleMDE({element: $('#content')[0]});
+        let id = [[${article ne null ? article.id : ''}]];
+        let tagify = new Tagify($('input[name=tagIds]')[0]);
+        let existTags = [[${article ne null ? article.tags : null}]];
+        if (existTags) {
+          // 回显标签
+          tagify.addTags(existTags.map(o => {
+            return {
+              'value': o.name,
+              'id': o.id,
+            };
+          }));
+        }
+        // 初始化 markdown 编辑器
+        let simplemde = new SimpleMDE({element: $('#content')[0], autoDownloadFontAwesome: false});
         // 标签输入
-        var tagify = new Tagify($('input[name=tagIds]')[0]), controller;
+        let controller;
         let autoCompleteTag = function(e) {
-          var value = e.detail.value;
-          tagify.settings.whitelist.length = 0; // reset the whitelist
+          let value = e.detail.value;
+          // reset the whitelist
+          tagify.settings.whitelist.length = 0;
           // https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
           controller && controller.abort();
           controller = new AbortController();
@@ -205,8 +214,7 @@
           console.debug(tags);
           if (tags && tags.length > 0) {
             tags = JSON.parse(tags);
-            let tagIds = tags.map(o => o.id).filter(o => id);
-            data.tagIds = tagIds;
+            data.tagIds = tags.map(o => o.id).filter(o => o);
             // 如果没有id,需要新增,处理成标准格式
             let newTags = tags.filter(o => !(o.id)).map(o => {
               return {'name': o.value};
@@ -222,8 +230,12 @@
               data: JSON.stringify(newTags),
               contentType: 'application/json',
               success: function(res) {
+                if (!res.result) {
+                  $.alert(res.msg);
+                  return false;
+                }
                 console.debug(res);
-                res.forEach(o => data.tagIds.add(o));
+                res.data.forEach(o => data.tagIds.push(o));
                 submitForm(data);
               },
             });
@@ -235,6 +247,7 @@
         });
 
         function submitForm(data) {
+          data.tagIds = data.tagIds.toString();
           console.log(JSON.stringify(data));
           id > 0 ?
               $.put('/manage/article/' + id, data, function(res) {

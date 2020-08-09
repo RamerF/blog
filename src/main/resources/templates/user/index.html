@@ -5,16 +5,39 @@
     <title>Welcome to Ramer's Blog</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/animejs/2.2.0/anime.min.js"></script>
+
     <script type="text/javascript" th:src="@{/libs/anime/fireworks.js}"></script>
 
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/simplemde/1.11.2/simplemde.min.css"/>
-    <script type="text/javascript" src="/libs/simplemde/simplemde.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"/>
+    <link rel="stylesheet" href="/style/user/index.css">
 
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
     <script type="text/javascript">
       $(function() {
-        let simplemde = new SimpleMDE();
-        $('.content').html(simplemde.markdown($('.content').html()));
+        let chinsesColor = [
+          '#ffffff', '#e9e7ef', '#f0f0f4', '#e9f1f6', '#f0fcff', '#e3f9fd', '#d6ecf0', '#fffbf0',
+          '#f2ecde', '#fcefe8', '#fff2df', '#f3f9f1', '#e0eee8', '#e0f0e9', '#c0ebd7', '#bbcdc5',
+          '#c2ccd0', '#bacac6', '#808080', '#75878a', '#88ada6', '#6b6882', '#725e82', '#3d3b4f',
+          '#392f41', '#75664d', '#5d513c', '#665757', '#493131', '#312520',
+          '#ffa631', '#ffa400', '#fa8c35', '#ff8c31', '#ff8936',
+          '#ff7500', '#ffb61e', '#ffc773', '#ffc64b', '#f2be45', '#f0c239', '#e9bb1d', '#d9b611',
+          '#eacd76', '#eedeb0', '#d3b17d', '#e29c45', '#a78e44', '#c89b40', '#ae7000', '#ca6924',
+          '#b25d25', '#b35c44', '#9b4400', '#9c5333', '#a88462', '#896c39', '#827100', '#6e511e',
+          '#7c4b00', '#955539', '#845a33', '#bce672',
+          '#21a675', '#057748',
+          '#48c0a3', '#549688',
+          '#789262', '#758a99', '#50616d', '#424c50', '#41555d', '#ff461f', '#f36838',
+          '#ed5736', '#ffb3a7', '#f47983', '#db5a6b', '#c93756', '#f9906f',
+          '#f05654', '#8c4356', '#c83c23', '#9d2933', '#ff4e20',
+          '#f35336', '#cb3a56', '#a98175', '#b36d61', '#ef7a82',
+          '#9d2933', '#60281e'];
+        $('.top').css('background-color', chinsesColor[Math.floor(Math.random() * 107)]);
+        jinrishici.load(function(res) {
+          $('#poem-sentence').html(res.data.content);
+          $('#poem-info').html(res.data.origin.author + '「' + res.data.origin.title + '」');
+        });
       });
     </script>
 </head>
@@ -22,17 +45,38 @@
 <canvas id="fireworks"></canvas>
 <div class="wrap">
     <textarea style="display: none"></textarea>
-    <div class="scroll-bar" style="height: 100px;width: 100%;background-color: lightyellow">
-        <div>轮播图</div>
-    </div>
     <div class="main-container">
-        <div class="left-article">
-            <div class="article-content " th:each="article:${articles}">
-                <h3 th:text="${article.title}"></h3>
-                <div class="content" th:utext="${article.content}"></div>
+        <div class="left-nav">
+            <img src="/images/logo.svg" width="40px" height="40px" alt="LOGO"/>
+            <div class="nav-menu">
+                <ul>
+                    <li>搜索</li>
+                    <li class="active">首页</li>
+                </ul>
+                <ul>
+                    <li>浏览历史</li>
+                    <li>我的Star</li>
+                    <li>我的收藏</li>
+                </ul>
+            </div>
+            <div class="about-me">
+                <img src="/images/logo.svg" width="40px" height="40px" alt="LOGO"/>
+                <h3>关于我</h3>
             </div>
         </div>
-        <div class="right-nav" style="position: absolute;width: 100px;background: transparent;overflow: hidden">导航2222
+        <div class="right-article">
+            <div class="top">
+                <div id="poem-sentence"></div>
+                <div id="poem-info"></div>
+            </div>
+            <div class="article-list-container">
+                <div class="prev-page"></div>
+                <div class="article-list" th:each="article:${articles}">
+                    <h3 th:text="${article.title}"></h3>
+                    <div class="content" th:utext="${article.description}"></div>
+                </div>
+                <div class="next-page"></div>
+            </div>
         </div>
     </div>
 </div>

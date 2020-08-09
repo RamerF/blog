@@ -1,8 +1,11 @@
 package io.github.ramerf.blog.service.impl;
 
+import io.github.ramerf.blog.entity.pojo.*;
+import io.github.ramerf.blog.entity.request.ArticleRequest;
+import io.github.ramerf.blog.repository.ArticleRepository;
+import io.github.ramerf.blog.service.*;
 import io.github.ramerf.wind.core.condition.SortColumn;
 import io.github.ramerf.wind.core.condition.SortColumn.Order;
-import io.github.ramerf.wind.core.function.IFunction;
 import io.github.ramerf.wind.core.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -10,13 +13,9 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import io.github.ramerf.blog.entity.pojo.ArticlePoJo;
-import io.github.ramerf.blog.entity.pojo.TagPoJo;
-import io.github.ramerf.blog.repository.ArticleRepository;
-import io.github.ramerf.blog.service.ArticleService;
-import io.github.ramerf.blog.service.TagService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 /** @author ramer */
@@ -24,7 +23,17 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class ArticleServiceImpl implements ArticleService {
   @Resource private TagService tagService;
+  @Resource private ArticleTagMapService mapService;
   @Resource private ArticleRepository repository;
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public long create(@Nonnull final ArticleRequest request) throws RuntimeException {
+    ArticlePoJo poJo = request.poJo();
+    setTags(poJo, request.getTagIds());
+    getUpdate(true).create(poJo);
+    return poJo.getId();
+  }
 
   @Override
   public Page<ArticlePoJo> page(final String keyword, final int page, final int size) {
@@ -50,31 +59,33 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public long create(
-      @Nonnull final ArticlePoJo poJo,
-      final List<Long> tagIds,
-      List<IFunction<ArticlePoJo, ?>> includeNullProps)
-      throws RuntimeException {
+  @Transactional(rollbackFor = Exception.class)
+  public long update(final ArticleRequest request) throws RuntimeException {
+    ArticlePoJo poJo = request.poJo(request.getId());
+    final List<Long> tagIds = request.getTagIds();
+    final boolean isCreate = poJo.getId() == null;
+    if (isCreate) {
+      setTags(poJo, tagIds);
+      getUpdate(true).create(poJo);
+      return poJo.getId();
+    }
+    // 先删除原来的绑定标签
+    mapService.delete(condition -> condition.eq(ArticleTagMapPoJo::setArticleId, poJo.getId()));
     setTags(poJo, tagIds);
-    getUpdate(true).createWithNull(poJo, includeNullProps);
+    getUpdate().update(poJo);
     return poJo.getId();
-  }
-
-  @Override
-  public Optional<Integer> update(
-      final ArticlePoJo poJo,
-      final List<Long> tagIds,
-      List<IFunction<ArticlePoJo, ?>> includeNullProps)
-      throws RuntimeException {
-    setTags(poJo, tagIds);
-    final int affectRow = getUpdate().updateWithNull(poJo, includeNullProps);
-    return affectRow == 1 ? Optional.empty() : Optional.of(affectRow);
   }
 
   private void setTags(final ArticlePoJo poJo, List<Long> tagIds) {
     if (CollectionUtils.isEmpty(tagIds)) {
       throw new IllegalArgumentException("标签不能为空");
     }
+    final Long articleId = poJo.getId();
+    final List<ArticleTagMapPoJo> mapPoJos =
+        tagIds.stream()
+            .map(tagId -> ArticleTagMapPoJo.of(articleId, tagId))
+            .collect(Collectors.toList());
+    mapService.createBatch(mapPoJos);
     // 更新标签集合
     poJo.setTagsStr(
         tagService.listByIds(tagIds).stream().map(TagPoJo::getName).collect(Collectors.joining()));

@@ -1,5 +1,10 @@
 package io.github.ramerf.blog.entity.pojo;
 
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.profiles.pegdown.Extensions;
+import com.vladsch.flexmark.profiles.pegdown.PegdownOptionsAdapter;
+import com.vladsch.flexmark.util.options.DataHolder;
 import io.github.ramerf.wind.core.annotation.TableInfo;
 import io.github.ramerf.wind.core.entity.pojo.AbstractEntityPoJo;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,6 +39,9 @@ public class ArticlePoJo extends AbstractEntityPoJo {
   @ApiModelProperty(value = "String")
   private String content;
 
+  @ApiModelProperty(value = "String")
+  private String htmlContent;
+
   @ApiModelProperty(value = "Long")
   @Column(name = "author_id")
   private Long authorId;
@@ -46,4 +54,13 @@ public class ArticlePoJo extends AbstractEntityPoJo {
 
   @ApiModelProperty(value = "被加星/点赞次数")
   private Long starCount;
+
+  public void setContent(final String content) {
+    this.content = content;
+    DataHolder dataHolder =
+        PegdownOptionsAdapter.flexmarkOptions(true, Extensions.ALL_WITH_OPTIONALS);
+    Parser parser = Parser.builder(dataHolder).build();
+    HtmlRenderer renderer = HtmlRenderer.builder(dataHolder).build();
+    setHtmlContent(renderer.render(parser.parse(content)));
+  }
 }

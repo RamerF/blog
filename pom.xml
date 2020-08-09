@@ -179,6 +179,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
+        <!--markdown to html-->
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-all</artifactId>
+            <version>0.34.48</version>
+        </dependency>
     </dependencies>
     <!-- // mvn blog clean deploy -Psonatype -Darguments="gpg.passphrase=gpg密码" -->
     <profiles>

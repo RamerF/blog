@@ -20,4 +20,11 @@ public class ArticleTagMapPoJo extends AbstractEntityPoJo {
   private Long articleId;
 
   private Long tagId;
+
+  public static ArticleTagMapPoJo of(final long articleId, final long tagId) {
+    ArticleTagMapPoJo poJo = new ArticleTagMapPoJo();
+    poJo.setArticleId(articleId);
+    poJo.setTagId(tagId);
+    return poJo;
+  }
 }

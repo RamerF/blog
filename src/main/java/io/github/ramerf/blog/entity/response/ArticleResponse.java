@@ -1,5 +1,6 @@
 package io.github.ramerf.blog.entity.response;
 
+import io.github.ramerf.blog.entity.pojo.TagPoJo;
 import io.github.ramerf.wind.core.entity.response.AbstractEntityResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,11 +33,20 @@ public class ArticleResponse extends AbstractEntityResponse {
   @ApiModelProperty(value = "内容")
   private String content;
 
+  @ApiModelProperty(value = "html内容")
+  private String htmlContent;
+
+  @ApiModelProperty(value = "概述")
+  private String description;
+
   @ApiModelProperty(value = "作者id")
   private Long authorId;
 
   @ApiModelProperty(value = "作者名称")
   private String authorName;
+
+  @ApiModelProperty(value = "文章标签")
+  private List<TagPoJo> tags;
 
   public static ArticleResponse of(final ArticlePoJo article, final ManagerService service) {
     if (Objects.isNull(article)) {
@@ -44,10 +54,12 @@ public class ArticleResponse extends AbstractEntityResponse {
     }
     ArticleResponse poJo = new ArticleResponse();
     BeanUtils.copyProperties(article, poJo);
-    poJo.setAuthorName(
-        Optional.ofNullable(article.getAuthorId())
-            .map(id -> service.getIdAndName(Collections.singletonList(id)).get(0).getName())
-            .orElse(null));
+    if (service != null) {
+      poJo.setAuthorName(
+          Optional.ofNullable(article.getAuthorId())
+              .map(id -> service.getIdAndName(Collections.singletonList(id)).get(0).getName())
+              .orElse(null));
+    }
     return poJo;
   }
 
@@ -65,14 +77,16 @@ public class ArticleResponse extends AbstractEntityResponse {
                   return poJo;
                 })
             .collect(Collectors.toList());
-    final Map<Long, List<ArticleResponse>> authorMap =
-        responses.stream().collect(Collectors.groupingBy(ArticleResponse::getAuthorId));
-    service
-        .getIdAndName(articles.stream().map(ArticlePoJo::getId).collect(Collectors.toList()))
-        .forEach(
-            manager ->
-                Optional.ofNullable(authorMap.get(manager.getId()))
-                    .ifPresent(o -> o.forEach(obj -> obj.setAuthorName(manager.getName()))));
+    if (service != null) {
+      final Map<Long, List<ArticleResponse>> authorMap =
+          responses.stream().collect(Collectors.groupingBy(ArticleResponse::getAuthorId));
+      service
+          .getIdAndName(articles.stream().map(ArticlePoJo::getId).collect(Collectors.toList()))
+          .forEach(
+              manager ->
+                  Optional.ofNullable(authorMap.get(manager.getId()))
+                      .ifPresent(o -> o.forEach(obj -> obj.setAuthorName(manager.getName()))));
+    }
     return responses;
   }
 }

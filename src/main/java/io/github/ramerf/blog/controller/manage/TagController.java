@@ -8,7 +8,6 @@ import io.github.ramerf.blog.system.entity.Constant.AccessPath;
 import io.github.ramerf.blog.system.exception.CommonException;
 import io.github.ramerf.blog.system.service.common.CommonService;
 import io.github.ramerf.wind.core.entity.response.Rs;
-import io.github.ramerf.wind.core.entity.response.Rs.JsonInstance;
 import io.github.ramerf.wind.core.helper.ControllerHelper;
 import io.github.ramerf.wind.core.util.CollectionUtils;
 import io.github.ramerf.wind.core.util.StringUtils;
@@ -30,8 +29,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * The type Tag controller.
@@ -118,7 +115,7 @@ public class TagController {
   /**
    * Create response entity.
    *
-   * @param tagRequest the tag request
+   * @param tagRequests the tag request
    * @param bindingResult the binding result
    * @return the response entity
    */
@@ -127,29 +124,20 @@ public class TagController {
   @PreAuthorize("hasAnyAuthority('global:create','tag:create')")
   @ApiOperation("批量添加文章标签")
   public ResponseEntity<Rs<Object>> createBatch(
-      @RequestBody List<TagRequest> tagRequest, @ApiIgnore BindingResult bindingResult) {
-    if (CollectionUtils.isEmpty(tagRequest)) {
+      @RequestBody List<TagRequest> tagRequests, @ApiIgnore BindingResult bindingResult) {
+    if (CollectionUtils.isEmpty(tagRequests)) {
       return Rs.canNotBlank("标签");
     }
-    final ViolationResult violationResult = validate(tagRequest);
+    final ViolationResult violationResult = validate(tagRequests);
     if (violationResult.hasErrors()) {
       return Rs.fail(collectViolationResult(violationResult));
     }
-    return Rs.ok(
-        tagRequest.stream()
-            .map(
-                o -> {
-                  final ResponseEntity<Rs<Object>> entity =
-                      ControllerHelper.create(service, o, bindingResult);
-                  return ((JsonInstance) entity.getBody().getData()).get("id");
-                })
-            .map(Long.class::cast)
-            .collect(toList()));
+    return Rs.ok(service.createBatchWithId(tagRequests));
   }
 
   private <T> ViolationResult validate(final List<T> ts) {
     if (ts.size() < 1) {
-      return null;
+      return ViolationResult.EMPTY;
     }
     final ViolationResult violationResult = new ViolationResult();
     for (T t : ts) {
@@ -181,6 +169,7 @@ public class TagController {
   }
 
   public static class ViolationResult implements Iterable<ViolationErrors> {
+    public static final ViolationResult EMPTY = new ViolationResult();
     private final List<ViolationErrors> violationErrors = new ArrayList<>();
 
     public boolean hasErrors() {

@@ -1,0 +1,237 @@
+body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.wrap {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.scroll-bar {
+    height: 100px;
+    width: 100%;
+    background-color: lightyellow;
+}
+
+.main-container {
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.left-nav {
+    position: relative;
+    float: left;
+    min-width: 224px;
+    width: 15%;
+    height: 100%;
+    overflow: hidden;
+    text-align: center;
+}
+
+.left-nav::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    overflow: hidden;
+    border-right: .15em solid #e1e4e8;
+}
+
+.left-nav img {
+    margin: 32px auto 0;
+}
+
+.left-nav .nav-menu {
+    width: 100%;
+    height: calc(100vh - 242px);
+    line-height: 4em;
+}
+
+.left-nav div.about-me {
+    position: absolute;
+    bottom: 14px;
+    left: calc(50% - 27px);
+    color: #616161;
+}
+
+.left-nav ul {
+    padding: 0;
+    height: 50%;
+    box-sizing: border-box;
+    vertical-align: bottom;
+    align-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.left-nav ul:first-of-type {
+    flex-direction: column-reverse;
+    margin-bottom: 32px;
+}
+
+.left-nav ul li {
+    list-style: none;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+    transition: .35s;
+    color: #616161;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+li.active {
+    background-color: #e1e4e85e;
+}
+
+li.active:hover {
+    background-color: #e1e4e8ad;
+}
+
+li.active:hover {
+    background-color: #e1e4e8ad;
+}
+
+.left-nav ul li.active:before {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: calc(50% - 16px);
+    width: 0;
+    height: 0;
+    border: 16px solid transparent;
+    border-right: 24px solid #e1e4e8;
+}
+
+.left-nav ul li.active:after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: calc(50% - 16px);
+    width: 0;
+    height: 0;
+    border: 16px solid transparent;
+    border-right: 16px solid #ffffff;
+    z-index: 1;
+}
+
+li:hover {
+    background-color: #e1e4e85e;
+}
+
+.left-nav ul li:hover:before {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: calc(50% - 16px);
+    width: 0;
+    height: 0;
+    border: 16px solid transparent;
+    border-right: 24px solid #e1e4e8;
+}
+
+.left-nav ul li:hover:after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: calc(50% - 16px);
+    width: 0;
+    height: 0;
+    border: 16px solid transparent;
+    border-right: 16px solid #ffffff;
+    z-index: 1;
+}
+
+
+.left-nav ul li:last-of-type {
+    padding-bottom: 0;
+}
+
+.right-article {
+    float: right;
+    max-width: calc(100% - 224px);
+    width: 85%;
+    padding: 32px 32px 0;
+    box-sizing: border-box;
+    height: 100vh;
+    border-right: .15em solid #e1e4e8;
+}
+
+.right-article .top {
+    text-align: center;
+    font-size: 30px;
+    padding: 0 24px;
+    color: #212121;
+    height: 192px;
+    box-shadow: 1px 3px 5px #3333334a;
+    /*background-image: url(http://ramer.tpddns.cn:9000/public/upload/public/2020/08/09/ubuntu.jpg);*/
+}
+
+#poem-sentence {
+    text-align: left;
+    height: 96px;
+    padding-top: 54px;
+    box-sizing: border-box;
+}
+
+#poem-info {
+    height: 96px;
+    text-align: right;
+    padding-top: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+.article-list-container {
+    position: relative;
+    height: calc(100vh - 256px);
+    padding: 16px 16px 0;
+}
+
+.prev-page, .next-page {
+    position: absolute;
+    writing-mode: vertical-lr;
+    width: 48px;
+    height: 100%;
+    /* padding: 0 8px; */
+    text-align: center;
+    line-height: 64px;
+    background: #e1e4e84a no-repeat center;
+    z-index: 1000;
+    opacity: .1;
+    transition: .5s;
+}
+
+.prev-page:hover, .next-page:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.prev-page {
+    left: -32px;
+    background-image: url('/images/less.svg');
+}
+
+.next-page {
+    right: -32px;
+    background-image: url('/images/greater.svg');
+}
+
+.article-list {
+    flex: 1;
+    padding: 8px 8px 16px;
+    /* margin-bottom: 24px; */
+    border-bottom: .15em solid #e1e4e8;
+    box-sizing: border-box;
+    background-color: #e1e4e814;
+    float: left;
+    width: 100%;
+}

@@ -345,7 +345,7 @@
       appendBodyData(dataList);
       let from = `${((_pageInfo.page - 1) * _pageInfo.size + 1)}`;
       let to = `${(_pageInfo.totalElements % _pageInfo.size !== 0
-                   && _pageInfo.page === _pageInfo.totalPages)
+          && _pageInfo.page === _pageInfo.totalPages)
           ? _pageInfo.totalElements
           : _pageInfo.page * _pageInfo.size}`;
       let total = `${_pageInfo.totalElements}`;
@@ -355,19 +355,19 @@
         initNumberBtn(pageContainer);
       }
       _container.
-      find('.pagination-container p.static-info').
-      text(staticInfo);
+          find('.pagination-container p.static-info').
+          text(staticInfo);
       updateNumberBtn(_pageInfo.page, _pageInfo.totalPages);
       // 上一页,下一页点击事件
       _container.find('button.prev-btn,button.next-btn').unbind();
       _container.find('button.prev-btn,button.next-btn').
-                 on('click', function() {
-                   pageInfo.page = $(this).hasClass('prev-btn')
-                       ? --_pageInfo.page
-                       : ++_pageInfo.page;
-                   updateNumberBtn(_pageInfo.page, _pageInfo.totalPages);
-                   pullData($.extend(_queryParams, _pageInfo), true);
-                 });
+          on('click', function() {
+            pageInfo.page = $(this).hasClass('prev-btn')
+                ? --_pageInfo.page
+                : ++_pageInfo.page;
+            updateNumberBtn(_pageInfo.page, _pageInfo.totalPages);
+            pullData($.extend(_queryParams, _pageInfo), true);
+          });
       // 页号点击事件
       _container.find('button[class*="num-btn"]').unbind();
       _container.find('button[class*="num-btn"]').on('click', function() {
@@ -438,11 +438,11 @@
       if (_check) {
         new mdc.checkbox.MDCCheckbox(
             $(checkNodeTh.find('input[type=checkbox]')).
-            parent('.mdc-checkbox').
-            get(0)).checked = false;
+                parent('.mdc-checkbox').
+                get(0)).checked = false;
       }
       _container.find('.pagination-container ul button.num-btn7').
-                 text(totalPages);
+          text(totalPages);
       let $prevBtn = _container.find(
           '.pagination-container ul button.prev-btn');
       let $nextBtn = _container.find(
@@ -460,7 +460,7 @@
       if (totalPages <= 7) {
         for (let i = 1; i <= totalPages; i++) {
           _container.find('.pagination-container ul button.num-btn' + i).
-                     text(i);
+              text(i);
           if (i === number) {
             colorPageBtn('.pagination-container ul button.num-btn' + i);
           }
@@ -471,10 +471,10 @@
         for (let i = 2; i < 7; i++) {
           if (i === 6) {
             _container.find('.pagination-container ul button.num-btn' + i).
-                       text('...');
+                text('...');
           } else {
             _container.find('.pagination-container ul button.num-btn' + i).
-                       text(i);
+                text(i);
           }
           if (i === number) {
             colorPageBtn('.pagination-container ul button.num-btn' + number);
@@ -485,10 +485,10 @@
         for (let i = totalPages - 5; i < totalPages; i++) {
           if (btnNum === 2) {
             _container.find('.pagination-container ul button.num-btn' + btnNum).
-                       text('...');
+                text('...');
           } else {
             _container.find('.pagination-container ul button.num-btn' + btnNum).
-                       text(i);
+                text(i);
           }
           if (i === number) {
             colorPageBtn('.pagination-container ul button.num-btn' + btnNum);
@@ -498,11 +498,11 @@
       } else {
         _container.find('.pagination-container ul button.num-btn2').text('...');
         _container.find('.pagination-container ul button.num-btn3').
-                   text(number - 1);
+            text(number - 1);
         _container.find('.pagination-container ul button.num-btn4').
-                   text(number);
+            text(number);
         _container.find('.pagination-container ul button.num-btn5').
-                   text(number + 1);
+            text(number + 1);
         _container.find('.pagination-container ul button.num-btn6').text('...');
         colorPageBtn('.pagination-container ul button.num-btn4');
       }
@@ -514,11 +514,11 @@
      */
     function colorPageBtn(selector) {
       _container.find(selector).
-                 parents('ul').
-                 find('button[class*="mdc-button"]').
-                 removeClass('mdc-button--raised');
+          parents('ul').
+          find('button[class*="mdc-button"]').
+          removeClass('mdc-button--raised');
       _container.find(selector).
-                 addClass('mdc-button--raised mdc-button--circle');
+          addClass('mdc-button--raised mdc-button--circle');
     }
 
     /**
@@ -756,7 +756,7 @@
       <div class="mdc-dialog__scrim"></div>
     </div>`);
     _width ? $container.find('.mdc-dialog__surface').
-                        css({'width': _width, 'max-width': _width}) : '';
+        css({'width': _width, 'max-width': _width}) : '';
     $('body').append($container);
     if (_contentType === 2) {
       $('#' + myDialogContentId).append(_content);
@@ -918,7 +918,7 @@
    */
   $.checked = function(selector) {
     return $(selector).prop('checked') ||
-           $(selector).prop('checked') === 'checked';
+        $(selector).prop('checked') === 'checked';
   };
   /***
    * 校验字符串是否为指定长度.
@@ -1055,8 +1055,12 @@
       checkbox: true,
       // 添加自定义属性到节点,{属性名: 属性},如; {'data-value': 'value'}
       externalProp: {},
+      // 切换触发事件
       toggleEvt: function() {
-      }, // 切换触发事件
+      },
+      // 切换触发事件后触发的事件,始终会执行
+      togglePostEvt: function() {
+      },
     }, opts || {});
     let _data = paras.data;
     let _parentId = paras.parentId;
@@ -1067,6 +1071,7 @@
     let _checkbox = paras.checkbox;
     let _externalProp = paras.externalProp;
     let _toggleEvt = paras.toggleEvt;
+    let _togglePostEvt = paras.togglePostEvt;
     let containNode = $(this);
     console.debug(_data);
     // 顶层节点
@@ -1105,38 +1110,39 @@
 
     // 展开/收缩
     containNode.find('.mdc-tree-heading-container .mdc-tree-heading').
-                on('click', function() {
-                  $(this).
-                  next('i.toggle-cell').
-                  toggleClass('mdc-tree-toggle__expanded');
-                  _toggleEvt && _toggleEvt(this);
-                  let headingContainer = $(this).
-                  parent('.mdc-tree-heading-container');
-                  // Tip: 如果没有复选框,只能有一个被选中
-                  if (!_checkbox) {
-                    console.debug('取消选中');
-                    containNode.find('.mdc-tree-heading-container.active').
-                                removeClass('active');
-                  }
+        on('click', function() {
+          $(this).
+              next('i.toggle-cell').
+              toggleClass('mdc-tree-toggle__expanded');
+          _toggleEvt && _toggleEvt(this);
+          _togglePostEvt && _togglePostEvt(this);
+          let headingContainer = $(this).
+              parent('.mdc-tree-heading-container');
+          // Tip: 如果没有复选框,只能有一个被选中
+          if (!_checkbox) {
+            console.debug('取消选中');
+            containNode.find('.mdc-tree-heading-container.active').
+                removeClass('active');
+          }
 
-                  //  切换时始终保持选中状态
-                  // headingContainer.toggleClass('active').
-                  headingContainer.addClass('active').
-                                   next('ul.mdc-tree-list').
-                                   slideToggle(150);
-                  // 折叠,收起子元素
-                  if (headingContainer.hasClass('active')) {
-                    let childHeadingContainer = headingContainer.next(
-                        'ul.mdc-tree-list').find(
-                        '.mdc-tree-heading-container');
-                    console.log(childHeadingContainer);
-                    childHeadingContainer.next('ul.mdc-tree-list').slideUp(100);
-                    childHeadingContainer.removeClass('active');
-                    childHeadingContainer.children('i.toggle-cell').
-                                          removeClass(
-                                              'mdc-tree-toggle__expanded');
-                  }
-                });
+          //  切换时始终保持选中状态
+          // headingContainer.toggleClass('active').
+          headingContainer.addClass('active').
+              next('ul.mdc-tree-list').
+              slideToggle(150);
+          // 折叠,收起子元素
+          if (headingContainer.hasClass('active')) {
+            let childHeadingContainer = headingContainer.next(
+                'ul.mdc-tree-list').find(
+                '.mdc-tree-heading-container');
+            console.log(childHeadingContainer);
+            childHeadingContainer.next('ul.mdc-tree-list').slideUp(100);
+            childHeadingContainer.removeClass('active');
+            childHeadingContainer.children('i.toggle-cell').
+                removeClass(
+                    'mdc-tree-toggle__expanded');
+          }
+        });
 
     function retrieveTree(root, dom, depth = 1) {
       // 当前元素子元素
@@ -1153,8 +1159,10 @@
                     data-ratio="${depth}"
                     data-id="${val[_id]}">${val[_label]}</h3>
                ${(_hasChild && val[_hasChild])
-                  ? `<i class="material-icons toggle-cell">keyboard_arrow_left</i>`
-                  : ''}`);
+                  ?
+                  `<i class="material-icons toggle-cell">keyboard_arrow_left</i>`
+                  :
+                  ''}`);
           for (let key in _externalProp) {
             $.trim(val[_externalProp[key + '']]) &&
             h3Node.attr(key + '', val[_externalProp[key + '']]);
@@ -1214,6 +1222,7 @@
           let item = parentNodes[0];
           item.parent('div').addClass('active');
           isTriggerEvt && item.trigger('click');
+          _togglePostEvt(item[0]);
         }
 
         function getParents(parentId) {
@@ -1238,8 +1247,22 @@
             item.trigger('click');
             item.parent().removeClass('active');
           }();
+          _togglePostEvt(item[0]);
         }
       };
+
+      /**
+       * 判断给定的id元素是否为子节点. true:是.
+       * @param id 选中元素data-id
+       */
+      isLeaf(id) {
+        let _this = this;
+        let isLeaf = !(_this.container.find('h3[data-id="' + id + '"]').
+            parent('div').
+            next('ul').text()) && true;
+        console.log('isLeaf', isLeaf);
+        return isLeaf;
+      }
     }
 
     return new MDCTree(_data, _id, _parentId, containNode);

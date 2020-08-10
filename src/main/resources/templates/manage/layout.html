@@ -53,8 +53,8 @@
           drawer.open = !drawer.open;
         });
 
-        console.log(' menus: ', [[${menus}]]);
-
+        console.debug('menus:', [[${menus}]]);
+        const CHECKED_MENU_ID_KEY = 'checked-menu-id';
         let mdcTree = $('#menuContainer').mdcTree({
           data: [[${menuLists}]],
           id: 'id',
@@ -67,13 +67,17 @@
             'data-href': 'url',
           },
           toggleEvt: function(cell) {
-            let selectItemId = cell.dataset.id;
-            console.log($.strFormat(' 点击元素: {}', selectItemId));
+          },
+          togglePostEvt: function(cell) {
+            let checkedMenuId = cell.dataset.id;
+            console.debug('togglePostEvt:', checkedMenuId);
+            putMenuId(checkedMenuId);
           },
         });
 
         // 菜单折叠
-        $('aside.mdc-drawer').collapse();
+        let $aside = $('aside.mdc-drawer');
+        $aside.collapse();
 
         // 保持select与父元素同宽
         // 侧边栏自动收缩
@@ -109,10 +113,23 @@
         $('aside').on('click', 'h3[data-href]', function() {
           $.trim(this.dataset.href) && (window.location.href = this.dataset.href);
         });
+
         // 菜单高亮
-        let url = location.pathname;
-        // $('aside.mdc-drawer').find('h3[data-href="' + url + '"]').parent('div').addClass('active');
-        mdcTree.check($('aside.mdc-drawer').find('h3[data-href="' + url + '"]').get(0).dataset.id, false);
+        let checkedMenuId = localStorage.getItem(CHECKED_MENU_ID_KEY);
+        if (!checkedMenuId) {
+          let url = location.pathname;
+          let h3Menu = $aside.find('h3[data-href="' + url + '"]');
+          if (!h3Menu || h3Menu.length < 1) {
+            h3Menu = $aside.find('h3[data-href="' + url.substring(0, url.lastIndexOf('#')) + '/index"]');
+          }
+          if (!h3Menu || h3Menu.length < 1) {
+            h3Menu = $aside.find('h3[data-href]:first-of-type:eq(0)');
+          }
+          // 当前选中的menu id
+          checkedMenuId = h3Menu.get(0).dataset.id;
+        }
+        mdcTree.check(checkedMenuId);
+        putMenuId(checkedMenuId);
 
         // 元素回车事件绑定
         $('[data-enter-trigger]').on('keypress', function(e) {
@@ -124,6 +141,12 @@
         $('body').on('click', '.data-href__auto[data-href]', function() {
           $.trim(this.dataset.href) && (window.location.href = this.dataset.href);
         });
+
+        function putMenuId(checkedMenuId) {
+          if (mdcTree.isLeaf(checkedMenuId)) {
+            localStorage.setItem(CHECKED_MENU_ID_KEY, checkedMenuId);
+          }
+        }
       });
     </script>
     <th:block layout:fragment="script">

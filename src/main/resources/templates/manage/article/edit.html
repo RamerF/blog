@@ -50,57 +50,57 @@
             [[${article ne null?'修改':'添加'}]]文章
         </h2>
         <!--标题-->
-        <div class="text-field-container mdc-panel__margin-16">
-            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                 data-mdc-auto-init="MDCTextField">
-                <input type="text" id="titleInput" name="title"
-                       class="mdc-text-field__input"
-                       maxlength="50"
-                       required
-                       data-validtip="标题不能为空,且小于20个字符"
-                       autocomplete="off"
-                       placeholder="请输入文章标题"
-                       th:value="${article ne null?article.title:''}">
-                <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                        <label for="titleInput" class="mdc-floating-label">标题</label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                </div>
-            </div>
-            <div class="mdc-text-field-helper-line">
-                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                    *必填</p>
-                <div class="mdc-text-field-character-counter">0 / 50</div>
-            </div>
-        </div>
+        <!--<div class="text-field-container mdc-panel__margin-16">-->
+        <!--    <div class="mdc-text-field mdc-text-field&#45;&#45;outlined mdc-text-field-row"-->
+        <!--         data-mdc-auto-init="MDCTextField">-->
+        <!--        <input type="text" id="titleInput" name="title"-->
+        <!--               class="mdc-text-field__input"-->
+        <!--               maxlength="50"-->
+        <!--               required-->
+        <!--               data-validtip="标题不能为空,且小于20个字符"-->
+        <!--               autocomplete="off"-->
+        <!--               placeholder="请输入文章标题"-->
+        <!--               th:value="${article ne null?article.title:''}">-->
+        <!--        <div class="mdc-notched-outline">-->
+        <!--            <div class="mdc-notched-outline__leading"></div>-->
+        <!--            <div class="mdc-notched-outline__notch">-->
+        <!--                <label for="titleInput" class="mdc-floating-label">标题</label>-->
+        <!--            </div>-->
+        <!--            <div class="mdc-notched-outline__trailing"></div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--    <div class="mdc-text-field-helper-line">-->
+        <!--        <p class="mdc-text-field-helper-text mdc-text-field-helper-text&#45;&#45;persistent mdc-text-field-helper-text&#45;&#45;validation-msg">-->
+        <!--            *必填</p>-->
+        <!--        <div class="mdc-text-field-character-counter">0 / 50</div>-->
+        <!--    </div>-->
+        <!--</div>-->
         <!--概述-->
-        <div class="text-field-container mdc-panel__margin-16">
-            <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
-                 data-mdc-auto-init="MDCTextField">
-                <input type="text" id="descInput" name="description"
-                       class="mdc-text-field__input"
-                       maxlength="250"
-                       required
-                       data-validtip="概述不能为空,且小于20个字符"
-                       autocomplete="off"
-                       placeholder="请输入文章标题"
-                       th:value="${article ne null?article.description:''}">
-                <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                        <label for="descInput" class="mdc-floating-label">概述</label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                </div>
-            </div>
-            <div class="mdc-text-field-helper-line">
-                <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
-                    *必填</p>
-                <div class="mdc-text-field-character-counter">0 / 250</div>
-            </div>
-        </div>
+        <!--<div class="text-field-container mdc-panel__margin-16">-->
+        <!--    <div class="mdc-text-field mdc-text-field&#45;&#45;outlined mdc-text-field-row"-->
+        <!--         data-mdc-auto-init="MDCTextField">-->
+        <!--        <input type="text" id="descInput" name="description"-->
+        <!--               class="mdc-text-field__input"-->
+        <!--               maxlength="250"-->
+        <!--               required-->
+        <!--               data-validtip="概述不能为空,且小于20个字符"-->
+        <!--               autocomplete="off"-->
+        <!--               placeholder="请输入文章标题"-->
+        <!--               th:value="${article ne null?article.description:''}">-->
+        <!--        <div class="mdc-notched-outline">-->
+        <!--            <div class="mdc-notched-outline__leading"></div>-->
+        <!--            <div class="mdc-notched-outline__notch">-->
+        <!--                <label for="descInput" class="mdc-floating-label">概述</label>-->
+        <!--            </div>-->
+        <!--            <div class="mdc-notched-outline__trailing"></div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--    <div class="mdc-text-field-helper-line">-->
+        <!--        <p class="mdc-text-field-helper-text mdc-text-field-helper-text&#45;&#45;persistent mdc-text-field-helper-text&#45;&#45;validation-msg">-->
+        <!--            *必填</p>-->
+        <!--        <div class="mdc-text-field-character-counter">0 / 250</div>-->
+        <!--    </div>-->
+        <!--</div>-->
         <!--标签-->
         <div class="text-field-container mdc-panel__margin-16">
             <div class="mdc-text-field mdc-text-field--outlined mdc-text-field-row"
@@ -108,7 +108,6 @@
                 <input type="text" id="tagIdsInput" name="tagIds"
                        class="mdc-text-field__input"
                        maxlength="50"
-                       required
                        data-validtip="标签不能为空,且小于20个字符"
                        autocomplete="off"
                        placeholder="请输入文章标签">
@@ -123,7 +122,6 @@
             <div class="mdc-text-field-helper-line">
                 <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
                     *必填</p>
-                <div class="mdc-text-field-character-counter">0 / 50</div>
             </div>
         </div>
         <!-- markdown内容 -->
@@ -196,7 +194,9 @@
             $.alert('文章内容 不能为空');
             return false;
           }
-          let title = $('#titleInput').val();
+          // let title = $('#titleInput').val();
+          // markdown第一行[# ]后的内容视为标题
+          let title = content.substring(2, content.indexOf('\n')) + ']';
           if (!$.trim(title)) {
             $.alert('文章标题 不能为空');
             return false;

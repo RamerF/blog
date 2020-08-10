@@ -31,6 +31,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * The type Article controller.
+ *
  * @author Tang xiaofeng
  */
 @Slf4j
@@ -52,7 +53,7 @@ public class ArticleController {
    * @param map the map
    * @return the string
    */
-@GetMapping("/index")
+  @GetMapping("/index")
   @ApiOperation("文章页面")
   public String index(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
@@ -67,7 +68,7 @@ public class ArticleController {
    * @param criteria the criteria
    * @return the response entity
    */
-@GetMapping("/page")
+  @GetMapping("/page")
   @ResponseBody
   @ApiOperation("获取文章列表")
   public ResponseEntity<Rs<Page<ArticleResponse>>> page(
@@ -91,7 +92,7 @@ public class ArticleController {
    * @param map the map
    * @return the string
    */
-@GetMapping
+  @GetMapping
   @ApiOperation("添加文章页面")
   public String create(@ApiIgnore HttpSession session, @ApiIgnore Map<String, Object> map) {
     commonService.writeMenuAndSiteInfo(session, map);
@@ -106,7 +107,7 @@ public class ArticleController {
    * @param authentication the authentication
    * @return the response entity
    */
-@PostMapping
+  @PostMapping
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:create','article:create')")
   @ApiOperation("添加文章")
@@ -114,7 +115,7 @@ public class ArticleController {
       @Valid ArticleRequest articleRequest,
       @ApiIgnore BindingResult bindingResult,
       Authentication authentication) {
-    if(bindingResult.hasErrors()){
+    if (bindingResult.hasErrors()) {
       return Rs.fail(ControllerHelper.collectBindingResult(bindingResult));
     }
     final String authName = authentication.getName();
@@ -137,7 +138,7 @@ public class ArticleController {
    * @param map the map
    * @return the string
    */
-@GetMapping("/{id}")
+  @GetMapping("/{id}")
   @ApiOperation("更新文章页面")
   public String update(
       @PathVariable("id") final Long id,
@@ -145,10 +146,13 @@ public class ArticleController {
       @ApiIgnore Map<String, Object> map) {
     final ArticlePoJo poJo = service.getById(id);
     poJo.getId();
-  ArticleResponse response =
-    Objects.requireNonNull(ArticleResponse.of(poJo, null));
-   final List<Long> tagIds = mapService
-      .list(condition -> condition.eq(ArticleTagMapPoJo::setArticleId, poJo.getId())).stream().map(ArticleTagMapPoJo::getTagId).collect(toList());
+    ArticleResponse response = Objects.requireNonNull(ArticleResponse.of(poJo, null));
+    final List<Long> tagIds =
+        mapService
+            .list(condition -> condition.eq(ArticleTagMapPoJo::setArticleId, poJo.getId()))
+            .stream()
+            .map(ArticleTagMapPoJo::getTagId)
+            .collect(toList());
     response.setTags(tagService.listByIds(tagIds));
     map.put("article", response);
     commonService.writeMenuAndSiteInfo(session, map);
@@ -162,15 +166,14 @@ public class ArticleController {
    * @param bindingResult the binding result
    * @return the response entity
    */
-@PutMapping("/{id}")
+  @PutMapping("/{id}")
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:write','article:write')")
   @ApiOperation("更新文章")
   public ResponseEntity<Rs<String>> update(
-      @Valid ArticleRequest articleRequest,
-      @ApiIgnore BindingResult bindingResult) {
+      @Valid ArticleRequest articleRequest, @ApiIgnore BindingResult bindingResult) {
     log.info("update:[{}]", articleRequest);
-    if(bindingResult.hasErrors()){
+    if (bindingResult.hasErrors()) {
       return Rs.fail(ControllerHelper.collectBindingResult(bindingResult));
     }
     return ControllerHelper.exec(
@@ -185,7 +188,7 @@ public class ArticleController {
    * @param id the id
    * @return the response entity
    */
-@DeleteMapping("/{id}")
+  @DeleteMapping("/{id}")
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','article:delete')")
   @ApiOperation("删除文章")
@@ -199,7 +202,7 @@ public class ArticleController {
    * @param ids the ids
    * @return the response entity
    */
-@DeleteMapping("/deleteBatch")
+  @DeleteMapping("/deleteBatch")
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('global:delete','article:delete')")
   @ApiOperation("删除文章批量")
@@ -216,7 +219,7 @@ public class ArticleController {
    * @param map the map
    * @return the string
    */
-@GetMapping("/{id}/view")
+  @GetMapping("/{id}/view")
   @ApiOperation("查看文章页面")
   public String view(
       @PathVariable("id") final Long id,
